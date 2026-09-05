@@ -118,13 +118,10 @@
 
 <div style="font-family: var(--rh-font); color: var(--rh-text-primary); background: var(--rh-bg); width: 100%; overflow-x: hidden; position: relative;">
   <sc-if value="{{ isIntroVisible }}" hint-placeholder-val="{{ true }}">
-    <div style="position: fixed; inset: 0; z-index: 1000; background: #000000; display: flex; align-items: center; justify-content: center; opacity: {{ introOpacity }}; transition: opacity 0.6s ease;">
+    <div style="position: fixed; inset: 0; z-index: 1000; background: #000000; display: flex; align-items: center; justify-content: center; overflow: hidden; transform: translateY({{ introTranslateY }}); transition: transform 0.35s cubic-bezier(0.65,0,0.35,1);">
       <video ref="{{ introVideoRef }}" autoPlay="{{ true }}" muted="{{ true }}" defaultMuted="{{ true }}" playsInline="{{ true }}" onEnded="{{ dismissIntro }}" onTimeUpdate="{{ handleIntroTimeUpdate }}" style="width: 100%; height: 100%; object-fit: contain;">
-        <source src="uploads/full%20black.mp4" type="video/mp4">
+        <source src="uploads/Intro-fc69fc54.mp4" type="video/mp4">
       </video>
-      <button onClick="{{ dismissIntro }}" onMouseEnter="{{ introSkipHoverEnter }}" onMouseLeave="{{ introSkipHoverLeave }}" style="position: absolute; top: 24px; right: clamp(16px, 4vw, 40px); background: transparent; border: none; color: #ffffff; font-family: var(--rh-font); font-size: 13px; font-weight: 500; letter-spacing: 0.05em; padding: 10px 2px; cursor: pointer;">
-        <span style="position: relative; display: inline-block;">Skip Intro<span style="position: absolute; left: 0; bottom: -4px; height: 1px; background: #ffffff; width: {{ introSkipUnderlineWidth }}; transition: width 0.3s ease;"></span></span>
-      </button>
     </div>
   </sc-if>
   <div style="position: fixed; inset: 0; z-index: 600; background: #000000; pointer-events: none; opacity: {{ langOverlayOpacity }}; transition: opacity 0.35s ease-in-out;"></div>
@@ -150,7 +147,7 @@
   </sc-if>
   <sc-if value="{{ isFullBleedHero }}" hint-placeholder-val="{{ true }}">
     <div id="hero-fullbleed" style="position: relative; width: 100%; height: 100vh; min-height: 720px; overflow: hidden; background: #000;">
-      <video ref="{{ heroVideoRef }}" muted="{{ true }}" defaultMuted="{{ true }}" loop="{{ true }}" playsInline="{{ true }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
+      <video ref="{{ heroVideoRef }}" autoPlay="{{ true }}" muted="{{ true }}" defaultMuted="{{ true }}" loop="{{ true }}" playsInline="{{ true }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;">
         <source src="uploads/Hero-b0be3542.mp4" type="video/mp4">
       </video>
       <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.2) 55%, rgba(0,0,0,0.45) 100%); pointer-events: none;"></div>
@@ -200,29 +197,34 @@
     </div>
   
 
-  <!-- FEATURED LISTINGS -->
-  <div id="listings" style="padding: 96px 64px; background: #000000;">
-    <div style="position: relative; margin-bottom: 44px; text-align: center;">
-      <h2 ref="{{ revealRefListingsHero }}" style="font-size: clamp(24px, 4.2vw, 36px); font-weight: 600; margin: 0; letter-spacing: -0.01em; color: #ffffff; text-transform: uppercase; {{ revealListingsHero }}">{{ t.listingsHeading }}</h2>
-      <a href="#idx" style="position: absolute; right: 0; top: 50%; transform: translateY(-50%); font-size: 14px; font-weight: 600; color: #ffffff;">{{ t.listingsViewAll }}</a>
-    </div>
-    <div style="width: 100%;">
-      <div id="ihf-featured-listings" ref="{{ featuredListingsRef }}" style="width: 100%;"></div>
-    </div>
-  </div>
-
-  <!-- NOTABLE SALES -->
-  <div id="idx" style="padding: 96px 64px;">
-    <div style="text-align: center; max-width: 640px; margin: 0 auto 64px;">
-      <h2 ref="{{ revealRefIdx }}" style="font-size: clamp(24px, 4.2vw, 36px); font-weight: 600; margin: 0; letter-spacing: -0.01em; text-transform: uppercase; {{ revealIdx }}">{{ t.notableHeading }}</h2>
-    </div>
-
-    <div style="width: 100%;">
-      <div id="ihf-notable-sales" ref="{{ notableSalesRef }}" style="width: 100%;"></div>
-    </div>
-  </div>
-
   <!-- AGENT / ABOUT -->
+  <div id="about" style="max-width: 1520px; margin: 0 auto; padding: 72px 64px 72px 140px; background: #ffffff; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 56px;">
+    <sc-if value="{{ isBioModalVisible }}" hint-placeholder-val="{{ false }}">
+      <div onClick="{{ closeBioModal }}" style="position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 40px; animation: {{ modalOverlayAnimation }};">
+        <div onClick="{{ stopPropagation }}" style="background: #ffffff; max-width: 640px; width: 100%; max-height: 80vh; overflow-y: auto; padding: 44px; position: relative; animation: {{ modalCardAnimation }};">
+          <button onClick="{{ closeBioModal }}" style="position: absolute; top: 18px; right: 18px; background: none; border: none; font-size: 34px; cursor: pointer; color: var(--rh-text-secondary); font-family: var(--rh-font); transition: color 0.25s ease;" style-hover="color: var(--rh-text-muted);">×</button>
+          <h2 style="font-size: 26px; font-weight: 700; margin: 0 0 16px; letter-spacing: -0.01em;">Jackson Kesecker</h2>
+          <p style="font-size: 15px; line-height: 1.7; color: var(--rh-text-secondary); white-space: pre-wrap; margin: 0;">{{ t.aboutParagraphRest }}</p>
+        </div>
+      </div>
+    </sc-if>
+    <div id="agent-avatar-small" style="display: none; width: 240px; height: 240px; margin: 0 auto 8px;">
+      <image-slot id="agent-portrait-small" shape="circle" fit="cover" src="uploads/Website%20Headshot.png" placeholder="Agent photo" style="width: 100%; height: 100%; --slot-bg: #ffffff;"></image-slot>
+    </div>
+    <div id="about-text-block" style="flex: 1 1 420px; min-width: 300px; max-width: 640px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; text-align: left; gap: 20px;">
+      <span class="vc-eyebrow">{{ t.aboutEyebrow }}</span>
+      <h2 ref="{{ revealRefAbout }}" style="font-size: clamp(22px, 4vw, 34px); font-weight: 600; margin: 0; letter-spacing: -0.01em; text-transform: uppercase; {{ revealAbout }}">Jackson Kesecker</h2>
+      <p style="font-size: 16px; line-height: 1.7; color: var(--rh-text-secondary); margin: 0; white-space: pre-wrap;">{{ t.aboutParagraph }}</p>
+      <div style="margin-top: 4px;">
+        <span class="rh-btn-secondary"><x-import component-from-global-scope="RealtyHub.Button" hint-size="140px,44px" variant="secondary" onClick="{{ openBioModal }}">{{ t.learnMore }}</x-import></span>
+      </div>
+    </div><div id="agent-portrait-wrapper" style="flex: 1 1 380px; min-width: 260px; max-width: 480px;">
+      <div style="position: relative; width: 100%; padding-top: 100%;">
+        <image-slot id="agent-portrait" shape="circle" fit="cover" src="uploads/Website%20Headshot.png" placeholder="Drop an agent portrait" style="position: absolute; inset: 0; --slot-bg: #ffffff;"></image-slot>
+      </div>
+    </div>
+  </div>
+
   <!-- TESTIMONIALS -->
   <div style="padding: 96px 32px; background: #000000;">
     <div style="text-align: center; margin-bottom: 48px;">
@@ -270,6 +272,17 @@
     </sc-if>
   </div>
 
+  <!-- NOTABLE SALES -->
+  <div id="idx" style="padding: 96px 64px;">
+    <div style="text-align: center; max-width: 640px; margin: 0 auto 64px;">
+      <h2 ref="{{ revealRefIdx }}" style="font-size: clamp(24px, 4.2vw, 36px); font-weight: 600; margin: 0; letter-spacing: -0.01em; text-transform: uppercase; {{ revealIdx }}">{{ t.notableHeading }}</h2>
+    </div>
+
+    <div style="width: 100%;">
+      <div id="ihf-notable-sales" ref="{{ notableSalesRef }}" style="width: 100%;"></div>
+    </div>
+  </div>
+
   <!-- HOME VALUATION CTA -->
   <div style="background: var(--rh-accent); padding: 72px 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; text-align: center;">
     <div style="max-width: 560px;">
@@ -278,57 +291,47 @@
     <a class="rh-btn-secondary" href="https://jacksonkesecker.realscout.com/whats-my-home-worth" target="_blank" rel="noopener noreferrer" style="text-decoration: none; display: inline-block;"><x-import component-from-global-scope="RealtyHub.Button" hint-size="180px,44px" variant="secondary">{{ t.ctaButton }}</x-import></a>
   </div>
 
-  <!-- CONTACT -->
-  <div id="contact" style="padding: 96px 64px; display: grid; grid-template-columns: minmax(380px, 480px) minmax(380px, 480px); gap: 64px; justify-content: center; align-items: center;">
-    <div style="align-self: start; margin-top: -24px;">
-      <span class="vc-eyebrow">{{ t.contactEyebrow }}</span>
-      <h2 ref="{{ revealRefContact }}" style="font-size: clamp(24px, 4.2vw, 36px); font-weight: 600; margin: 10px 0 16px; letter-spacing: -0.01em; text-transform: uppercase; {{ revealContact }}">{{ t.contactHeading }}</h2>
-      <p style="font-size: 15px; line-height: 1.7; color: var(--rh-text-secondary); max-width: 420px; margin: 0 0 28px;">{{ t.contactParagraph }}</p>
-      <div style="display: flex; flex-direction: column; gap: 10px; font-size: 14px;">
-        <div><strong>{{ t.labelPhone }}:</strong> <a href="tel:+18318210398" style="display: inline-flex; align-items: center; gap: 6px; color: var(--rh-text-primary);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>(831) 821-0398</a></div>
-        <div><strong>{{ t.labelEmail }}:</strong> <a href="mailto:jackson@kesecker.co" style="display: inline-flex; align-items: center; gap: 6px; color: var(--rh-text-primary);"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: -2px;"><path d="M4 4h16v16H4z" stroke="none"></path><path d="M22 6l-10 7L2 6"></path><rect x="2" y="4" width="20" height="16" rx="2"></rect></svg>jackson@kesecker.co</a></div>
-        <div><strong>Salinas Office</strong><br><a href="https://www.google.com/maps/search/?api=1&query=1368+South+Main+Street+Suite+B+Salinas+CA+93901" target="_blank" rel="noopener" style="display: inline-block; margin-top: 4px; color: var(--rh-text-primary);">1368 South Main Street, Suite B<br>Salinas, CA 93901</a></div>
-        <div><strong>Carmel Office</strong><br><a href="https://www.google.com/maps/search/?api=1&query=26135+Carmel+Rancho+Boulevard+Suite+F200+Carmel+CA+93923" target="_blank" rel="noopener" style="display: inline-block; margin-top: 4px; color: var(--rh-text-primary);">26135 Carmel Rancho Boulevard, Suite F200<br>Carmel, CA 93923</a></div>
-      </div>
+  <!-- NEIGHBORHOODS -->
+  <div id="neighborhoods" style="padding: 32px 64px 0; background: #ffffff;">
+    <div style="margin-bottom: 64px; text-align: center;">
+      <span class="vc-eyebrow">{{ t.neighborhoodsEyebrow }}</span>
+      <h2 ref="{{ revealRefNeighborhoods }}" style="font-size: clamp(24px, 4.2vw, 36px); font-weight: 600; margin: 10px 0 0; letter-spacing: -0.01em; text-transform: uppercase; {{ revealNeighborhoods }}">{{ t.neighborhoodsHeading }}</h2>
     </div>
-    <form onSubmit="{{ handleContactSubmit }}" style="padding: 0; display: flex; flex-direction: column; gap: 22px; justify-content: center; align-self: center;">
-      <div style="display: flex; flex-direction: column; gap: 6px; width: 100%;">
-        <label style="font-size: 12px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--rh-text-secondary);">{{ t.formFullName }}</label>
-        <input type="text" required="{{ true }}" placeholder="Isabel Meadows" style="width: 100%; box-sizing: border-box; padding: 8px 2px; font-size: 15px; font-family: var(--rh-font); color: var(--rh-text-primary); background: transparent; border: none; border-bottom: 1px solid var(--rh-border); outline: none; transition: border-color 0.2s ease;" style-focus="border-bottom-color: #1a1a1a;">
-      </div>
-      <div style="display: flex; flex-direction: column; gap: 6px; width: 100%;">
-        <label style="font-size: 12px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--rh-text-secondary);">{{ t.labelEmail }}</label>
-        <input type="email" required="{{ true }}" placeholder="isabel@email.com" style="width: 100%; box-sizing: border-box; padding: 8px 2px; font-size: 15px; font-family: var(--rh-font); color: var(--rh-text-primary); background: transparent; border: none; border-bottom: 1px solid var(--rh-border); outline: none; transition: border-color 0.2s ease;" style-focus="border-bottom-color: #1a1a1a;">
-      </div>
-      <div style="display: flex; flex-direction: column; gap: 6px; width: 100%;">
-        <label style="font-size: 12px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--rh-text-secondary);">{{ t.formPhone }}</label>
-        <input type="tel" required="{{ true }}" placeholder="(831) 123-4567" style="width: 100%; box-sizing: border-box; padding: 8px 2px; font-size: 15px; font-family: var(--rh-font); color: var(--rh-text-primary); background: transparent; border: none; border-bottom: 1px solid var(--rh-border); outline: none; transition: border-color 0.2s ease;" style-focus="border-bottom-color: #1a1a1a;">
-      </div>
-      <div style="display: flex; flex-direction: column; gap: 6px; width: 100%;">
-        <label style="font-size: 12px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--rh-text-secondary);">{{ t.formInterestLabel }}</label>
-        <div style="position: relative; width: 100%;">
-          <sc-if value="{{ interestOpen }}" hint-placeholder-val="{{ false }}">
-            <div onClick="{{ closeInterestOpen }}" style="position: fixed; inset: 0; z-index: 4; background: transparent;"></div>
-          </sc-if>
-          <div onClick="{{ toggleInterestOpen }}" style="width: 100%; box-sizing: border-box; height: 40px; padding: 0 2px 8px; font-size: 15px; font-family: var(--rh-font); color: var(--rh-text-primary); background: transparent; border: none; border-bottom: 1px solid var(--rh-border); cursor: pointer; display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 5; {{ interestTriggerStyle }}">
-            <span>{{ interestSelectedLabel }}</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transition: transform 0.2s ease; {{ interestChevronStyle }}"><path d="M6 9l6 6 6-6"></path></svg>
-          </div>
-          <sc-if value="{{ interestOpen }}" hint-placeholder-val="{{ false }}">
-            <div style="position: absolute; top: calc(100% + 6px); left: 0; right: 0; background: #ffffff; border: 1px solid var(--rh-border); border-radius: var(--rh-radius-input); box-shadow: 0 12px 28px rgba(0,0,0,0.12); z-index: 6; overflow: hidden; animation: rhDropdownFade 0.16s ease;">
-              <sc-for list="{{ interestOptions }}" as="opt" hint-placeholder-count="3">
-                <div onClick="{{ opt.onSelect }}" style="padding: 11px 16px; font-size: 15px; font-family: var(--rh-font); color: var(--rh-text-primary); cursor: pointer; transition: background 0.15s ease; {{ opt.textStyle }}" style-hover="background: var(--rh-surface);">{{ opt.label }}</div>
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; align-items: flex-start;">
+      <div id="neighborhoods-list" style="flex: 1 1 220px; min-width: 200px; max-width: 260px; display: flex; flex-direction: column; gap: 44px; justify-content: flex-start; align-items: center; padding: 0 24px; box-sizing: border-box;">
+        <div style="display: flex; gap: 40px; justify-content: center; width: 100%; flex-wrap: nowrap;">
+          <sc-for list="{{ topGroups }}" as="group" hint-placeholder-count="2">
+            <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
+              <span style="font-size: 11px; white-space: nowrap; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rh-text-secondary);">{{ group.title }}</span>
+              <sc-for list="{{ group.cities }}" as="city" hint-placeholder-count="5">
+                <div style="cursor: pointer;" onClick="{{ city.focusHandler }}" onMouseEnter="{{ city.hoverEnter }}" onMouseLeave="{{ hoverAreaLeave }}">
+                  <span style="position: relative; display: inline-block; font-size: 16px; font-weight: 500; color: var(--rh-text-primary); transition: color 0.2s ease;" style-hover="color: var(--rh-accent);">
+                    {{ city.name }}
+                    <span style="position: absolute; left: 0; bottom: -4px; height: 2px; background: var(--rh-accent); width: {{ city.underlineWidth }}; transition: width 0.35s ease;"></span>
+                  </span>
+                </div>
               </sc-for>
             </div>
-          </sc-if>
+          </sc-for>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 10px; align-items: center; width: 100%;">
+          <span style="font-size: 11px; white-space: nowrap; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rh-text-secondary);">{{ bottomGroup.title }}</span>
+          <sc-for list="{{ bottomGroup.cities }}" as="city" hint-placeholder-count="3">
+            <div style="cursor: pointer;" onClick="{{ city.focusHandler }}" onMouseEnter="{{ city.hoverEnter }}" onMouseLeave="{{ hoverAreaLeave }}">
+              <span style="position: relative; display: inline-block; font-size: 16px; font-weight: 500; color: var(--rh-text-primary); transition: color 0.2s ease;" style-hover="color: var(--rh-accent);">
+                {{ city.name }}
+                <span style="position: absolute; left: 0; bottom: -4px; height: 2px; background: var(--rh-accent); width: {{ city.underlineWidth }}; transition: width 0.35s ease;"></span>
+              </span>
+            </div>
+          </sc-for>
         </div>
       </div>
-      <div style="display: flex; flex-direction: column; gap: 6px; width: 100%;">
-        <label style="font-size: 12px; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--rh-text-secondary);">{{ t.formMessage }}</label>
-        <textarea placeholder="{{ t.formMessagePlaceholder }}" rows="4" required="{{ true }}" style="width: 100%; box-sizing: border-box; padding: 12px 16px; font-size: 15px; font-family: var(--rh-font); color: var(--rh-text-primary); background: var(--rh-bg); border: 1px solid var(--rh-border); border-radius: var(--rh-radius-input); resize: vertical;"></textarea>
+      <div style="position: relative; margin-left: 60px;">
+        <div id="neighborhoods-map-wrap" style="flex: none; width: 500px; height: 396px;">
+          <iframe ref="{{ mapIframeRef }}" src="Neighborhoods Map.html" title="Monterey County service area map" style="width: 100%; height: 100%; border: none; display: block;"></iframe>
+        </div>
       </div>
-      <span class="rh-btn-primary" style="display: block;"><x-import component-from-global-scope="RealtyHub.Button" hint-size="100%,46px" variant="primary" type="submit" fullWidth="{{ true }}">{{ t.formSend }}</x-import></span>
-    </form>
+    </div>
   </div>
 
   <!-- CTA PHOTO BAND -->
@@ -355,7 +358,7 @@
       <a href="https://keseckerproperties.com/listings" target="_self" style="font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.2s ease;" style-hover="color: #ffffff;">{{ t.navListings }}</a>
       <a href="https://keseckerproperties.com/communities" target="_self" style="font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.2s ease;" style-hover="color: #ffffff;">{{ t.navNeighborhoods }}</a>
       <a href="https://keseckerproperties.com/about" target="_self" style="font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.2s ease;" style-hover="color: #ffffff;">{{ t.navAbout }}</a>
-      <a href="#contact" style="font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.2s ease;" style-hover="color: #ffffff;">{{ t.navContact }}</a>
+      <a href="#" onClick="{{ openContactModal }}" style="font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.2s ease;" style-hover="color: #ffffff;">{{ t.navContact }}</a>
     </div>
     <p style="font-size: 11px; line-height: 1.7; color: rgba(255,255,255,0.55); text-align: center; max-width: 720px; margin: 32px 0 0;">{{ t.legalDisclaimer }}</p>
   </div>
@@ -720,6 +723,8 @@
     </div>
   </sc-if>
 
+  <button onClick="{{ replayIntro }}" style="position: fixed; bottom: 16px; right: 16px; z-index: 900; background: #000000; color: #ffffff; border: none; font-family: var(--rh-font); font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; padding: 8px 14px; cursor: pointer; opacity: 0.55; transition: opacity 0.2s ease;" style-hover="opacity: 1;">Replay Intro</button>
+
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
@@ -727,16 +732,21 @@ class Component extends DCLogic {
   heroVideoRef = React.createRef();
   introVideoRef = (el) => {
     this.introVideoEl = el;
-    if (el) el.playbackRate = 1.2;
+    if (el) el.playbackRate = 1.5;
+  };
+  replayIntro = () => {
+    try { localStorage.removeItem('jkr_intro_seen'); } catch (e) {}
+    this.setState({ isIntroVisible: true, isIntroFading: false });
   };
   dismissIntro = () => {
     if (this.state.isIntroFading) return;
+    try { localStorage.setItem('jkr_intro_seen', '1'); } catch (e) {}
     if (this.introVideoEl) { try { this.introVideoEl.pause(); } catch (e) {} }
     if (this.heroVideoRef.current) { try { this.heroVideoRef.current.play(); } catch (e) {} }
     this.setState({ isIntroFading: true });
     setTimeout(() => {
       this.setState({ isIntroVisible: false, isIntroFading: false });
-    }, 600);
+    }, 350);
   };
   handleIntroTimeUpdate = () => {};
   introSkipHoverEnter = () => this.setState({ introSkipHover: true });
@@ -751,7 +761,8 @@ class Component extends DCLogic {
     }
     return phrase;
   }
-  state = { isIntroVisible: true, isIntroFading: false, activeReviewIndex: 0, isReviewModalVisible: false, isReviewModalClosing: false, heroPhraseIndex: 0, heroFadeVisible: true, lang: 'en', isBioModalOpen: false, isBioModalVisible: false, isContactModalVisible: false, isContactModalClosing: false, modalInterestIndex: 0, modalInterestOpen: false, hoveredOffice: null, isBioModalClosing: false, isMobileMenuVisible: false, isMobileMenuClosing: false, isScrolled: false, revealed: {}, listingsOverflow: false, heroSearchValue: '',
+  hasSeenIntro = () => { try { return !!localStorage.getItem('jkr_intro_seen'); } catch (e) { return false; } };
+  state = { isIntroVisible: !this.hasSeenIntro(), isIntroFading: false, activeReviewIndex: 0, isReviewModalVisible: false, isReviewModalClosing: false, heroPhraseIndex: 0, heroFadeVisible: true, lang: 'en', isBioModalOpen: false, isBioModalVisible: false, isContactModalVisible: false, isContactModalClosing: false, modalInterestIndex: 0, modalInterestOpen: false, hoveredOffice: null, isBioModalClosing: false, isMobileMenuVisible: false, isMobileMenuClosing: false, isScrolled: false, revealed: {}, listingsOverflow: false, heroSearchValue: '',
     a11yOpen: false, a11yStatementOpen: false, a11yPosition: 'bottom-left', a11yScrollVisible: false, a11yLang: null, langFading: false,
     isIosDevice: false,
     a11yBigText: 0, a11yLineHeight: 0, a11yTextSpacing: 0, a11yTextAlign: 0, a11yContrast: 0, a11ySaturation: 0,
@@ -1242,6 +1253,7 @@ class Component extends DCLogic {
       : 'opacity:0;transform:translateX(-32px);transition:opacity 1.4s cubic-bezier(.16,1,.3,1),transform 1.4s cubic-bezier(.16,1,.3,1);';
   }
   componentDidMount() {
+    if (!this.state.isIntroVisible && this.heroVideoRef.current) { try { this.heroVideoRef.current.play(); } catch (e) {} }
     this.marqueeInterval = setInterval(this.marqueeTick, 30);
     this.onScroll = () => {
       const scrolled = window.scrollY > 400;
@@ -1356,6 +1368,7 @@ class Component extends DCLogic {
     const heroLayout = this.props.heroLayout ?? 'full-bleed';
     const t = this.translations[this.state.lang];
     const introOpacity = this.state.isIntroFading ? 0 : 1;
+    const introTranslateY = this.state.isIntroFading ? '-100%' : '0%';
     const a11yT = Object.assign({}, this.a11yI18n.en, this.a11yI18n[this.state.a11yLang || (this.state.lang === 'es' ? 'es' : 'en')] || {});
     const list = this.testimonials[this.state.lang];
     const es = this.state.lang === 'es';
@@ -1369,7 +1382,7 @@ class Component extends DCLogic {
     const reviewCards = [...baseCards, ...baseCards];
     const activeReview = list[this.state.activeReviewIndex] || list[0];
     return {
-      isIntroVisible: this.state.isIntroVisible, introOpacity, introVideoRef: this.introVideoRef, dismissIntro: this.dismissIntro, handleIntroTimeUpdate: this.handleIntroTimeUpdate,
+      isIntroVisible: this.state.isIntroVisible, introOpacity, introTranslateY, introVideoRef: this.introVideoRef, dismissIntro: this.dismissIntro, handleIntroTimeUpdate: this.handleIntroTimeUpdate, replayIntro: this.replayIntro,
       introSkipHoverEnter: this.introSkipHoverEnter, introSkipHoverLeave: this.introSkipHoverLeave, introSkipUnderlineWidth: this.state.introSkipHover ? '100%' : '0%',
       revealRefAbout: this.getRevealRef('about'), revealAbout: this.revealStyle('about'),
       revealRefListings: this.getRevealRef('listings'), revealListings: this.revealStyle('listings'),
@@ -1466,6 +1479,7 @@ class Component extends DCLogic {
       isContactModalVisible: this.state.isContactModalVisible,
       contactModalOverlayAnimation: this.state.isContactModalClosing ? 'modal-fade-out 0.3s ease forwards' : 'modal-fade-in 0.35s ease',
       contactModalCardAnimation: this.state.isContactModalClosing ? 'modal-scale-out 0.3s ease forwards' : 'modal-scale-in 0.35s ease',
+      openContactModal: (e) => { if (e) e.preventDefault(); this.setState({ isContactModalVisible: true, isContactModalClosing: false }); },
       openContactModalFromMenu: (e) => {
         if (e) e.preventDefault();
         this.setState({ isMobileMenuClosing: true });
