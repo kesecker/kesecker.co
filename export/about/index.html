@@ -36,9 +36,9 @@
     a { color: var(--rh-accent); text-decoration: none; }
     a:hover { color: var(--rh-accent-hover); }
     .vc-eyebrow { font-family: var(--rh-font); font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--rh-accent); }
-    @media (max-width: 760px) {
-      #communities-list { flex-wrap: wrap !important; }
-      #communities-map-col { margin-left: 0 !important; }
+    @media (max-width: 900px) {
+      #about-content { flex-direction: column-reverse !important; text-align: center !important; padding-left: 36px !important; padding-right: 36px !important; }
+      #about-text-block { align-items: center !important; text-align: center !important; }
     }
   </style>
 </helmet>
@@ -51,47 +51,33 @@
     <div style="display: flex; align-items: center; gap: clamp(14px, 2.4vw, 26px); flex: 1; padding-left: clamp(8px, 2vw, 28px);">
       <a href="../listings" style="font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75);" style-hover="color: #ffffff;">Search</a>
       <span style="font-size: 30px; line-height: 1; display: flex; align-items: center; color: #ffffff;">•</span>
-      <span style="font-size: 14px; font-weight: 500; color: #ffffff;">Communities</span>
+      <a href="../communities" style="font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75);" style-hover="color: #ffffff;">Communities</a>
       <span style="font-size: 30px; line-height: 1; display: flex; align-items: center; color: #ffffff;">•</span>
-      <a href="../about" style="font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75);" style-hover="color: #ffffff;">About</a>
+      <span style="font-size: 14px; font-weight: 500; color: #ffffff;">About</span>
     </div>
     <a href="#" onClick="{{ openContactModal }}" style="font-size: 13px; font-weight: 600; color: #ffffff; flex-shrink: 0;">Contact</a>
     <dc-import name="ContactModal" hint-size="0,0"></dc-import>
   </div>
 
   <div style="height: calc(100vh - 92px); overflow-y: auto;">
-    <div style="max-width: 1160px; margin: 0 auto; padding: 72px 36px 96px;">
-      <div style="text-align: center; margin-bottom: 56px;">
-        <span class="vc-eyebrow">Where We Serve</span>
-        <h1 style="font-size: clamp(26px, 4.4vw, 40px); font-weight: 600; margin: 10px 0 0; letter-spacing: -0.01em; text-transform: uppercase;">Areas Served</h1>
-      </div>
-      <div id="communities-list" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; align-items: flex-start;">
-        <div style="flex: 1 1 220px; min-width: 200px; max-width: 260px; display: flex; flex-direction: column; gap: 44px; justify-content: flex-start; align-items: center; padding: 0 24px; box-sizing: border-box;">
-          <div style="display: flex; gap: 40px; justify-content: center; width: 100%; flex-wrap: nowrap;">
-            <sc-for list="{{ topGroups }}" as="group" hint-placeholder-count="2">
-              <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
-                <span style="font-size: 11px; white-space: nowrap; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rh-text-secondary);">{{ group.title }}</span>
-                <sc-for list="{{ group.cities }}" as="city" hint-placeholder-count="5">
-                  <div style="cursor: pointer;" onClick="{{ city.focusHandler }}" onMouseEnter="{{ city.hoverEnter }}" onMouseLeave="{{ hoverAreaLeave }}">
-                    <span style="position: relative; display: inline-block; font-size: 16px; font-weight: 500; color: var(--rh-text-primary); line-height: 24px; transition: color 0.2s ease; padding-bottom: 4px;" style-hover="color: var(--rh-accent);">{{ city.name }}<svg width="100%" height="2" style="position: absolute; left: 0; bottom: 0; overflow: visible; display: block;" preserveAspectRatio="none"><rect x="0" y="0" width="{{ city.underlineWidth }}" height="2" fill="var(--rh-accent)" shape-rendering="crispEdges" style="transition: width 0.35s ease;"></rect></svg></span>
-                  </div>
-                </sc-for>
-              </div>
-            </sc-for>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 10px; align-items: center; width: 100%;">
-            <span style="font-size: 11px; white-space: nowrap; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rh-text-secondary);">{{ bottomGroup.title }}</span>
-            <sc-for list="{{ bottomGroup.cities }}" as="city" hint-placeholder-count="3">
-              <div style="cursor: pointer;" onClick="{{ city.focusHandler }}" onMouseEnter="{{ city.hoverEnter }}" onMouseLeave="{{ hoverAreaLeave }}">
-                <span style="position: relative; display: inline-block; font-size: 16px; font-weight: 500; color: var(--rh-text-primary); line-height: 24px; transition: color 0.2s ease; padding-bottom: 4px;" style-hover="color: var(--rh-accent);">{{ city.name }}<svg width="100%" height="2" style="position: absolute; left: 0; bottom: 0; overflow: visible; display: block;" preserveAspectRatio="none"><rect x="0" y="0" width="{{ city.underlineWidth }}" height="2" fill="var(--rh-accent)" shape-rendering="crispEdges" style="transition: width 0.35s ease;"></rect></svg></span>
-              </div>
-            </sc-for>
-          </div>
+    <div id="about-content" style="max-width: 1160px; margin: 0 auto; padding: 72px 36px 96px; display: flex; align-items: center; justify-content: center; gap: 56px; flex-wrap: wrap;">
+      <div id="about-text-block" style="flex: 1 1 420px; min-width: 300px; max-width: 640px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; text-align: left; gap: 20px;">
+        <span class="vc-eyebrow">Meet Your Agent</span>
+        <h1 style="font-size: clamp(24px, 4vw, 38px); font-weight: 600; margin: 0; letter-spacing: -0.01em; text-transform: uppercase;">Jackson Kesecker</h1>
+        <p style="font-size: 16px; line-height: 1.75; color: var(--rh-text-secondary); margin: 0; white-space: pre-wrap;">Jackson was born in Monterey, California and raised in Soledad, a rapidly growing city in the heart of the Salinas Valley. From the stunning beaches and breathtaking views of the Monterey Peninsula to the vast, endless rows of agricultural fields that feed the world, surrounded by tall and proud mountain ranges, Monterey County is the most beautiful place on earth. With its diverse range of ecosystems, its temperate year-round weather, and its iconic historical and cultural significance, this wondrous place is the envy of the world. As someone lucky enough to call this place home, Jackson has made it his mission to make his Central Coast community's dreams of homeownership a reality. A Monterey County native, he is committed to serving the very community that saw him grow into the man he is today.
+
+Buying and selling your home is one of the most significant life decisions one can ever make. It is absolutely critical to work with an agent who knows the area, both geographically and economically, and to work with someone who has a genuine, authentic passion for people, someone who's primary drive is to help people attain their goals and fulfill their real estate needs and not a person who is only in it for the money, regardless of the outcome for their clients.
+
+That's where I come in.
+
+If you or someone you know requires a trusted and competent real estate advisor in Monterey County, a place I am honored and grateful to call home, please don't hesitate to call me. I live to serve and I am thrilled to help.</p>
+        <div style="margin-top: 4px;">
+          <span class="rh-btn-secondary"><x-import component-from-global-scope="RealtyHub.Button" hint-size="140px,44px" variant="secondary" onClick="{{ openContactModal }}">Get in Touch</x-import></span>
         </div>
-        <div id="communities-map-col" style="position: relative; margin-left: 60px;">
-          <div style="flex: none; width: 500px; max-width: 100%; height: 396px;">
-            <iframe ref="{{ mapIframeRef }}" src="Neighborhoods Map.html" title="Monterey County service area map" style="width: 100%; height: 100%; border: none; display: block;"></iframe>
-          </div>
+      </div>
+      <div style="flex: 1 1 340px; min-width: 240px; max-width: 420px;">
+        <div style="position: relative; width: 100%; padding-top: 100%;">
+          <image-slot id="about-portrait" shape="circle" fit="cover" src="uploads/Website%20Headshot.png" placeholder="Drop an agent portrait" style="position: absolute; inset: 0; --slot-bg: #ffffff;"></image-slot>
         </div>
       </div>
     </div>
@@ -144,58 +130,12 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  state = { isPhoneOpen: false, hoveredCity: null };
-  mapIframeEl = null;
-  mapIframeRef = (el) => { this.mapIframeEl = el; };
-  CITY_NAMES = ['Salinas', 'Gonzales', 'Soledad', 'Greenfield', 'King City', 'Marina', 'Seaside', 'Monterey', 'Pacific Grove', 'Pebble Beach', 'Carmel-by-the-sea', 'Carmel Valley', 'Big Sur', 'Spreckels', 'Del Rey Oaks'];
-  CITY_GROUPS = [
-    { title: 'Salinas Valley', names: ['Salinas', 'Spreckels', 'Gonzales', 'Soledad', 'Greenfield', 'King City'] },
-    { title: 'Monterey Peninsula', names: ['Marina', 'Seaside', 'Del Rey Oaks', 'Monterey', 'Pacific Grove', 'Pebble Beach'] },
-    { title: 'Coastal & Inland', names: ['Carmel-by-the-sea', 'Carmel Valley', 'Big Sur'] },
-  ];
-  focusMapArea = (n) => {
-    if (this.mapIframeEl && this.mapIframeEl.contentWindow) this.mapIframeEl.contentWindow.postMessage({ type: 'focus', n }, '*');
-  };
-  hoverMapArea = (n) => {
-    this.setState({ hoveredCity: n });
-    if (this.mapIframeEl && this.mapIframeEl.contentWindow) this.mapIframeEl.contentWindow.postMessage({ type: 'hover', n }, '*');
-  };
-  getFocusAreaHandler(n) {
-    this._focusHandlers = this._focusHandlers || {};
-    if (!this._focusHandlers[n]) this._focusHandlers[n] = () => this.focusMapArea(n);
-    return this._focusHandlers[n];
-  }
-  getHoverAreaHandler(n) {
-    this._hoverHandlers = this._hoverHandlers || {};
-    if (!this._hoverHandlers[n]) this._hoverHandlers[n] = () => this.hoverMapArea(n);
-    return this._hoverHandlers[n];
-  }
-  hoverAreaLeave = () => this.hoverMapArea(null);
-  getCities() {
-    return this.CITY_NAMES.map((name, i) => {
-      const n = i + 1;
-      return {
-        n, name,
-        focusHandler: this.getFocusAreaHandler(n),
-        hoverEnter: this.getHoverAreaHandler(n),
-        underlineWidth: this.state.hoveredCity === n ? '100%' : '0%',
-      };
-    });
-  }
-  getCityGroups() {
-    const byName = {};
-    this.getCities().forEach((c) => { byName[c.name] = c; });
-    return this.CITY_GROUPS.map((g) => ({ title: g.title, cities: g.names.map((n) => byName[n]) }));
-  }
+  state = { isPhoneOpen: false };
   openContactModal = (e) => { if (e) e.preventDefault(); if (window.openKeseckerContactModal) window.openKeseckerContactModal(); };
   togglePhonePopup = () => this.setState(s => ({ isPhoneOpen: !s.isPhoneOpen }));
   onPhoneClose = () => this.setState({ isPhoneOpen: false });
   renderVals() {
     return {
-      mapIframeRef: this.mapIframeRef,
-      topGroups: this.getCityGroups().slice(0, 2),
-      bottomGroup: this.getCityGroups()[2],
-      hoverAreaLeave: this.hoverAreaLeave,
       openContactModal: this.openContactModal,
       isPhoneOpen: this.state.isPhoneOpen, togglePhonePopup: this.togglePhonePopup, onPhoneClose: this.onPhoneClose,
       phonePopoverStyle: this.state.isPhoneOpen ? 'opacity:1;visibility:visible;transform:translateY(0);transition:opacity 0.3s ease,transform 0.3s ease;' : 'opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity 0.3s ease,transform 0.3s ease;',
