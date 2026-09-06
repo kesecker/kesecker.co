@@ -754,7 +754,13 @@ class Component extends DCLogic {
   heroVideoRef = React.createRef();
   introVideoRef = (el) => {
     this.introVideoEl = el;
-    if (el) el.playbackRate = 1.5;
+    if (el) {
+      el.playbackRate = 1.5;
+      el.muted = true;
+      el.defaultMuted = true;
+      const p = el.play();
+      if (p && p.catch) p.catch(() => { this.dismissIntro(); });
+    }
   };
   replayIntro = () => {
     try { localStorage.removeItem('jkr_intro_seen'); } catch (e) {}
