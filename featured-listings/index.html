@@ -131,7 +131,6 @@ class Component extends DCLogic {
       const filterCountMatch = text.match(/^(Price|Beds|Baths|More)\s*\(\d+\)$/);
       if (filterCountMatch) { node.nodeValue = filterCountMatch[1]; continue; }
       if (node.parentElement && /^\$[\d,]+\+?$/.test(text.trim())) node.parentElement.style.setProperty('font-weight', '700', 'important');
-      if (node.parentElement && /^[\d,.]+\s*(Beds?|Baths?|SqFt\.?)$/i.test(text.trim())) node.parentElement.style.setProperty('font-weight', '700', 'important');
       const trimmed = text.trim();
       const cz = trimmed.match(cityStateZipRe);
       if (cz && trimmed === trimmed.toUpperCase()) {
@@ -147,18 +146,12 @@ class Component extends DCLogic {
       });
       if (changed) node.nodeValue = fixedText;
     }
+    const ihfDirectText = (el) => { let s = ''; el.childNodes.forEach((n) => { if (n.nodeType === 3) s += n.nodeValue; }); return s.trim(); };
     root.querySelectorAll('*').forEach((el) => {
-      if (el.children.length) return;
-      const t = (el.textContent || '').trim();
+      const t = ihfDirectText(el);
       if (!t) return;
-      if (/^\$[\d,]+\+?$/.test(t) || /\d[\d,.]*\s*(beds?|baths?|sqft\.?|sq\.?\s*ft\.?)/i.test(t)) {
+      if (/^\$[\d,]+\+?$/.test(t) || /^Save Search\b/i.test(t)) {
         el.style.setProperty('font-weight', '700', 'important');
-      } else if (/^\d[\d,.]*$/.test(t)) {
-        const sib = el.nextElementSibling || el.previousElementSibling;
-        if (sib && !sib.children.length && /beds?|baths?|sqft|sq\.?\s*ft/i.test(sib.textContent || '')) {
-          el.style.setProperty('font-weight', '700', 'important');
-          sib.style.setProperty('font-weight', '700', 'important');
-        }
       }
     });
     if (!root.querySelector('style[data-ihf-font-fix]')) {
@@ -171,11 +164,11 @@ class Component extends DCLogic {
         + ".ui-outlined-input-input { font-size: 14px !important; padding: 8px 4px !important; }"
         + ".ui-outlined-input fieldset { border: none !important; }"
         + ".ihf-email-field, .ui-form-control { max-width: 320px !important; margin-left: auto !important; margin-right: auto !important; }"
-        + "[role=\"menu\"], .MuiPaper-root:not([class*='listing' i]):not([class*='result' i]):not([class*='gallery' i]) { border: none !important; border-radius: 10px !important; box-shadow: 0 8px 24px rgba(0,0,0,0.10) !important; overflow: hidden !important; padding: 20px 20px 28px 20px !important; box-sizing: border-box !important; margin-top: 10px !important; }"
+        + ".MuiPaper-root:not([class*='listing' i]):not([class*='result' i]):not([class*='gallery' i]) { border: none !important; border-radius: 10px !important; box-shadow: 0 8px 24px rgba(0,0,0,0.10) !important; overflow: hidden !important; padding: 20px 20px 28px 20px !important; box-sizing: border-box !important; margin-top: 10px !important; }"
+        + "[role=\"menu\"] { border: none !important; border-radius: 0 !important; box-shadow: none !important; background: transparent !important; padding: 0 !important; margin: 0 !important; }"
         + ".ihf-listing-result-cell, [class*='listing-card' i], [class*='result-cell' i], [class*='gallery-card' i] { border: none !important; box-shadow: none !important; background: none !important; background-color: transparent !important; }"
         + "[class*='price' i] { font-weight: 700 !important; }"
         + ".ihf-listing-result-status, .ihf-listing-result-status .ui-chip-label, .ihf-listing-result-status span, .ihf-listing-result-badge-open-house, .ihf-listing-result-badge-open-house .ui-chip-label, .ihf-listing-result-badge-open-house span, .ihf-listing-result-badge-virtual-tour, .ihf-listing-result-badge-virtual-tour .ui-chip-label, .ihf-listing-result-badge-virtual-tour span, [class*='open' i][class*='house' i], [class*='virtual' i][class*='tour' i] { font-weight: 700 !important; }"
-        + "[class*='bed' i], [class*='bath' i], [class*='sqft' i], [class*='sq-ft' i], [class*='square-f' i] { font-weight: 700 !important; }"
         + ".MuiCardContent-root:last-child { padding-bottom: 20px !important; }"
         + ".MuiMenuItem-root, [role=\"menu\"] li[role=\"menuitem\"] { position: relative !important; border-bottom: none !important; box-shadow: none !important; outline: none !important; min-height: 40px !important; box-sizing: border-box !important; }"
         + ".MuiMenuItem-root:focus, [role=\"menu\"] li[role=\"menuitem\"]:focus { outline: none !important; box-shadow: none !important; }"
@@ -200,8 +193,33 @@ class Component extends DCLogic {
         + ".heart-trace-clone path { transition: stroke-dashoffset 0.6s ease; } .ihf-listing-result-badge-fav:hover .heart-trace-clone path, .ihf-listing-result-badge-fav svg[fill=\"currentColor\"] ~ .heart-trace-clone path { stroke-dashoffset: 0 !important; }";
       root.appendChild(style);
     }
+    this._ihfMoveResultsCount(root);
     this._ihfTraceHearts(root);
     root.querySelectorAll('*').forEach((el) => { if (el.shadowRoot) this._ihfFixTextInRoot(el.shadowRoot); });
+  };
+  _ihfMoveResultsCount = (root) => {
+    const leaves = Array.from(root.querySelectorAll('*'));
+    const directText = (el) => { let s = ''; el.childNodes.forEach((n) => { if (n.nodeType === 3) s += n.nodeValue; }); return s.trim(); };
+    const resultsEl = leaves.find((el) => !el.children.length && /^\d[\d,]*\s*results?$/i.test(directText(el)));
+    const mapEl = leaves.find((el) => !el.children.length && /^map$/i.test(directText(el)));
+    if (!resultsEl || !mapEl || !mapEl.parentElement) return;
+    const resultsRow = resultsEl.parentElement;
+    if (resultsRow && resultsRow !== mapEl.parentElement) resultsRow.style.setProperty('display', 'none', 'important');
+    let clone = root.querySelector('[data-ihf-results-clone]');
+    if (!clone) {
+      clone = document.createElement('span');
+      clone.setAttribute('data-ihf-results-clone', '1');
+      clone.style.marginLeft = '12px';
+      clone.style.fontSize = '14px';
+      clone.style.color = 'inherit';
+      clone.style.fontFamily = 'inherit';
+      clone.style.whiteSpace = 'nowrap';
+    }
+    const t = directText(resultsEl);
+    if (clone.textContent !== t) clone.textContent = t;
+    if (clone.parentElement !== mapEl.parentElement || clone.previousElementSibling !== mapEl) {
+      mapEl.parentElement.insertBefore(clone, mapEl.nextSibling);
+    }
   };
   _ihfTraceHearts = (root) => {
     root.querySelectorAll('.ihf-listing-result-badge-fav').forEach((btn) => {
