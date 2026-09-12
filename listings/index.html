@@ -57,11 +57,11 @@
     <div style="display: flex; align-items: center; gap: clamp(14px, 2.4vw, 26px); flex: 1; padding-left: clamp(8px, 2vw, 28px);">
       <a href="https://keseckerproperties.com/listings" style="font-family: 'Montserrat', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: #ffffff; text-decoration: none; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 1px; padding-bottom: 2px; transition: background-size 0.3s ease;" style-hover="background-size: 100% 1px;">Search</a>
       <span style="font-size: 15px; line-height: 1; display: flex; align-items: center; color: #ffffff;">•</span>
-      <a href="../communities" style="font-family: 'Montserrat', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75); text-decoration: none; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 1px; padding-bottom: 2px; transition: background-size 0.3s ease;" style-hover="color: #ffffff; background-size: 100% 1px;">Communities</a>
+      <a href="../communities" style="font-family: 'Montserrat', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75); text-decoration: none; transition: color 0.3s ease, background-size 0.3s ease; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 1px; padding-bottom: 2px;" style-hover="color: #ffffff; background-size: 100% 1px;">Communities</a>
       <span style="font-size: 15px; line-height: 1; display: flex; align-items: center; color: #ffffff;">•</span>
-      <a href="../about" style="font-family: 'Montserrat', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75); text-decoration: none; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 1px; padding-bottom: 2px; transition: background-size 0.3s ease;" style-hover="color: #ffffff; background-size: 100% 1px;">About</a>
+      <a href="../about" style="font-family: 'Montserrat', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75); text-decoration: none; transition: color 0.3s ease, background-size 0.3s ease; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 1px; padding-bottom: 2px;" style-hover="color: #ffffff; background-size: 100% 1px;">About</a>
     </div>
-<a href="#" onClick="{{ openContactModal }}" style="font-family: 'Montserrat', system-ui, sans-serif !important; font-size: 13px; font-weight: 600; color: #ffffff; flex-shrink: 0; text-decoration: none; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 1px; padding-bottom: 2px; transition: background-size 0.3s ease;" style-hover="background-size: 100% 1px;">Contact</a>
+<a href="#" onClick="{{ openContactModal }}" style="font-family: 'Montserrat', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75); flex-shrink: 0; text-decoration: none; transition: color 0.3s ease, background-size 0.3s ease; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 1px; padding-bottom: 2px;" style-hover="color: #ffffff; background-size: 100% 1px;">Contact</a>
     <dc-import name="ContactModal" hint-size="0,0"></dc-import>
   </div>
 
@@ -240,7 +240,7 @@ class Component extends DCLogic {
       const m = img.src.match(/\/property\/[A-Za-z]+\/(\d+)\//);
       if (!m) return;
       card._ihfLinkFixed = true;
-      link.setAttribute('href', 'https://keseckerproperties.com/listing?id=' + m[1]);
+      link.setAttribute('href', 'https://keseckerproperties.com/listing?id=ML' + m[1]);
     });
   };
   _ihfFixCloseButtons = (root) => {

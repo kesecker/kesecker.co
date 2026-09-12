@@ -1201,7 +1201,7 @@ class Component extends DCLogic {
       const m = img.src.match(/\/property\/[A-Za-z]+\/(\d+)\//);
       if (!m) return;
       card._ihfLinkFixed = true;
-      link.setAttribute('href', 'https://keseckerproperties.com/listing?id=' + m[1]);
+      link.setAttribute('href', 'https://keseckerproperties.com/listing?id=ML' + m[1]);
     });
   };
   _ihfFixAllShadowRoots = () => {
