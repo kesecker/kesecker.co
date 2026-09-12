@@ -305,7 +305,8 @@ class Component extends DCLogic {
     const mount = () => {
       if (!window.ihfKestrel || !window.ihfKestrel.render) { setTimeout(mount, 150); return; }
       node.dataset.ihfMounted = '1';
-      node.appendChild(window.ihfKestrel.render());
+      const listingId = new URLSearchParams(window.location.search).get('id');
+      node.appendChild(window.ihfKestrel.render(listingId ? { component: 'listingDetailWidget', id: listingId } : { component: 'listingDetailWidget' }));
       this._ihfStartCaseFix();
     };
     mount();
