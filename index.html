@@ -1167,7 +1167,8 @@ class Component extends DCLogic {
     if (!root.querySelector('style[data-ihf-font-fix]')) {
       const style = document.createElement('style');
       style.setAttribute('data-ihf-font-fix', '1');
-      style.textContent = ":host, * { --rh-font: 'Montserrat', system-ui, sans-serif !important; font-family: 'Montserrat', system-ui, sans-serif !important; font-weight: 400 !important; }"
+      const scopeSel = root === document ? '#ihf-notable-sales, #ihf-notable-sales *' : ':host, *';
+      style.textContent = scopeSel + " { --rh-font: 'Montserrat', system-ui, sans-serif !important; font-family: 'Montserrat', system-ui, sans-serif !important; font-weight: 400 !important; }"
         + (allowDark ? (
           ".ihf-listing-result-cell, .ihf-listing-result-cell * { background: transparent !important; background-color: transparent !important; box-shadow: none !important; color: #ffffff !important; }"
           + ".ihf-listing-result-status, .active-status-tag, .pending-status-tag, .sold-status-tag, .active-status-tag .ihf-listing-result-status { background: #ffffff !important; background-color: #ffffff !important; }"

@@ -157,7 +157,8 @@ class Component extends DCLogic {
     if (!root.querySelector('style[data-ihf-font-fix]')) {
       const style = document.createElement('style');
       style.setAttribute('data-ihf-font-fix', '1');
-      style.textContent = ":host, * { --rh-font: 'Montserrat', system-ui, sans-serif !important; font-family: 'Montserrat', system-ui, sans-serif !important; font-weight: 400 !important; }"
+      const scopeSel = root === document ? '#ihf-featured-listings-page, #ihf-featured-listings-page *' : ':host, *';
+      style.textContent = scopeSel + " { --rh-font: 'Montserrat', system-ui, sans-serif !important; font-family: 'Montserrat', system-ui, sans-serif !important; font-weight: 400 !important; }"
         + ".ui-typography-h3 { text-align: center !important; font-size: 22px !important; }"
         + ".ui-typography-body1 { text-align: center !important; font-size: 14px !important; }"
         + ".ui-outlined-input { border: none !important; border-bottom: 1px solid #cccccc !important; border-radius: 0 !important; box-shadow: none !important; padding-left: 4px !important; }"
