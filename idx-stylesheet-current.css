@@ -15,8 +15,8 @@ div.ihf-overlay-container {
    Also targets MUI's own generated classnames directly (higher specificity
    than a bare "*") so it wins even if MUI's stylesheet injects after ours. */
 :root, :host, * {
-  --rh-font: 'Montserrat', system-ui, sans-serif !important;
-  font-family: 'Montserrat', system-ui, sans-serif !important;
+  --rh-font: 'Inter', system-ui, sans-serif !important;
+  font-family: 'Inter', system-ui, sans-serif !important;
   font-weight: 400 !important;
 }
 html, html *,
@@ -26,7 +26,7 @@ body, body *,
 [class^="ihf" i],
 [class^="ihf" i] *,
 [class*="ui-typography" i] {
-  font-family: 'Montserrat', system-ui, sans-serif !important;
+  font-family: 'Inter', system-ui, sans-serif !important;
 }
 [class*="price" i] {
   font-weight: 700 !important;
@@ -219,4 +219,118 @@ body, body *,
   max-width: 320px !important;
   margin-left: auto !important;
   margin-right: auto !important;
+}
+
+/* Search/filter field trigger boxes (location search, price, time-on-site, etc.) —
+   replace the grey hover fill with an underline hover animation instead. Uses the
+   exact same background-image line technique (and 2px thickness) as the dropdown
+   menu item / toggle button underlines above, so stroke weight matches exactly. */
+.MuiButtonBase-root:hover,
+.MuiIconButton-root:hover,
+.MuiFormControl-root:hover,
+.MuiAutocomplete-root:hover,
+.MuiInputBase-root:hover,
+.MuiOutlinedInput-root:hover,
+.MuiFilledInput-root:hover,
+[class*="Input" i]:hover,
+[class^="ihf" i]:hover {
+  background-color: transparent !important;
+}
+.MuiFormControl-root,
+.MuiAutocomplete-root,
+.MuiInputBase-root {
+  background-image: linear-gradient(#000000, #000000) !important;
+  background-repeat: no-repeat !important;
+  background-position: left bottom !important;
+  background-size: 0 2px !important;
+  transition: background-size 0.3s ease !important;
+}
+.MuiFormControl-root:hover,
+.MuiAutocomplete-root:hover,
+.MuiInputBase-root:hover,
+.MuiFormControl-root:focus-within,
+.MuiAutocomplete-root:focus-within,
+.MuiInputBase-root:focus-within {
+  background-size: 100% 2px !important;
+}
+
+/* Cities/list-item hover inside dropdown panels — underline instead of grey fill */
+[role="menu"] li:hover,
+[role="menu"] li[role="menuitem"]:hover,
+[role="listbox"] li:hover,
+[role="option"]:hover,
+.MuiMenuItem-root:hover,
+.MuiListItem-root:hover,
+.MuiAutocomplete-option:hover {
+  background-color: transparent !important;
+  background: none !important;
+}
+[role="menu"] li,
+[role="menu"] li[role="menuitem"],
+[role="listbox"] li,
+[role="option"],
+.MuiMenuItem-root,
+.MuiListItem-root,
+.MuiAutocomplete-option {
+  background-image: linear-gradient(#000000, #000000) !important;
+  background-repeat: no-repeat !important;
+  background-position: left bottom !important;
+  background-size: 0 2px !important;
+  transition: background-size 0.3s ease !important;
+}
+[role="menu"] li:hover,
+[role="menu"] li[role="menuitem"]:hover,
+[role="listbox"] li:hover,
+[role="option"]:hover,
+.MuiMenuItem-root:hover,
+.MuiListItem-root:hover,
+.MuiAutocomplete-option:hover {
+  background-size: 100% 2px !important;
+}
+
+/* All dialog/modal close (X) buttons — lighten on hover, matching the site's own
+   modal close buttons (dark icon fades to a lighter grey on hover) */
+[aria-label*="close" i],
+button[aria-label*="close" i] svg,
+.MuiDialog-root [aria-label*="close" i],
+.MuiModal-root [aria-label*="close" i] {
+  transition: color 0.2s ease, opacity 0.2s ease !important;
+}
+[aria-label*="close" i]:hover,
+button[aria-label*="close" i]:hover svg,
+.MuiDialog-root [aria-label*="close" i]:hover,
+.MuiModal-root [aria-label*="close" i]:hover {
+  color: #999999 !important;
+  fill: #999999 !important;
+  opacity: 0.65 !important;
+}
+
+/* Broader fallback: any icon button in a dialog/modal (covers the close X even
+   without an aria-label) — lighten its icon on hover */
+.MuiDialog-root .MuiIconButton-root,
+.MuiModal-root .MuiIconButton-root,
+.MuiDialog-root button svg,
+.MuiModal-root button svg {
+  transition: color 0.2s ease, opacity 0.2s ease, fill 0.2s ease !important;
+}
+.MuiDialog-root .MuiIconButton-root:hover,
+.MuiModal-root .MuiIconButton-root:hover,
+.MuiDialog-root button:hover svg,
+.MuiModal-root button:hover svg {
+  color: #999999 !important;
+  fill: #999999 !important;
+  opacity: 0.65 !important;
+}
+
+/* Save Search dialog close X — stroke-based icon (stroke="currentColor", fill="none"),
+   so it lightens via color (which currentColor inherits), not fill */
+.MuiDialog-paper .MuiIconButton-root svg,
+.MuiDialog-paper .MuiIconButton-root svg line {
+  transition: color 0.2s ease, stroke 0.2s ease, opacity 0.2s ease !important;
+}
+.MuiDialog-paper .MuiIconButton-root:hover svg,
+.MuiDialog-paper .MuiIconButton-root:hover svg line {
+  color: #999999 !important;
+  stroke: #999999 !important;
+  opacity: 0.65 !important;
 }

@@ -168,6 +168,9 @@ class Component extends DCLogic {
         + "[role=\"menu\"] { border: none !important; border-radius: 0 !important; box-shadow: none !important; background: transparent !important; padding: 0 !important; margin: 0 !important; }"
         + ".ihf-listing-result-cell, [class*='listing-card' i], [class*='result-cell' i], [class*='gallery-card' i] { border: none !important; box-shadow: none !important; background: none !important; background-color: transparent !important; }"
         + "[class*='price' i] { font-weight: 700 !important; }"
+        + ".MuiButtonBase-root:hover, .MuiIconButton-root:hover, .MuiFormControl-root:hover, .MuiAutocomplete-root:hover, .MuiInputBase-root:hover, .MuiOutlinedInput-root:hover, .MuiFilledInput-root:hover, [class*='Input' i]:hover, [class^='ihf' i]:hover { background-color: transparent !important; }"
+        + ".MuiFormControl-root, .MuiAutocomplete-root, .MuiInputBase-root { background-image: linear-gradient(#000000, #000000) !important; background-repeat: no-repeat !important; background-position: left bottom !important; background-size: 0 2px !important; transition: background-size 0.3s ease !important; }"
+        + ".MuiFormControl-root:hover, .MuiAutocomplete-root:hover, .MuiInputBase-root:hover, .MuiFormControl-root:focus-within, .MuiAutocomplete-root:focus-within, .MuiInputBase-root:focus-within { background-size: 100% 2px !important; }"
         + ".ihf-listing-result-status, .ihf-listing-result-status .ui-chip-label, .ihf-listing-result-status span, .ihf-listing-result-badge-open-house, .ihf-listing-result-badge-open-house .ui-chip-label, .ihf-listing-result-badge-open-house span, .ihf-listing-result-badge-virtual-tour, .ihf-listing-result-badge-virtual-tour .ui-chip-label, .ihf-listing-result-badge-virtual-tour span, [class*='open' i][class*='house' i], [class*='virtual' i][class*='tour' i] { font-weight: 700 !important; }"
         + ".MuiCardContent-root:last-child { padding-bottom: 20px !important; }"
         + ".MuiMenuItem-root, [role=\"menu\"] li[role=\"menuitem\"] { position: relative !important; border-bottom: none !important; box-shadow: none !important; outline: none !important; min-height: 40px !important; box-sizing: border-box !important; }"
@@ -191,7 +194,7 @@ class Component extends DCLogic {
         + ".MuiOutlinedInput-root:hover, .MuiFilledInput-root:hover, .MuiInputBase-root:hover { border-bottom-color: #888888 !important; }"
         + ".MuiOutlinedInput-root.Mui-focused, .MuiFilledInput-root.Mui-focused, .MuiInputBase-root.Mui-focused { border-bottom: 2px solid #000000 !important; }"
         + ".heart-trace-clone path { transition: stroke-dashoffset 0.6s ease; } .ihf-listing-result-badge-fav:hover .heart-trace-clone path, .ihf-listing-result-badge-fav svg[fill=\"currentColor\"] ~ .heart-trace-clone path { stroke-dashoffset: 0 !important; }";
-      root.appendChild(style);
+      (root === document ? document.head : root).appendChild(style);
     }
     this._ihfMoveResultsCount(root);
     this._ihfTraceHearts(root);
@@ -246,9 +249,21 @@ class Component extends DCLogic {
       svg.insertAdjacentElement('afterend', clone);
     });
   };
+  _ihfFixCloseButtons = (root) => {
+    root.querySelectorAll('.MuiIconButton-root').forEach((btn) => {
+      if (btn._ihfCloseHoverBound) return;
+      const svg = btn.querySelector('svg');
+      if (!svg || !svg.querySelector('line')) return;
+      btn._ihfCloseHoverBound = true;
+      btn.addEventListener('mouseenter', () => { svg.style.setProperty('color', '#999999', 'important'); svg.querySelectorAll('line').forEach((l) => l.style.setProperty('stroke', '#999999', 'important')); });
+      btn.addEventListener('mouseleave', () => { svg.style.removeProperty('color'); svg.querySelectorAll('line').forEach((l) => l.style.removeProperty('stroke')); });
+    });
+  };
   _ihfFixAllShadowRoots = () => {
+    this._ihfFixTextInRoot(document);
+    this._ihfFixCloseButtons(document);
     document.querySelectorAll('*').forEach((el) => {
-      if (el.shadowRoot) this._ihfFixTextInRoot(el.shadowRoot);
+      if (el.shadowRoot) { this._ihfFixTextInRoot(el.shadowRoot); this._ihfFixCloseButtons(el.shadowRoot); }
     });
   };
   _ihfStartCaseFix = () => {
@@ -263,7 +278,13 @@ class Component extends DCLogic {
         + ".ui-outlined-input { border: none !important; border-bottom: 1px solid #cccccc !important; border-radius: 0 !important; box-shadow: none !important; padding-left: 4px !important; }"
         + ".ui-outlined-input-input { font-size: 14px !important; padding: 8px 4px !important; }"
         + ".ui-outlined-input fieldset { border: none !important; }"
-        + ".ihf-email-field, .ui-form-control { max-width: 320px !important; margin-left: auto !important; margin-right: auto !important; }";
+        + ".ihf-email-field, .ui-form-control { max-width: 320px !important; margin-left: auto !important; margin-right: auto !important; }"
+        + "[aria-label*='close' i], button[aria-label*='close' i] svg, .MuiDialog-root [aria-label*='close' i], .MuiModal-root [aria-label*='close' i] { transition: color 0.2s ease, opacity 0.2s ease !important; }"
+        + "[aria-label*='close' i]:hover, button[aria-label*='close' i]:hover svg, .MuiDialog-root [aria-label*='close' i]:hover, .MuiModal-root [aria-label*='close' i]:hover { color: #999999 !important; fill: #999999 !important; opacity: 0.65 !important; }"
+        + ".MuiDialog-root .MuiIconButton-root, .MuiModal-root .MuiIconButton-root, .MuiDialog-root button svg, .MuiModal-root button svg { transition: color 0.2s ease, opacity 0.2s ease, fill 0.2s ease !important; }"
+        + ".MuiDialog-root .MuiIconButton-root:hover, .MuiModal-root .MuiIconButton-root:hover, .MuiDialog-root button:hover svg, .MuiModal-root button:hover svg { color: #999999 !important; fill: #999999 !important; opacity: 0.65 !important; }"
+        + ".MuiDialog-paper .MuiIconButton-root svg, .MuiDialog-paper .MuiIconButton-root svg line { transition: color 0.2s ease, stroke 0.2s ease, opacity 0.2s ease !important; }"
+        + ".MuiDialog-paper .MuiIconButton-root:hover svg, .MuiDialog-paper .MuiIconButton-root:hover svg line { color: #999999 !important; stroke: #999999 !important; opacity: 0.65 !important; }";
       document.head.appendChild(s);
     }
     setInterval(() => this._ihfFixAllShadowRoots(), 500);

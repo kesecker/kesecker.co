@@ -261,7 +261,7 @@
     <sc-if value="{{ isReviewModalVisible }}" hint-placeholder-val="{{ false }}">
       <div onClick="{{ closeReviewModal }}" style="position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 40px; animation: {{ reviewOverlayAnimation }};">
         <div onClick="{{ stopPropagation }}" style="background: #ffffff; max-width: 640px; width: 100%; max-height: 80vh; overflow-y: auto; padding: 44px; position: relative; text-align: left; animation: {{ reviewCardAnimation }};">
-          <button onClick="{{ closeReviewModal }}" style="position: absolute; top: 18px; right: 18px; background: none; border: none; font-size: 34px; line-height: 1; cursor: pointer; color: var(--rh-text-secondary); font-family: inherit;">×</button>
+          <button onClick="{{ closeReviewModal }}" style="position: absolute; top: 18px; right: 18px; background: none; border: none; font-size: 34px; line-height: 1; cursor: pointer; color: var(--rh-text-secondary); font-family: inherit; transition: color 0.25s ease;" style-hover="color: var(--rh-text-muted);">×</button>
           <div style="color: #d9b45c; font-size: 22px; letter-spacing: 0.25em; margin-bottom: 12px;">★★★★★</div>
           <h2 style="font-size: 24px; font-weight: 700; margin: 0 0 16px; letter-spacing: -0.01em; text-transform: uppercase;">"{{ activeReview.headline }}"</h2>
           <p style="font-size: 15px; line-height: 1.75; color: var(--rh-text-secondary); white-space: pre-wrap; margin: 0 0 22px;">{{ activeReview.quote }}</p>
@@ -724,7 +724,7 @@
       <div onClick="{{ stopPropagation }}" style="background: #ffffff; border-radius: 12px; padding: 28px; max-width: 420px; width: calc(100% - 48px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); font-family: var(--rh-font);">
         <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px;">
           <h3 style="font-size: 19px; font-weight: 700; color: var(--rh-text-primary); margin: 0;">{{ a11yT.accessibilityStatement }}</h3>
-          <span onClick="{{ closeA11yStatement }}" style="cursor: pointer; color: var(--rh-text-muted); font-size: 16px;">✕</span>
+          <span onClick="{{ closeA11yStatement }}" style="cursor: pointer; color: var(--rh-text-muted); font-size: 16px; transition: color 0.2s ease;" style-hover="color: var(--rh-text-secondary);">✕</span>
         </div>
         <p style="font-size: 14px; line-height: 1.6; color: var(--rh-text-secondary); margin: 0 0 12px;">{{ a11yT.statementIntro1 }}</p>
         <p style="font-size: 14px; line-height: 1.6; color: var(--rh-text-secondary); margin: 0 0 20px;">{{ a11yT.statementIntro2 }}</p>
