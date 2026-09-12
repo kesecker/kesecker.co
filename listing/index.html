@@ -306,7 +306,9 @@ class Component extends DCLogic {
     const mount = () => {
       if (!window.ihfKestrel || !window.ihfKestrel.render) { setTimeout(mount, 150); return; }
       node.dataset.ihfMounted = '1';
-      node.appendChild(window.ihfKestrel.render());
+      const s = document.createElement('script');
+      s.textContent = "document.currentScript.replaceWith(ihfKestrel.render());";
+      node.appendChild(s);
       this._ihfStartCaseFix();
     };
     mount();
