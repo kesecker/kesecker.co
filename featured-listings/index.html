@@ -249,6 +249,18 @@ class Component extends DCLogic {
       svg.insertAdjacentElement('afterend', clone);
     });
   };
+  _ihfFixListingLinks = (root) => {
+    root.querySelectorAll('.ihf-listing-result-cell, [class*="listing-result-cell" i], [class*="listing-card" i], [class*="gallery-card" i]').forEach((card) => {
+      if (card._ihfLinkFixed) return;
+      const img = card.querySelector('img[src*="/property/"]');
+      const link = card.querySelector('a[href]');
+      if (!img || !link) return;
+      const m = img.src.match(/\/property\/[A-Za-z]+\/(\d+)\//);
+      if (!m) return;
+      card._ihfLinkFixed = true;
+      link.setAttribute('href', 'https://keseckerproperties.com/listing?id=' + m[1]);
+    });
+  };
   _ihfFixCloseButtons = (root) => {
     root.querySelectorAll('.MuiIconButton-root').forEach((btn) => {
       if (btn._ihfCloseHoverBound) return;
@@ -262,8 +274,9 @@ class Component extends DCLogic {
   _ihfFixAllShadowRoots = () => {
     this._ihfFixTextInRoot(document);
     this._ihfFixCloseButtons(document);
+    this._ihfFixListingLinks(document);
     document.querySelectorAll('*').forEach((el) => {
-      if (el.shadowRoot) { this._ihfFixTextInRoot(el.shadowRoot); this._ihfFixCloseButtons(el.shadowRoot); }
+      if (el.shadowRoot) { this._ihfFixTextInRoot(el.shadowRoot); this._ihfFixCloseButtons(el.shadowRoot); this._ihfFixListingLinks(el.shadowRoot); }
     });
   };
   _ihfStartCaseFix = () => {
