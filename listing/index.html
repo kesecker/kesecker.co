@@ -67,13 +67,13 @@
       <img src="uploads/JKR-key-white.png" alt="Jackson Kesecker Realtor" style="height: 34px; width: auto;">
     </a>
     <div style="display: flex; align-items: center; gap: clamp(14px, 2.4vw, 26px); flex: 1; padding-left: clamp(8px, 2vw, 28px);">
-      <a href="../listings" style="font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75);" style-hover="color: #ffffff;">Search</a>
-      <span style="font-size: 30px; line-height: 1; display: flex; align-items: center; color: #ffffff;">•</span>
-      <a href="../communities" style="font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75);" style-hover="color: #ffffff;">Communities</a>
-      <span style="font-size: 30px; line-height: 1; display: flex; align-items: center; color: #ffffff;">•</span>
-      <a href="../about" style="font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75);" style-hover="color: #ffffff;">About</a>
+      <a href="https://keseckerproperties.com/listings" style="font-family: 'Montserrat', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: #ffffff; text-decoration: none; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 1px; padding-bottom: 2px; transition: background-size 0.3s ease;" style-hover="background-size: 100% 1px;">Search</a>
+      <span style="font-size: 15px; line-height: 1; display: flex; align-items: center; color: #ffffff;">•</span>
+      <a href="../communities" style="font-family: 'Montserrat', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75); text-decoration: none; transition: color 0.3s ease, background-size 0.3s ease; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 1px; padding-bottom: 2px;" style-hover="color: #ffffff; background-size: 100% 1px;">Communities</a>
+      <span style="font-size: 15px; line-height: 1; display: flex; align-items: center; color: #ffffff;">•</span>
+      <a href="../about" style="font-family: 'Montserrat', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75); text-decoration: none; transition: color 0.3s ease, background-size 0.3s ease; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 1px; padding-bottom: 2px;" style-hover="color: #ffffff; background-size: 100% 1px;">About</a>
     </div>
-    <a href="#" onClick="{{ openContactModal }}" style="font-size: 13px; font-weight: 600; color: #ffffff; flex-shrink: 0;">Contact</a>
+<a href="#" onClick="{{ openContactModal }}" style="font-family: 'Montserrat', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75); flex-shrink: 0; text-decoration: none; transition: color 0.3s ease, background-size 0.3s ease; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 1px; padding-bottom: 2px;" style-hover="color: #ffffff; background-size: 100% 1px;">Contact</a>
     <dc-import name="ContactModal" hint-size="0,0"></dc-import>
   </div>
 
@@ -83,28 +83,55 @@
 
   <div style="position: relative; width: 100%; height: 620px; overflow: hidden; background-image: url('uploads/Pinnacles.png'); background-size: cover; background-position: center; background-attachment: fixed;">
     <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.55) 55%, #000000 100%);"></div>
+    <div style="position: absolute; left: 50%; top: 150px; transform: translateX(-50%); width: 100%; max-width: 640px; padding: 0 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px; text-align: center;">
+      <h2 style="font-size: clamp(22px, 3.8vw, 30px); font-weight: 600; color: #ffffff; margin: 0; letter-spacing: -0.01em; text-transform: uppercase; text-shadow: 0 2px 12px rgba(0,0,0,0.55);">Work with Jackson</h2>
+      <p style="font-size: 15px; line-height: 1.75; color: rgba(255,255,255,0.92); margin: 28px 0 0; text-shadow: 0 1px 8px rgba(0,0,0,0.6);">With deep roots in Monterey County and a passion for service, I would be privileged and thrilled to work with you in making one of the most important decisions in your life.</p>
+      <p style="font-size: 15px; line-height: 1.75; color: rgba(255,255,255,0.92); margin: 0; text-shadow: 0 1px 8px rgba(0,0,0,0.6);">Buying and selling property is not simply a transaction — it's a significant life event. That's why you need a trusted advisor with you every step of the way to make your personalized experience seamless and even enjoyable.</p>
+      <p style="font-size: 15px; line-height: 1.75; color: rgba(255,255,255,0.92); margin: 0; text-shadow: 0 1px 8px rgba(0,0,0,0.6);">No matter your situation today, click below to get in touch with me. I'm excited to meet you.</p>
+      <a href="#" onClick="{{ openContactModal }}" style="text-decoration: none; margin-top: 40px; display: inline-block;">
+        <span style="display: inline-block; padding: 14px 36px; border: 1px solid rgba(255,255,255,0.85);">
+          <span style="position: relative; display: inline-block; font-size: 18px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: #ffffff; text-shadow: 0 1px 8px rgba(0,0,0,0.6); padding-bottom: 4px; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 2px; transition: background-size 0.3s ease;" style-hover="background-size: 100% 2px;">Get in Touch</span>
+        </span>
+      </a>
+    </div>
   </div>
-  <div style="background: #000000; padding: 36px 64px 10px; display: flex; flex-direction: column; align-items: center;">
+  <div style="background: #000000; padding: 8px 64px 10px; display: flex; flex-direction: column; align-items: center;">
     <div style="display: flex; align-items: center; justify-content: center; gap: clamp(10px, 4vw, 28px); flex-wrap: nowrap;">
       <a href="https://luxury.kw.com/" target="_blank" rel="noopener noreferrer" style="display: inline-flex; flex-shrink: 0;"><img src="uploads/(White) Luxury.png" alt="KW Luxury" style="height: clamp(48px, 16vw, 168px); width: auto;"></a>
       <img src="uploads/(White) JKR.png" alt="JKR" style="height: clamp(26px, 8.6vw, 90px); width: auto; flex-shrink: 0;">
       <a href="https://www.kwcoastalestates.com" target="_blank" rel="noopener noreferrer" style="display: inline-flex; flex-shrink: 0;"><img src="uploads/(White) Keller Williams-b7681c76.png" alt="Keller Williams" style="height: clamp(48px, 16vw, 168px); width: auto;"></a>
     </div>
-    <div style="display: flex; align-items: center; justify-content: center; gap: 28px; flex-wrap: wrap; margin-top: -20px;">
-      <a href="https://keseckerproperties.com/listings" style="font-size: 13px; color: rgba(255,255,255,0.7);" style-hover="color: #ffffff;">Listings</a>
-      <a href="https://keseckerproperties.com/communities" style="font-size: 13px; color: rgba(255,255,255,0.7);" style-hover="color: #ffffff;">Communities</a>
-      <a href="https://keseckerproperties.com/about" style="font-size: 13px; color: rgba(255,255,255,0.7);" style-hover="color: #ffffff;">About</a>
-      <a href="https://keseckerproperties.com/#contact" style="font-size: 13px; color: rgba(255,255,255,0.7);" style-hover="color: #ffffff;">Contact</a>
+    <div style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 24px; margin-top: -20px;">
+      <div style="display: flex; align-items: center; gap: 10px; justify-self: end;">
+        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram" style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.4); box-sizing: border-box; transition: border-color 0.2s ease, background 0.2s ease;" style-hover="border-color: #ffffff; background: rgba(255,255,255,0.08);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.6" fill="#ffffff" stroke="none"></circle></svg>
+        </a>
+        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook" style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.4); box-sizing: border-box; transition: border-color 0.2s ease, background 0.2s ease;" style-hover="border-color: #ffffff; background: rgba(255,255,255,0.08);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2h-3a5 5 0 0 0-5 5v3H6v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+        </a>
+        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.4); box-sizing: border-box; transition: border-color 0.2s ease, background 0.2s ease;" style-hover="border-color: #ffffff; background: rgba(255,255,255,0.08);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="3"></rect><line x1="7" y1="10" x2="7" y2="17"></line><circle cx="7" cy="6.5" r="0.6" fill="#ffffff" stroke="none"></circle><path d="M11 17v-4.5a2.5 2.5 0 0 1 5 0V17"></path><line x1="11" y1="10" x2="11" y2="17"></line></svg>
+        </a>
+        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="YouTube" style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.4); box-sizing: border-box; transition: border-color 0.2s ease, background 0.2s ease;" style-hover="border-color: #ffffff; background: rgba(255,255,255,0.08);">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="4"></rect><path d="M10 9l5 3-5 3z" fill="#ffffff" stroke="none"></path></svg>
+        </a>
+      </div>
+      <div style="display: flex; align-items: center; gap: 28px; flex-wrap: wrap; justify-self: center;">
+        <a href="../listings" style="font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.2s ease;" style-hover="color: #ffffff;">Listings</a>
+        <a href="../communities" style="font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.2s ease;" style-hover="color: #ffffff;">Communities</a>
+        <a href="../about" style="font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.2s ease;" style-hover="color: #ffffff;">About</a>
+        <a href="#" onClick="{{ openContactModal }}" style="font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.2s ease;" style-hover="color: #ffffff;">Contact</a>
+      </div>
+      <div style="display: flex; align-items: center; gap: 14px; justify-self: start;">
+        <img src="uploads/(White) EHO.png" alt="Equal Housing Opportunity" style="height: 32px; width: auto;">
+        <img src="uploads/(White) REALTOR.png" alt="Realtor" style="height: 32px; width: auto;">
+        <img src="uploads/MLS-transparent.png" alt="MLS Listings" style="height: 32px; width: auto;">
+      </div>
     </div>
     <p style="font-size: 11px; line-height: 1.7; color: rgba(255,255,255,0.55); text-align: center; max-width: 720px; margin: 32px 0 0;">All information is from sources deemed reliable but is subject to errors, omissions, changes in price, prior sale or withdrawal without notice. No representation is made as to the accuracy of any description. All measurements and square footages are approximate and all descriptive information should be confirmed by customer. Information is reliable but not guaranteed and should not be considered legal or financial advice. Each Keller Williams® office is independently owned and operated.</p>
   </div>
-  <div style="height: 130px; background: #000000; position: relative; box-sizing: border-box;">
-    <div style="position: absolute; left: 100px; bottom: 90px; display: flex; align-items: center; gap: 16px;">
-      <img src="uploads/(White) EHO.png" alt="Equal Housing Opportunity" style="height: 40px; width: auto;">
-      <img src="uploads/(White) REALTOR.png" alt="Realtor" style="height: 40px; width: auto;">
-      <img src="uploads/MLS-transparent.png" alt="MLS Listings" style="height: 40px; width: auto;">
-    </div>
-    <div style="position: absolute; left: 50%; bottom: 90px; transform: translateX(-50%); font-size: 12px; color: rgba(255,255,255,0.55); text-align: center; white-space: nowrap;">© 2026 Jackson Kesecker, Realtor®. DRE#02196405 | Broker DRE#01527814.</div>
+  <div style="height: 60px; background: #000000; position: relative; box-sizing: border-box;">
+    <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 12px; color: rgba(255,255,255,0.55); text-align: center; white-space: nowrap;">© 2026 Jackson Kesecker, Realtor®. DRE#02196405 | Broker DRE#01527814.</div>
   </div>
 
   <sc-if value="{{ isPhoneOpen }}" hint-placeholder-val="{{ false }}">
@@ -141,6 +168,7 @@ class Component extends DCLogic {
       if (text.includes('Sold Price:')) { node.nodeValue = text.replace('Sold Price:', '').trim(); continue; }
       const filterCountMatch = text.match(/^(Price|Beds|Baths|More)\s*\(\d+\)$/);
       if (filterCountMatch) { node.nodeValue = filterCountMatch[1]; continue; }
+      if (node.parentElement && /^\$[\d,]+\+?$/.test(text.trim())) node.parentElement.style.setProperty('font-weight', '700', 'important');
       const trimmed = text.trim();
       const cz = trimmed.match(cityStateZipRe);
       if (cz && trimmed === trimmed.toUpperCase()) {
@@ -156,18 +184,33 @@ class Component extends DCLogic {
       });
       if (changed) node.nodeValue = fixedText;
     }
+    const ihfDirectText = (el) => { let s = ''; el.childNodes.forEach((n) => { if (n.nodeType === 3) s += n.nodeValue; }); return s.trim(); };
+    root.querySelectorAll('*').forEach((el) => {
+      const t = ihfDirectText(el);
+      if (!t) return;
+      if (/^\$[\d,]+\+?$/.test(t) || /^Save Search\b/i.test(t)) {
+        el.style.setProperty('font-weight', '700', 'important');
+      }
+    });
     if (!root.querySelector('style[data-ihf-font-fix]')) {
       const style = document.createElement('style');
       style.setAttribute('data-ihf-font-fix', '1');
-      style.textContent = ":host, * { --rh-font: 'Inter', system-ui, sans-serif !important; font-family: 'Inter', system-ui, sans-serif !important; }"
+      const scopeSel = root === document ? '#ihf-listing-detail, #ihf-listing-detail *' : ':host, *';
+      style.textContent = scopeSel + " { --rh-font: 'Montserrat', system-ui, sans-serif !important; font-family: 'Montserrat', system-ui, sans-serif !important; font-weight: 400 !important; }"
         + ".ui-typography-h3 { text-align: center !important; font-size: 22px !important; }"
         + ".ui-typography-body1 { text-align: center !important; font-size: 14px !important; }"
         + ".ui-outlined-input { border: none !important; border-bottom: 1px solid #cccccc !important; border-radius: 0 !important; box-shadow: none !important; padding-left: 4px !important; }"
         + ".ui-outlined-input-input { font-size: 14px !important; padding: 8px 4px !important; }"
         + ".ui-outlined-input fieldset { border: none !important; }"
         + ".ihf-email-field, .ui-form-control { max-width: 320px !important; margin-left: auto !important; margin-right: auto !important; }"
-        + "[role=\"menu\"], .MuiPaper-root:not([class*='listing' i]):not([class*='result' i]):not([class*='gallery' i]) { border: none !important; border-radius: 10px !important; box-shadow: 0 8px 24px rgba(0,0,0,0.10) !important; overflow: hidden !important; padding: 20px 20px 28px 20px !important; box-sizing: border-box !important; margin-top: 10px !important; }"
-        + ".ihf-listing-result-cell, [class*='listing-card' i], [class*='result-cell' i], [class*='gallery-card' i] { border: none !important; box-shadow: none !important; }"
+        + ".MuiPaper-root:not([class*='listing' i]):not([class*='result' i]):not([class*='gallery' i]) { border: none !important; border-radius: 10px !important; box-shadow: 0 8px 24px rgba(0,0,0,0.10) !important; overflow: hidden !important; padding: 20px 20px 28px 20px !important; box-sizing: border-box !important; margin-top: 10px !important; }"
+        + "[role=\"menu\"] { border: none !important; border-radius: 0 !important; box-shadow: none !important; background: transparent !important; padding: 0 !important; margin: 0 !important; }"
+        + ".ihf-listing-result-cell, [class*='listing-card' i], [class*='result-cell' i], [class*='gallery-card' i] { border: none !important; box-shadow: none !important; background: none !important; background-color: transparent !important; }"
+        + "[class*='price' i] { font-weight: 700 !important; }"
+        + ".MuiButtonBase-root:hover, .MuiIconButton-root:hover, .MuiFormControl-root:hover, .MuiAutocomplete-root:hover, .MuiInputBase-root:hover, .MuiOutlinedInput-root:hover, .MuiFilledInput-root:hover, [class*='Input' i]:hover, [class^='ihf' i]:hover { background-color: transparent !important; }"
+        + ".MuiFormControl-root, .MuiAutocomplete-root, .MuiInputBase-root { background-image: linear-gradient(#000000, #000000) !important; background-repeat: no-repeat !important; background-position: left bottom !important; background-size: 0 2px !important; transition: background-size 0.3s ease !important; }"
+        + ".MuiFormControl-root:hover, .MuiAutocomplete-root:hover, .MuiInputBase-root:hover, .MuiFormControl-root:focus-within, .MuiAutocomplete-root:focus-within, .MuiInputBase-root:focus-within { background-size: 100% 2px !important; }"
+        + ".ihf-listing-result-status, .ihf-listing-result-status .ui-chip-label, .ihf-listing-result-status span, .ihf-listing-result-badge-open-house, .ihf-listing-result-badge-open-house .ui-chip-label, .ihf-listing-result-badge-open-house span, .ihf-listing-result-badge-virtual-tour, .ihf-listing-result-badge-virtual-tour .ui-chip-label, .ihf-listing-result-badge-virtual-tour span, [class*='open' i][class*='house' i], [class*='virtual' i][class*='tour' i] { font-weight: 700 !important; }"
         + ".MuiCardContent-root:last-child { padding-bottom: 20px !important; }"
         + ".MuiMenuItem-root, [role=\"menu\"] li[role=\"menuitem\"] { position: relative !important; border-bottom: none !important; box-shadow: none !important; outline: none !important; min-height: 40px !important; box-sizing: border-box !important; }"
         + ".MuiMenuItem-root:focus, [role=\"menu\"] li[role=\"menuitem\"]:focus { outline: none !important; box-shadow: none !important; }"
@@ -190,10 +233,35 @@ class Component extends DCLogic {
         + ".MuiOutlinedInput-root:hover, .MuiFilledInput-root:hover, .MuiInputBase-root:hover { border-bottom-color: #888888 !important; }"
         + ".MuiOutlinedInput-root.Mui-focused, .MuiFilledInput-root.Mui-focused, .MuiInputBase-root.Mui-focused { border-bottom: 2px solid #000000 !important; }"
         + ".heart-trace-clone path { transition: stroke-dashoffset 0.6s ease; } .ihf-listing-result-badge-fav:hover .heart-trace-clone path, .ihf-listing-result-badge-fav svg[fill=\"currentColor\"] ~ .heart-trace-clone path { stroke-dashoffset: 0 !important; }";
-      root.appendChild(style);
+      (root === document ? document.head : root).appendChild(style);
     }
+    this._ihfMoveResultsCount(root);
     this._ihfTraceHearts(root);
     root.querySelectorAll('*').forEach((el) => { if (el.shadowRoot) this._ihfFixTextInRoot(el.shadowRoot); });
+  };
+  _ihfMoveResultsCount = (root) => {
+    const leaves = Array.from(root.querySelectorAll('*'));
+    const directText = (el) => { let s = ''; el.childNodes.forEach((n) => { if (n.nodeType === 3) s += n.nodeValue; }); return s.trim(); };
+    const resultsEl = leaves.find((el) => !el.children.length && /^\d[\d,]*\s*results?$/i.test(directText(el)));
+    const mapEl = leaves.find((el) => !el.children.length && /^map$/i.test(directText(el)));
+    if (!resultsEl || !mapEl || !mapEl.parentElement) return;
+    const resultsRow = resultsEl.parentElement;
+    if (resultsRow && resultsRow !== mapEl.parentElement) resultsRow.style.setProperty('display', 'none', 'important');
+    let clone = root.querySelector('[data-ihf-results-clone]');
+    if (!clone) {
+      clone = document.createElement('span');
+      clone.setAttribute('data-ihf-results-clone', '1');
+      clone.style.marginLeft = '12px';
+      clone.style.fontSize = '14px';
+      clone.style.color = 'inherit';
+      clone.style.fontFamily = 'inherit';
+      clone.style.whiteSpace = 'nowrap';
+    }
+    const t = directText(resultsEl);
+    if (clone.textContent !== t) clone.textContent = t;
+    if (clone.parentElement !== mapEl.parentElement || clone.previousElementSibling !== mapEl) {
+      mapEl.parentElement.insertBefore(clone, mapEl.nextSibling);
+    }
   };
   _ihfTraceHearts = (root) => {
     root.querySelectorAll('.ihf-listing-result-badge-fav').forEach((btn) => {
@@ -220,9 +288,21 @@ class Component extends DCLogic {
       svg.insertAdjacentElement('afterend', clone);
     });
   };
+  _ihfFixCloseButtons = (root) => {
+    root.querySelectorAll('.MuiIconButton-root').forEach((btn) => {
+      if (btn._ihfCloseHoverBound) return;
+      const svg = btn.querySelector('svg');
+      if (!svg || !svg.querySelector('line')) return;
+      btn._ihfCloseHoverBound = true;
+      btn.addEventListener('mouseenter', () => { svg.style.setProperty('color', '#999999', 'important'); svg.querySelectorAll('line').forEach((l) => l.style.setProperty('stroke', '#999999', 'important')); });
+      btn.addEventListener('mouseleave', () => { svg.style.removeProperty('color'); svg.querySelectorAll('line').forEach((l) => l.style.removeProperty('stroke')); });
+    });
+  };
   _ihfFixAllShadowRoots = () => {
+    this._ihfFixTextInRoot(document);
+    this._ihfFixCloseButtons(document);
     document.querySelectorAll('*').forEach((el) => {
-      if (el.shadowRoot) this._ihfFixTextInRoot(el.shadowRoot);
+      if (el.shadowRoot) { this._ihfFixTextInRoot(el.shadowRoot); this._ihfFixCloseButtons(el.shadowRoot); }
     });
   };
   _ihfStartCaseFix = () => {
@@ -237,7 +317,13 @@ class Component extends DCLogic {
         + ".ui-outlined-input { border: none !important; border-bottom: 1px solid #cccccc !important; border-radius: 0 !important; box-shadow: none !important; padding-left: 4px !important; }"
         + ".ui-outlined-input-input { font-size: 14px !important; padding: 8px 4px !important; }"
         + ".ui-outlined-input fieldset { border: none !important; }"
-        + ".ihf-email-field, .ui-form-control { max-width: 320px !important; margin-left: auto !important; margin-right: auto !important; }";
+        + ".ihf-email-field, .ui-form-control { max-width: 320px !important; margin-left: auto !important; margin-right: auto !important; }"
+        + "[aria-label*='close' i], button[aria-label*='close' i] svg, .MuiDialog-root [aria-label*='close' i], .MuiModal-root [aria-label*='close' i] { transition: color 0.2s ease, opacity 0.2s ease !important; }"
+        + "[aria-label*='close' i]:hover, button[aria-label*='close' i]:hover svg, .MuiDialog-root [aria-label*='close' i]:hover, .MuiModal-root [aria-label*='close' i]:hover { color: #999999 !important; fill: #999999 !important; opacity: 0.65 !important; }"
+        + ".MuiDialog-root .MuiIconButton-root, .MuiModal-root .MuiIconButton-root, .MuiDialog-root button svg, .MuiModal-root button svg { transition: color 0.2s ease, opacity 0.2s ease, fill 0.2s ease !important; }"
+        + ".MuiDialog-root .MuiIconButton-root:hover, .MuiModal-root .MuiIconButton-root:hover, .MuiDialog-root button:hover svg, .MuiModal-root button:hover svg { color: #999999 !important; fill: #999999 !important; opacity: 0.65 !important; }"
+        + ".MuiDialog-paper .MuiIconButton-root svg, .MuiDialog-paper .MuiIconButton-root svg line { transition: color 0.2s ease, stroke 0.2s ease, opacity 0.2s ease !important; }"
+        + ".MuiDialog-paper .MuiIconButton-root:hover svg, .MuiDialog-paper .MuiIconButton-root:hover svg line { color: #999999 !important; stroke: #999999 !important; opacity: 0.65 !important; }";
       document.head.appendChild(s);
     }
     setInterval(() => this._ihfFixAllShadowRoots(), 500);
@@ -247,7 +333,9 @@ class Component extends DCLogic {
     const mount = () => {
       if (!window.ihfKestrel || !window.ihfKestrel.render) { setTimeout(mount, 150); return; }
       node.dataset.ihfMounted = '1';
-      node.appendChild(window.ihfKestrel.render());
+      const s = document.createElement('script');
+      s.textContent = "document.currentScript.replaceWith(ihfKestrel.render());";
+      node.appendChild(s);
       this._ihfStartCaseFix();
     };
     mount();

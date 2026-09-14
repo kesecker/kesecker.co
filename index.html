@@ -91,9 +91,9 @@
       #listings-viewport, #testimonials-viewport, #notable-viewport { padding-left: 24px !important; padding-right: 24px !important; }
       #hero-logo-img { height: 60px !important; }
       #hero-search-bar { padding: 14px 20px !important; }
-      #footer-bottom-bar { height: 190px !important; }
-      #footer-bottom-logos { left: 50% !important; transform: translateX(-50%) !important; bottom: 130px !important; }
-      #footer-bottom-copyright { bottom: 90px !important; white-space: normal !important; width: 90% !important; }
+      #footer-bottom-bar { height: 60px !important; }
+      #footer-legal-secondary-row { gap: 28px !important; margin-top: 18px !important; }
+      #footer-bottom-copyright { white-space: normal !important; width: 90% !important; }
     }
     ::-webkit-scrollbar { width: 10px !important; height: 10px !important; }
     ::-webkit-scrollbar-track { background: transparent !important; }
@@ -261,7 +261,7 @@
     <sc-if value="{{ isReviewModalVisible }}" hint-placeholder-val="{{ false }}">
       <div onClick="{{ closeReviewModal }}" style="position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 40px; animation: {{ reviewOverlayAnimation }};">
         <div onClick="{{ stopPropagation }}" style="background: #ffffff; max-width: 640px; width: 100%; max-height: 80vh; overflow-y: auto; padding: 44px; position: relative; text-align: left; animation: {{ reviewCardAnimation }};">
-          <button onClick="{{ closeReviewModal }}" style="position: absolute; top: 18px; right: 18px; background: none; border: none; font-size: 34px; line-height: 1; cursor: pointer; color: var(--rh-text-secondary); font-family: inherit;">×</button>
+          <button onClick="{{ closeReviewModal }}" style="position: absolute; top: 18px; right: 18px; background: none; border: none; font-size: 34px; line-height: 1; cursor: pointer; color: var(--rh-text-secondary); font-family: inherit; transition: color 0.25s ease;" style-hover="color: var(--rh-text-muted);">×</button>
           <div style="color: #d9b45c; font-size: 22px; letter-spacing: 0.25em; margin-bottom: 12px;">★★★★★</div>
           <h2 style="font-size: 24px; font-weight: 700; margin: 0 0 16px; letter-spacing: -0.01em; text-transform: uppercase;">"{{ activeReview.headline }}"</h2>
           <p style="font-size: 15px; line-height: 1.75; color: var(--rh-text-secondary); white-space: pre-wrap; margin: 0 0 22px;">{{ activeReview.quote }}</p>
@@ -376,21 +376,37 @@
       <img src="uploads/(White) JKR.png" alt="JKR" style="height: clamp(26px, 8.6vw, 90px); width: auto; flex-shrink: 0;">
       <a href="https://www.kwcoastalestates.com" target="_blank" rel="noopener noreferrer" style="display: inline-flex; flex-shrink: 0;"><img src="uploads/(White) Keller Williams-b7681c76.png" alt="Keller Williams" style="height: clamp(48px, 16vw, 168px); width: auto;"></a>
     </div>
-    <div style="display: flex; align-items: center; justify-content: center; gap: 28px; flex-wrap: wrap; margin-top: -20px;">
-      <a href="https://keseckerproperties.com/listings" target="_self" style="font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.2s ease;" style-hover="color: #ffffff;">{{ t.navListings }}</a>
-      <a href="https://keseckerproperties.com/communities" target="_self" style="font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.2s ease;" style-hover="color: #ffffff;">{{ t.navNeighborhoods }}</a>
-      <a href="https://keseckerproperties.com/about" target="_self" style="font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.2s ease;" style-hover="color: #ffffff;">{{ t.navAbout }}</a>
-      <a href="#" onClick="{{ openContactModal }}" style="font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.2s ease;" style-hover="color: #ffffff;">{{ t.navContact }}</a>
+    <div id="footer-legal-secondary-row" style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 24px; margin-top: -20px;">
+      <div style="display: flex; align-items: center; gap: 10px; justify-self: end;">
+        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram" style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.4); box-sizing: border-box; transition: border-color 0.2s ease, background 0.2s ease;" style-hover="border-color: #ffffff; background: rgba(255,255,255,0.08);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.6" fill="#ffffff" stroke="none"></circle></svg>
+        </a>
+        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook" style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.4); box-sizing: border-box; transition: border-color 0.2s ease, background 0.2s ease;" style-hover="border-color: #ffffff; background: rgba(255,255,255,0.08);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2h-3a5 5 0 0 0-5 5v3H6v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+        </a>
+        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.4); box-sizing: border-box; transition: border-color 0.2s ease, background 0.2s ease;" style-hover="border-color: #ffffff; background: rgba(255,255,255,0.08);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="3"></rect><line x1="7" y1="10" x2="7" y2="17"></line><circle cx="7" cy="6.5" r="0.6" fill="#ffffff" stroke="none"></circle><path d="M11 17v-4.5a2.5 2.5 0 0 1 5 0V17"></path><line x1="11" y1="10" x2="11" y2="17"></line></svg>
+        </a>
+        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="YouTube" style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.4); box-sizing: border-box; transition: border-color 0.2s ease, background 0.2s ease;" style-hover="border-color: #ffffff; background: rgba(255,255,255,0.08);">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="4"></rect><path d="M10 9l5 3-5 3z" fill="#ffffff" stroke="none"></path></svg>
+        </a>
+      </div>
+      <div style="display: flex; align-items: center; gap: 28px; flex-wrap: wrap; justify-self: center;">
+        <a href="https://keseckerproperties.com/listings" target="_self" style="font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.2s ease;" style-hover="color: #ffffff;">{{ t.navListings }}</a>
+        <a href="https://keseckerproperties.com/communities" target="_self" style="font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.2s ease;" style-hover="color: #ffffff;">{{ t.navNeighborhoods }}</a>
+        <a href="https://keseckerproperties.com/about" target="_self" style="font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.2s ease;" style-hover="color: #ffffff;">{{ t.navAbout }}</a>
+        <a href="#" onClick="{{ openContactModal }}" style="font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.2s ease;" style-hover="color: #ffffff;">{{ t.navContact }}</a>
+      </div>
+      <div style="display: flex; align-items: center; gap: 14px; justify-self: start;">
+        <img src="uploads/(White) EHO.png" alt="Equal Housing Opportunity" style="height: 32px; width: auto;">
+        <img src="uploads/(White) REALTOR.png" alt="Realtor" style="height: 32px; width: auto;">
+        <img src="uploads/MLS-transparent.png" alt="MLS Listings" style="height: 32px; width: auto;">
+      </div>
     </div>
     <p style="font-size: 11px; line-height: 1.7; color: rgba(255,255,255,0.55); text-align: center; max-width: 720px; margin: 32px 0 0;">{{ t.legalDisclaimer }}</p>
   </div>
-  <div id="footer-bottom-bar" style="height: 130px; background: #000000; position: relative; box-sizing: border-box;">
-    <div id="footer-bottom-logos" style="position: absolute; left: 100px; bottom: 90px; display: flex; align-items: center; gap: 16px;">
-      <img src="uploads/(White) EHO.png" alt="Equal Housing Opportunity" style="height: 40px; width: auto;">
-      <img src="uploads/(White) REALTOR.png" alt="Realtor" style="height: 40px; width: auto;">
-      <img src="uploads/MLS-transparent.png" alt="MLS Listings" style="height: 40px; width: auto;">
-    </div>
-    <div id="footer-bottom-copyright" style="position: absolute; left: 50%; bottom: 90px; transform: translateX(-50%); font-size: 12px; color: rgba(255,255,255,0.55); text-align: center; white-space: nowrap;">{{ t.footerCopyright }}</div>
+  <div id="footer-bottom-bar" style="height: 60px; background: #000000; position: relative; box-sizing: border-box;">
+    <div id="footer-bottom-copyright" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 12px; color: rgba(255,255,255,0.55); text-align: center; white-space: nowrap;">{{ t.footerCopyright }}</div>
   </div>
 
   <!-- CONTACT MODAL -->
@@ -724,7 +740,7 @@
       <div onClick="{{ stopPropagation }}" style="background: #ffffff; border-radius: 12px; padding: 28px; max-width: 420px; width: calc(100% - 48px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); font-family: var(--rh-font);">
         <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px;">
           <h3 style="font-size: 19px; font-weight: 700; color: var(--rh-text-primary); margin: 0;">{{ a11yT.accessibilityStatement }}</h3>
-          <span onClick="{{ closeA11yStatement }}" style="cursor: pointer; color: var(--rh-text-muted); font-size: 16px;">✕</span>
+          <span onClick="{{ closeA11yStatement }}" style="cursor: pointer; color: var(--rh-text-muted); font-size: 16px; transition: color 0.2s ease;" style-hover="color: var(--rh-text-secondary);">✕</span>
         </div>
         <p style="font-size: 14px; line-height: 1.6; color: var(--rh-text-secondary); margin: 0 0 12px;">{{ a11yT.statementIntro1 }}</p>
         <p style="font-size: 14px; line-height: 1.6; color: var(--rh-text-secondary); margin: 0 0 20px;">{{ a11yT.statementIntro2 }}</p>
@@ -753,10 +769,13 @@ class Component extends DCLogic {
   introVideoRef = (el) => {
     this.introVideoEl = el;
     if (el) {
-      el.playbackRate = 2;
       el.muted = true;
       el.defaultMuted = true;
+      const setRate = () => { el.playbackRate = 2; };
+      el.addEventListener('loadedmetadata', setRate);
+      el.addEventListener('playing', setRate);
       try { el.load(); } catch (e) {}
+      setRate();
       const p = el.play();
       if (p && p.catch) p.catch(() => {});
     }
@@ -1137,6 +1156,7 @@ class Component extends DCLogic {
       if (text.includes('Sold Price:')) { node.nodeValue = text.replace('Sold Price:', '').trim(); continue; }
       const filterCountMatch = text.match(/^(Status|Price|Beds|Baths|Property Type|More)\s*\(\d+\)$/);
       if (filterCountMatch) { node.nodeValue = filterCountMatch[1]; continue; }
+      if (node.parentElement && /^\$[\d,]+\+?$/.test(text.trim())) node.parentElement.style.setProperty('font-weight', '700', 'important');
       const trimmed = text.trim();
       const cz = trimmed.match(cityStateZipRe);
       if (cz && trimmed === trimmed.toUpperCase()) {
@@ -1152,10 +1172,19 @@ class Component extends DCLogic {
       });
       if (changed) node.nodeValue = fixedText;
     }
+    const ihfDirectText = (el) => { let s = ''; el.childNodes.forEach((n) => { if (n.nodeType === 3) s += n.nodeValue; }); return s.trim(); };
+    root.querySelectorAll('*').forEach((el) => {
+      const t = ihfDirectText(el);
+      if (!t) return;
+      if (/^\$[\d,]+\+?$/.test(t) || /^Save Search\b/i.test(t)) {
+        el.style.setProperty('font-weight', '700', 'important');
+      }
+    });
     if (!root.querySelector('style[data-ihf-font-fix]')) {
       const style = document.createElement('style');
       style.setAttribute('data-ihf-font-fix', '1');
-      style.textContent = ":host, * { --rh-font: 'Inter', system-ui, sans-serif !important; font-family: 'Inter', system-ui, sans-serif !important; }"
+      const scopeSel = root === document ? '#ihf-notable-sales, #ihf-notable-sales *' : ':host, *';
+      style.textContent = scopeSel + " { --rh-font: 'Montserrat', system-ui, sans-serif !important; font-family: 'Montserrat', system-ui, sans-serif !important; font-weight: 400 !important; }"
         + (allowDark ? (
           ".ihf-listing-result-cell, .ihf-listing-result-cell * { background: transparent !important; background-color: transparent !important; box-shadow: none !important; color: #ffffff !important; }"
           + ".ihf-listing-result-status, .active-status-tag, .pending-status-tag, .sold-status-tag, .active-status-tag .ihf-listing-result-status { background: #ffffff !important; background-color: #ffffff !important; }"
@@ -1163,6 +1192,9 @@ class Component extends DCLogic {
           + ".ihf-listing-result-badge-open-house, .ihf-listing-result-badge-virtual-tour { background: #ffffff !important; background-color: #ffffff !important; }"
           + ".ihf-listing-result-badge-open-house *, .ihf-listing-result-badge-virtual-tour * { color: #000000 !important; }"
         ) : '')
+        + ".ihf-listing-result-cell, [class*='listing-card' i], [class*='result-cell' i], [class*='gallery-card' i] { border: none !important; box-shadow: none !important; background: none !important; background-color: transparent !important; }"
+        + "[class*='price' i] { font-weight: 700 !important; }"
+        + ".ihf-listing-result-status, .ihf-listing-result-status .ui-chip-label, .ihf-listing-result-status span, .ihf-listing-result-badge-open-house, .ihf-listing-result-badge-open-house .ui-chip-label, .ihf-listing-result-badge-open-house span, .ihf-listing-result-badge-virtual-tour, .ihf-listing-result-badge-virtual-tour .ui-chip-label, .ihf-listing-result-badge-virtual-tour span, [class*='open' i][class*='house' i], [class*='virtual' i][class*='tour' i] { font-weight: 700 !important; }"
         + ".ihf-listing-result-badge-open-house, .ihf-listing-result-badge-virtual-tour { display: inline-flex !important; align-items: center !important; justify-content: center !important; gap: 4px !important; padding: 4px 10px 4px 8px !important; box-sizing: border-box !important; margin-left: 6px !important; }"
         + ".ihf-listing-result-badge-open-house .ui-chip-label, .ihf-listing-result-badge-open-house span { margin: 0 0 0 3px !important; }"
         + ".ihf-listing-result-badge-open-house::before { content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #2ecc40 !important; box-shadow: 0 0 6px 1px #2ecc40 !important; flex-shrink: 0; }"
@@ -1176,9 +1208,21 @@ class Component extends DCLogic {
     }
     root.querySelectorAll('*').forEach((el) => { if (el.shadowRoot) this._ihfFixTextInRoot(el.shadowRoot, allowDark); });
   };
+  _ihfFixListingLinks = (root) => {
+    root.querySelectorAll('.ihf-listing-result-cell, [class*="listing-result-cell" i], [class*="listing-card" i], [class*="gallery-card" i]').forEach((card) => {
+      if (card._ihfLinkFixed) return;
+      const img = card.querySelector('img[src*="/property/"]');
+      const link = card.querySelector('a[href]');
+      if (!img || !link) return;
+      const m = img.src.match(/\/property\/[A-Za-z]+\/(\d+)\//);
+      if (!m) return;
+      card._ihfLinkFixed = true;
+      link.setAttribute('href', 'https://keseckerproperties.com/listing?id=MLSL' + m[1]);
+    });
+  };
   _ihfFixAllShadowRoots = () => {
     document.querySelectorAll('*').forEach((el) => {
-      if (el.shadowRoot) this._ihfFixTextInRoot(el.shadowRoot, !!el.closest('[data-ihf-dark-cards]'));
+      if (el.shadowRoot) { this._ihfFixTextInRoot(el.shadowRoot, !!el.closest('[data-ihf-dark-cards]')); this._ihfFixListingLinks(el.shadowRoot); }
     });
   };
   _ihfStartCaseFix = () => {
