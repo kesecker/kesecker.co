@@ -288,6 +288,10 @@ class Component extends DCLogic {
         priceEl.style.setProperty('margin', '2px 0 0', 'important');
         priceEl.style.setProperty('margin-left', '0', 'important');
         priceEl.style.setProperty('padding-left', '0', 'important');
+        if (priceEl.parentElement) {
+          priceEl.parentElement.style.setProperty('margin-left', '0', 'important');
+          priceEl.parentElement.style.setProperty('padding-left', '0', 'important');
+        }
       }
       if (addr1) addr1.style.setProperty('font-size', '18px', 'important');
       if (addr2) addr2.style.setProperty('font-size', '18px', 'important');
@@ -304,25 +308,51 @@ class Component extends DCLogic {
     let firstTabEl = null;
     const badgeTextEl = allLeaves.find((el) => /^(Active|Pending|Sold|Contingent|Coming Soon)$/i.test((el.textContent || '').trim()));
     if (badgeTextEl) {
-      let n = badgeTextEl;
-      for (let i = 0; i < 3 && n; i++) {
-        n.style.setProperty('background-color', '#ffffff', 'important');
-        n.style.setProperty('color', '#1a1a1a', 'important');
-        n.style.setProperty('font-weight', '600', 'important');
-        n.style.setProperty('border-radius', '999px', 'important');
-        n.style.setProperty('border', '1px solid #e0e0e0', 'important');
-        n.style.setProperty('font-size', '13px', 'important');
-        n.style.setProperty('padding', '4px 14px 4px 10px', 'important');
-        n.style.setProperty('display', 'inline-flex', 'important');
-        n.style.setProperty('align-items', 'center', 'important');
-        n.style.setProperty('gap', '6px', 'important');
-        n = n.parentElement;
+      badgeTextEl.style.setProperty('background-color', '#ffffff', 'important');
+      badgeTextEl.style.setProperty('color', '#1a1a1a', 'important');
+      badgeTextEl.style.setProperty('font-weight', '600', 'important');
+      badgeTextEl.style.setProperty('border-radius', '999px', 'important');
+      badgeTextEl.style.setProperty('border', '1px solid #e0e0e0', 'important');
+      badgeTextEl.style.setProperty('font-size', '13px', 'important');
+      badgeTextEl.style.setProperty('padding', '4px 14px 4px 10px', 'important');
+      badgeTextEl.style.setProperty('display', 'inline-flex', 'important');
+      badgeTextEl.style.setProperty('align-items', 'center', 'important');
+      badgeTextEl.style.setProperty('gap', '6px', 'important');
+      let p = badgeTextEl.parentElement;
+      for (let i = 0; i < 2 && p; i++) {
+        p.style.setProperty('background', 'transparent', 'important');
+        p.style.setProperty('border', 'none', 'important');
+        p.style.setProperty('padding', '0', 'important');
+        p.style.setProperty('box-shadow', 'none', 'important');
+        p = p.parentElement;
       }
       if (!badgeTextEl.dataset.ihfDot) {
         badgeTextEl.dataset.ihfDot = '1';
         const dot = document.createElement('span');
         dot.style.cssText = 'display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0;';
         badgeTextEl.insertBefore(dot, badgeTextEl.firstChild);
+      }
+    }
+    const openHouseEl = allLeaves.find((el) => /^open house$/i.test((el.textContent || '').trim()));
+    if (openHouseEl) {
+      const fullText = openHouseEl.getAttribute('title') || openHouseEl.getAttribute('aria-label') || (openHouseEl.parentElement && openHouseEl.parentElement.getAttribute('title'));
+      if (fullText && fullText.length > openHouseEl.textContent.trim().length) openHouseEl.textContent = fullText;
+      openHouseEl.style.setProperty('background-color', '#ffffff', 'important');
+      openHouseEl.style.setProperty('color', '#1a1a1a', 'important');
+      openHouseEl.style.setProperty('font-weight', '600', 'important');
+      openHouseEl.style.setProperty('border-radius', '999px', 'important');
+      openHouseEl.style.setProperty('border', '1px solid #1a1a1a', 'important');
+      openHouseEl.style.setProperty('font-size', '13px', 'important');
+      openHouseEl.style.setProperty('padding', '4px 14px', 'important');
+      openHouseEl.style.setProperty('display', 'inline-flex', 'important');
+      openHouseEl.style.setProperty('align-items', 'center', 'important');
+      let op = openHouseEl.parentElement;
+      for (let i = 0; i < 2 && op; i++) {
+        op.style.setProperty('background', 'transparent', 'important');
+        op.style.setProperty('border', 'none', 'important');
+        op.style.setProperty('padding', '0', 'important');
+        op.style.setProperty('box-shadow', 'none', 'important');
+        op = op.parentElement;
       }
     }
     allLeaves.forEach((el) => {
@@ -389,6 +419,11 @@ class Component extends DCLogic {
       sidebar.style.setProperty('padding', '20px', 'important');
       sidebar.style.setProperty('box-shadow', '0 4px 16px rgba(0,0,0,0.06)', 'important');
       sidebar.style.setProperty('box-sizing', 'border-box', 'important');
+      sidebar.style.setProperty('max-width', '340px', 'important');
+      sidebar.style.setProperty('height', 'fit-content', 'important');
+      sidebar.style.setProperty('align-self', 'flex-start', 'important');
+      sidebar.style.setProperty('position', 'sticky', 'important');
+      sidebar.style.setProperty('top', '20px', 'important');
       sidebar.querySelectorAll('button').forEach((btn) => btn.style.setProperty('border-radius', '6px', 'important'));
     }
     if (!this._ihfTitleObserverBound) {
