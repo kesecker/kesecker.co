@@ -78,7 +78,7 @@
     <dc-import name="ContactModal" hint-size="0,0"></dc-import>
   </div>
 
-  <div style="height: calc(100vh - 92px); overflow-y: auto;">
+  <div style="height: calc(100vh - 92px); overflow-y: auto; scroll-behavior: smooth;">
     <div id="ihf-listing-detail" ref="{{ ihfListingDetailRef }}" style="width: 100%; min-height: 100%; padding: 24px 36px; box-sizing: border-box;"></div>
   </div>
 
@@ -273,16 +273,66 @@ class Component extends DCLogic {
       if (statusWrap) {
         const chip = statusWrap.querySelector('.MuiChip-root');
         const chipLabel = statusWrap.querySelector('.MuiChip-label');
-        if (chip) chip.style.setProperty('font-weight', '700', 'important');
-        if (chipLabel) chipLabel.style.setProperty('font-weight', '700', 'important');
+        [chip, chipLabel].forEach((el) => {
+          if (!el) return;
+          el.style.setProperty('background-color', '#2f6d31', 'important');
+          el.style.setProperty('color', '#ffffff', 'important');
+          el.style.setProperty('font-weight', '700', 'important');
+          el.style.setProperty('border-radius', '4px', 'important');
+          el.style.setProperty('font-size', '12px', 'important');
+        });
+        if (chip) chip.style.setProperty('padding', '2px 10px', 'important');
       }
+      if (priceEl) priceEl.style.setProperty('font-size', '30px', 'important');
+      if (addr1) addr1.style.setProperty('font-size', '18px', 'important');
+      if (addr2) addr2.style.setProperty('font-size', '18px', 'important');
       if (!header.dataset.ihfBreadcrumb && addr1 && addr2) {
         header.dataset.ihfBreadcrumb = '1';
         const bc = document.createElement('div');
-        bc.style.cssText = 'font-size:13px;color:#888;margin:0 0 10px;';
+        bc.style.cssText = 'font-size:15px;color:#888;margin:0 0 16px;';
         bc.innerHTML = '<a href="https://keseckerproperties.com/listings" style="color:#888;text-decoration:none;">Home Search</a><span style="margin:0 6px;">\u203a</span><span style="color:#1a1a1a;">' + addr1.textContent + ', ' + addr2.textContent + '</span>';
         header.parentElement.insertBefore(bc, header);
       }
+    }
+    const tabLabels = ['Details', 'Map', 'Similar Listings', 'Mortgage Calc', 'Schools', 'Walk Score'];
+    const allLeaves = Array.from(root.querySelectorAll('*')).filter((el) => !el.children.length);
+    let firstTabEl = null;
+    allLeaves.forEach((el) => {
+      const t = (el.textContent || '').trim();
+      if (!tabLabels.includes(t)) return;
+      if (!firstTabEl) firstTabEl = el;
+      if (el.dataset.ihfTabHover) return;
+      el.dataset.ihfTabHover = '1';
+      el.style.setProperty('background-image', 'linear-gradient(#000000, #000000)', 'important');
+      el.style.setProperty('background-repeat', 'no-repeat', 'important');
+      el.style.setProperty('background-position', 'left bottom', 'important');
+      el.style.setProperty('background-size', '0 2px', 'important');
+      el.style.setProperty('transition', 'background-size 0.3s ease', 'important');
+      el.style.setProperty('padding-bottom', '4px', 'important');
+      el.addEventListener('mouseenter', () => el.style.setProperty('background-size', '100% 2px', 'important'));
+      el.addEventListener('mouseleave', () => el.style.setProperty('background-size', '0 2px', 'important'));
+    });
+    const bcRow = root.querySelector('.listing-header') && root.querySelector('.listing-header').previousElementSibling;
+    if (firstTabEl && bcRow && bcRow.style && !bcRow.dataset.ihfAligned) {
+      const wantX = firstTabEl.getBoundingClientRect().left;
+      const gotX = bcRow.getBoundingClientRect().left;
+      const diff = Math.round(wantX - gotX);
+      if (diff) { bcRow.dataset.ihfAligned = '1'; bcRow.style.marginLeft = diff + 'px'; }
+    }
+    const carousel = root.querySelector('.listing-photo-carousel');
+    if (carousel && !carousel.dataset.ihfResized) {
+      carousel.dataset.ihfResized = '1';
+      carousel.style.setProperty('max-height', '380px', 'important');
+      carousel.style.setProperty('overflow', 'hidden', 'important');
+      carousel.querySelectorAll('.carousel-root, .carousel, .slider-wrapper, ul.slider, li.slide').forEach((el) => {
+        el.style.setProperty('height', '380px', 'important');
+        el.style.setProperty('max-height', '380px', 'important');
+      });
+      carousel.querySelectorAll('li.slide img').forEach((img) => {
+        img.style.setProperty('height', '380px', 'important');
+        img.style.setProperty('object-fit', 'cover', 'important');
+        img.style.setProperty('width', '100%', 'important');
+      });
     }
     const statsRow = root.querySelector('.listing-attributes');
     if (statsRow && !statsRow.dataset.ihfStyled) {
