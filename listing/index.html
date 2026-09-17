@@ -207,6 +207,7 @@ class Component extends DCLogic {
         + "[role=\"menu\"] { border: none !important; border-radius: 0 !important; box-shadow: none !important; background: transparent !important; padding: 0 !important; margin: 0 !important; }"
         + ".ihf-listing-result-cell, [class*='listing-card' i], [class*='result-cell' i], [class*='gallery-card' i] { border: none !important; box-shadow: none !important; background: none !important; background-color: transparent !important; }"
         + "[class*='price' i] { font-weight: 700 !important; }"
+        + "[class*='status' i] { font-weight: 700 !important; }"
         + ".MuiButtonBase-root:hover, .MuiIconButton-root:hover, .MuiFormControl-root:hover, .MuiAutocomplete-root:hover, .MuiInputBase-root:hover, .MuiOutlinedInput-root:hover, .MuiFilledInput-root:hover, [class*='Input' i]:hover, [class^='ihf' i]:hover { background-color: transparent !important; }"
         + ".MuiFormControl-root, .MuiAutocomplete-root, .MuiInputBase-root { background-image: linear-gradient(#000000, #000000) !important; background-repeat: no-repeat !important; background-position: left bottom !important; background-size: 0 2px !important; transition: background-size 0.3s ease !important; }"
         + ".MuiFormControl-root:hover, .MuiAutocomplete-root:hover, .MuiInputBase-root:hover, .MuiFormControl-root:focus-within, .MuiAutocomplete-root:focus-within, .MuiInputBase-root:focus-within { background-size: 100% 2px !important; }"
@@ -237,7 +238,42 @@ class Component extends DCLogic {
     }
     this._ihfMoveResultsCount(root);
     this._ihfTraceHearts(root);
+    this._ihfFixDetailLayout(root);
+    this._ihfFixFormValues(root);
     root.querySelectorAll('*').forEach((el) => { if (el.shadowRoot) this._ihfFixTextInRoot(el.shadowRoot); });
+  };
+  _ihfFixDetailLayout = (root) => {
+    const leaves = Array.from(root.querySelectorAll('*')).filter((el) => !el.children.length);
+    const directText = (el) => (el.textContent || '').trim();
+    const priceLeaf = leaves.find((el) => /^\$[\d,]+$/.test(directText(el)));
+    if (!priceLeaf) return;
+    const priceRow = priceLeaf.parentElement;
+    if (!priceRow || !priceRow.parentElement) return;
+    if (!priceRow.dataset.ihfLabelHidden) {
+      const container = priceRow.parentElement;
+      const labelEl = Array.from(container.querySelectorAll('*')).find((el) => !el.children.length && /^list price$/i.test(directText(el)));
+      if (labelEl) { labelEl.style.setProperty('display', 'none', 'important'); priceRow.dataset.ihfLabelHidden = '1'; }
+    }
+    const h1 = root.querySelector('h1');
+    if (h1 && !h1.dataset.ihfMoved) {
+      h1.dataset.ihfMoved = '1';
+      h1.style.setProperty('text-align', 'left', 'important');
+      h1.style.setProperty('font-size', '15px', 'important');
+      h1.style.setProperty('font-weight', '400', 'important');
+      h1.style.setProperty('margin', '4px 0 0', 'important');
+      priceRow.parentElement.insertBefore(h1, priceRow.nextSibling);
+    }
+  };
+  _ihfFixFormValues = (root) => {
+    root.querySelectorAll('textarea').forEach((ta) => {
+      if (ta.dataset.ihfValueFixed || !ta.value) return;
+      let fixed = ta.value.replace(/\b([A-Za-z .'-]+),\s*([A-Z]{2})\s*(\d{5})\b/g, (m, city, st, zip) => {
+        if (city !== city.toUpperCase()) return m;
+        return city.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase()) + ', ' + st + ' ' + zip;
+      });
+      fixed = fixed.replace(/\b([A-Za-z]{2,6})\b\.?/g, (word, base) => this._ihfStreetSuffixes[base.toUpperCase()] || word);
+      if (fixed !== ta.value) { ta.value = fixed; ta.dataset.ihfValueFixed = '1'; }
+    });
   };
   _ihfMoveResultsCount = (root) => {
     const leaves = Array.from(root.querySelectorAll('*'));
