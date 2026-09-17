@@ -266,7 +266,8 @@ class Component extends DCLogic {
       this._ihfFixListingLinks(sr);
       if (this._ihfShadowFadeRoots.has(sr)) return;
       this._ihfShadowFadeRoots.add(sr);
-
+      const srMo = new MutationObserver(() => this._ihfFixAllShadowRoots());
+      srMo.observe(sr, { childList: true, subtree: true });
     });
   };
   _ihfStartCaseFix = () => {
@@ -290,17 +291,23 @@ class Component extends DCLogic {
         + ".MuiDialog-paper .MuiIconButton-root:hover svg, .MuiDialog-paper .MuiIconButton-root:hover svg line { color: #999999 !important; stroke: #999999 !important; opacity: 0.65 !important; }";
       document.head.appendChild(s);
     }
-    setInterval(() => this._ihfFixAllShadowRoots(), 500);
+    if (!this._ihfMo) {
+      this._ihfMo = new MutationObserver(() => this._ihfFixAllShadowRoots());
+      this._ihfMo.observe(document.body, { childList: true, subtree: true });
+    }
+    this._ihfFixAllShadowRoots();
   };
   ihfListingSearchRef = (node) => {
     if (!node || node.dataset.ihfMounted) return;
-    const mount = () => {
-      if (!window.ihfKestrel || !window.ihfKestrel.render) { setTimeout(mount, 150); return; }
+    const doMount = () => {
+      if (node.dataset.ihfMounted) return;
       node.dataset.ihfMounted = '1';
       node.appendChild(window.ihfKestrel.render({ component: 'listingSearchWidget' }));
       this._ihfStartCaseFix();
     };
-    mount();
+    if (window.ihfKestrel && window.ihfKestrel.render) { doMount(); return; }
+    const ks = document.querySelector('script[src*="ihf-kestrel.js"]');
+    if (ks) ks.addEventListener('load', doMount, { once: true });
   };
   openContactModal = (e) => { if (e) e.preventDefault(); if (window.openKeseckerContactModal) window.openKeseckerContactModal(); };
   togglePhonePopup = () => this.setState(s => ({ isPhoneOpen: !s.isPhoneOpen }));

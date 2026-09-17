@@ -1240,13 +1240,17 @@ class Component extends DCLogic {
         + ".ihf-email-field, .ui-form-control { max-width: 320px !important; margin-left: auto !important; margin-right: auto !important; }";
       document.head.appendChild(s);
     }
-    setInterval(() => this._ihfFixAllShadowRoots(), 500);
+    if (!this._ihfMo) {
+      this._ihfMo = new MutationObserver(() => this._ihfFixAllShadowRoots());
+      this._ihfMo.observe(document.body, { childList: true, subtree: true });
+    }
+    this._ihfFixAllShadowRoots();
   };
   featuredListingsRef = (node) => {
     if (!node || node.dataset.ihfMounted) return;
     node.setAttribute('data-ihf-dark-cards', '1');
-    const mount = () => {
-      if (!window.ihfKestrel || !window.ihfKestrel.render) { setTimeout(mount, 150); return; }
+    const doMount = () => {
+      if (node.dataset.ihfMounted) return;
       node.dataset.ihfMounted = '1';
       node.appendChild(window.ihfKestrel.render({
         component: 'featuredListingSearchWidget',
@@ -1257,12 +1261,14 @@ class Component extends DCLogic {
       }));
       this._ihfStartCaseFix();
     };
-    mount();
+    if (window.ihfKestrel && window.ihfKestrel.render) { doMount(); return; }
+    const ks = document.querySelector('script[src*="ihf-kestrel.js"]');
+    if (ks) ks.addEventListener('load', doMount, { once: true });
   };
   notableSalesRef = (node) => {
     if (!node || node.dataset.ihfMounted) return;
-    const mount = () => {
-      if (!window.ihfKestrel || !window.ihfKestrel.render) { setTimeout(mount, 150); return; }
+    const doMount = () => {
+      if (node.dataset.ihfMounted) return;
       node.dataset.ihfMounted = '1';
       node.appendChild(window.ihfKestrel.render({
         component: 'featuredListingSearchWidget',
@@ -1273,7 +1279,9 @@ class Component extends DCLogic {
       }));
       this._ihfStartCaseFix();
     };
-    mount();
+    if (window.ihfKestrel && window.ihfKestrel.render) { doMount(); return; }
+    const ks = document.querySelector('script[src*="ihf-kestrel.js"]');
+    if (ks) ks.addEventListener('load', doMount, { once: true });
   };
   marqueeOffset = 0;
   marqueePaused = false;
