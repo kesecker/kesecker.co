@@ -8,6 +8,7 @@
 <body>
 <x-dc>
 <helmet>
+  <title>Home Search | Jackson Kesecker</title>
   <link rel="icon" type="image/png" href="assets/favicon-dark.png" media="(prefers-color-scheme: dark)">
   <link rel="icon" type="image/png" href="assets/favicon-light.png" media="(prefers-color-scheme: light)">
   <link rel="icon" type="image/png" href="assets/favicon-light.png">
@@ -259,7 +260,7 @@ class Component extends DCLogic {
     const badgeEl = leaves.find((el) => /^(Active|Pending|Sold|Contingent|Coming Soon)$/i.test(directText(el)));
     if (badgeEl) badgeEl.style.setProperty('font-weight', '700', 'important');
     const streetSuffixNames = Object.values(this._ihfStreetSuffixes);
-    const streetRe = new RegExp('^\\d+\\s+.+(' + streetSuffixNames.join('|') + ')$');
+    const streetRe = new RegExp('^\\d+\\s+.*\\b(' + streetSuffixNames.join('|') + ')\\b');
     const streetEl = leaves.find((el) => streetRe.test(directText(el)));
     const cityZipRe = /^[A-Za-z .'-]+,\s*[A-Z]{2}\s*\d{5}$/;
     const cityZipEl = leaves.find((el) => cityZipRe.test(directText(el)));
@@ -280,7 +281,8 @@ class Component extends DCLogic {
       this._ihfTitleObserverBound = true;
       const fixTitle = () => {
         const t = document.title;
-        const fixed = t.replace(/\b([A-Z]{2,}(?:[ .'-][A-Z]{2,})*),\s*([A-Z]{2})\b/g, (m, city, st) => city.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase()) + ', ' + st);
+        let fixed = t.replace(/\b([A-Z]{2,}(?:[ .'-][A-Z]{2,})*),\s*([A-Z]{2})\b/g, (m, city, st) => city.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase()) + ', ' + st);
+        if (/\{listingAddress\}/.test(fixed)) fixed = 'Home Search | Jackson Kesecker';
         if (fixed !== t) document.title = fixed;
       };
       const titleEl = document.querySelector('title');
