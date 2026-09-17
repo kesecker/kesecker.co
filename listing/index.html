@@ -342,8 +342,7 @@ class Component extends DCLogic {
       bcRow.style.marginLeft = diff + 'px';
     }
     const carousel = root.querySelector('.listing-photo-carousel');
-    if (carousel && !carousel.dataset.ihfResized) {
-      carousel.dataset.ihfResized = '1';
+    if (carousel) {
       carousel.style.setProperty('max-height', '255px', 'important');
       carousel.style.setProperty('overflow', 'hidden', 'important');
       carousel.querySelectorAll('.carousel-root, .carousel, .slider-wrapper, ul.slider, li.slide').forEach((el) => {
