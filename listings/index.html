@@ -180,6 +180,7 @@ class Component extends DCLogic {
     }
     this._ihfMoveResultsCount(root);
     this._ihfTraceHearts(root);
+    // link-href rewrite disabled — testing native widget href now that site URL config is fixed
     root.querySelectorAll('*').forEach((el) => { if (el.shadowRoot) this._ihfFixTextInRoot(el.shadowRoot); });
   };
   _ihfMoveResultsCount = (root) => {
@@ -256,14 +257,12 @@ class Component extends DCLogic {
   _ihfFixAllShadowRoots = () => {
     this._ihfFixTextInRoot(document);
     this._ihfFixCloseButtons(document);
-    this._ihfFixListingLinks(document);
     if (!this._ihfShadowFadeRoots) this._ihfShadowFadeRoots = new WeakSet();
     document.querySelectorAll('*').forEach((el) => {
       const sr = el.shadowRoot;
       if (!sr) return;
       this._ihfFixTextInRoot(sr);
       this._ihfFixCloseButtons(sr);
-      this._ihfFixListingLinks(sr);
       if (this._ihfShadowFadeRoots.has(sr)) return;
       this._ihfShadowFadeRoots.add(sr);
       const srMo = new MutationObserver(() => this._ihfFixAllShadowRoots());
