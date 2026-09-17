@@ -244,38 +244,45 @@ class Component extends DCLogic {
     root.querySelectorAll('*').forEach((el) => { if (el.shadowRoot) this._ihfFixTextInRoot(el.shadowRoot); });
   };
   _ihfFixDetailLayout = (root) => {
-    const leaves = Array.from(root.querySelectorAll('*')).filter((el) => !el.children.length);
-    const directText = (el) => (el.textContent || '').trim();
-    const priceLeaf = leaves.find((el) => /^\$[\d,]+$/.test(directText(el)));
-    if (!priceLeaf) return;
-    const priceRow = priceLeaf.parentElement;
-    if (!priceRow || !priceRow.parentElement) return;
-    if (!priceRow.dataset.ihfLabelHidden) {
-      const container = priceRow.parentElement;
-      const labelEl = Array.from(container.querySelectorAll('*')).find((el) => !el.children.length && /^list price$/i.test(directText(el)));
-      if (labelEl) { labelEl.style.setProperty('display', 'none', 'important'); priceRow.dataset.ihfLabelHidden = '1'; }
-    }
-    priceLeaf.style.setProperty('margin', '0', 'important');
-    priceLeaf.style.setProperty('padding-left', '0', 'important');
-    const badgeEl = leaves.find((el) => /^(Active|Pending|Sold|Contingent|Coming Soon)$/i.test(directText(el)));
-    if (badgeEl) badgeEl.style.setProperty('font-weight', '700', 'important');
-    const streetSuffixNames = Object.values(this._ihfStreetSuffixes);
-    const streetRe = new RegExp('^\\d+\\s+.*\\b(' + streetSuffixNames.join('|') + ')\\b');
-    const streetEl = leaves.find((el) => streetRe.test(directText(el)));
-    const cityZipRe = /^[A-Za-z .'-]+,\s*[A-Z]{2}\s*\d{5}$/;
-    const cityZipEl = leaves.find((el) => cityZipRe.test(directText(el)));
-    if (streetEl) {
-      streetEl.style.setProperty('text-align', 'left', 'important');
-      streetEl.style.setProperty('font-size', '16px', 'important');
-      streetEl.style.setProperty('font-weight', '400', 'important');
-      streetEl.style.setProperty('margin', '2px 0 0', 'important');
-      streetEl.style.setProperty('padding-left', '0', 'important');
-      if (!streetEl.dataset.ihfMoved) { streetEl.dataset.ihfMoved = '1'; priceRow.parentElement.insertBefore(streetEl, priceRow.nextSibling); }
-    }
-    if (cityZipEl) {
-      cityZipEl.style.setProperty('font-size', '16px', 'important');
-      cityZipEl.style.setProperty('margin', '2px 0 0', 'important');
-      cityZipEl.style.setProperty('padding-left', '0', 'important');
+    const header = root.querySelector('.listing-header');
+    if (header) {
+      const priceEl = header.querySelector('.list-price');
+      const addr1 = header.querySelector('.listing-address-1');
+      const addr2 = header.querySelector('.listing-address-2');
+      const statusWrap = header.querySelector('[class*="listing-status-"]');
+      const labelEl = Array.from(header.querySelectorAll('*')).find((el) => !el.children.length && /^list price$/i.test((el.textContent || '').trim()));
+      if (labelEl) labelEl.style.setProperty('display', 'none', 'important');
+      if (priceEl) {
+        priceEl.style.setProperty('font-weight', '700', 'important');
+        priceEl.style.setProperty('margin', '2px 0 0', 'important');
+        priceEl.style.setProperty('padding-left', '0', 'important');
+      }
+      if (addr1) {
+        addr1.style.setProperty('font-size', '16px', 'important');
+        addr1.style.setProperty('font-weight', '400', 'important');
+        addr1.style.setProperty('text-align', 'left', 'important');
+        addr1.style.setProperty('margin', '3px 0 0', 'important');
+        addr1.style.setProperty('line-height', '1.3', 'important');
+      }
+      if (addr2) {
+        addr2.style.setProperty('font-size', '16px', 'important');
+        addr2.style.setProperty('font-weight', '400', 'important');
+        addr2.style.setProperty('margin', '1px 0 6px', 'important');
+        addr2.style.setProperty('line-height', '1.3', 'important');
+      }
+      if (statusWrap) {
+        const chip = statusWrap.querySelector('.MuiChip-root');
+        const chipLabel = statusWrap.querySelector('.MuiChip-label');
+        if (chip) chip.style.setProperty('font-weight', '700', 'important');
+        if (chipLabel) chipLabel.style.setProperty('font-weight', '700', 'important');
+      }
+      if (!header.dataset.ihfBreadcrumb && addr1 && addr2) {
+        header.dataset.ihfBreadcrumb = '1';
+        const bc = document.createElement('div');
+        bc.style.cssText = 'font-size:13px;color:#888;margin:0 0 10px;';
+        bc.innerHTML = '<a href="https://keseckerproperties.com/listings" style="color:#888;text-decoration:none;">Home Search</a><span style="margin:0 6px;">\u203a</span><span style="color:#1a1a1a;">' + addr1.textContent + ', ' + addr2.textContent + '</span>';
+        header.parentElement.insertBefore(bc, header);
+      }
     }
     if (!this._ihfTitleObserverBound) {
       this._ihfTitleObserverBound = true;
