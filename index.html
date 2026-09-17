@@ -91,9 +91,9 @@
       #listings-viewport, #testimonials-viewport, #notable-viewport { padding-left: 24px !important; padding-right: 24px !important; }
       #hero-logo-img { height: 60px !important; }
       #hero-search-bar { padding: 14px 20px !important; }
-      #footer-bottom-bar { height: 190px !important; }
-      #footer-bottom-logos { left: 50% !important; transform: translateX(-50%) !important; bottom: 130px !important; }
-      #footer-bottom-copyright { bottom: 90px !important; white-space: normal !important; width: 90% !important; }
+      #footer-bottom-bar { height: 60px !important; }
+      #footer-legal-secondary-row { gap: 28px !important; margin-top: 18px !important; }
+      #footer-bottom-copyright { white-space: normal !important; width: 90% !important; }
     }
     ::-webkit-scrollbar { width: 10px !important; height: 10px !important; }
     ::-webkit-scrollbar-track { background: transparent !important; }
@@ -176,11 +176,11 @@
       <sc-if value="{{ isMobileMenuVisible }}" hint-placeholder-val="{{ false }}">
         <div onClick="{{ closeMobileMenu }}" style="position: fixed; inset: 0; z-index: 110; background: rgba(0,0,0,0.88); animation: {{ mobileMenuOverlayAnimation }};">
           <div onClick="{{ stopPropagation }}" style="position: absolute; top: 128px; right: clamp(20px, 5vw, 64px); background: transparent; min-width: 280px; padding: 0; display: flex; flex-direction: column; align-items: flex-end; gap: clamp(26px, 4.2vh, 46px); animation: {{ mobileMenuCardAnimation }};">
-            <a href="https://keseckerproperties.com/listings" target="_self" onClick="{{ closeMobileMenu }}" style="font-size: clamp(16px, 2vw, 24px); font-weight: 500; letter-spacing: -0.02em; line-height: 1; color: #ffffff; transition: opacity 0.25s ease;" style-hover="opacity: 0.55;">{{ t.navListings }}</a>
-            <a href="https://keseckerproperties.com/communities" target="_self" onClick="{{ closeMobileMenu }}" style="font-size: clamp(16px, 2vw, 24px); font-weight: 500; letter-spacing: -0.02em; line-height: 1; color: #ffffff; transition: opacity 0.25s ease;" style-hover="opacity: 0.55;">{{ t.navNeighborhoods }}</a>
-            <a href="https://keseckerproperties.com/about" target="_self" onClick="{{ closeMobileMenu }}" style="font-size: clamp(16px, 2vw, 24px); font-weight: 500; letter-spacing: -0.02em; line-height: 1; color: #ffffff; transition: opacity 0.25s ease;" style-hover="opacity: 0.55;">{{ t.navAbout }}</a>
-            <a href="#" onClick="{{ openContactModalFromMenu }}" style="font-size: clamp(16px, 2vw, 24px); font-weight: 500; letter-spacing: -0.02em; line-height: 1; color: #ffffff; transition: opacity 0.25s ease;" style-hover="opacity: 0.55;">{{ t.navContact }}</a>
-            <a href="#" onClick="{{ toggleLang }}" style="margin-top: 12px; font-size: clamp(13px, 1.1vw, 16px); font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: rgba(255,255,255,0.65); transition: color 0.25s ease;" style-hover="color: #ffffff;">{{ langToggleLabel }}</a>
+            <a href="https://keseckerproperties.com/listings" target="_self" onClick="{{ closeMobileMenu }}" style="font-size: clamp(16px, 2vw, 24px); font-weight: 500; letter-spacing: -0.02em; line-height: 1; color: #ffffff; text-decoration: none; padding-bottom: 4px; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 2px; transition: background-size 0.3s ease;" style-hover="background-size: 100% 2px;">{{ t.navListings }}</a>
+            <a href="https://keseckerproperties.com/communities" target="_self" onClick="{{ closeMobileMenu }}" style="font-size: clamp(16px, 2vw, 24px); font-weight: 500; letter-spacing: -0.02em; line-height: 1; color: #ffffff; text-decoration: none; padding-bottom: 4px; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 2px; transition: background-size 0.3s ease;" style-hover="background-size: 100% 2px;">{{ t.navNeighborhoods }}</a>
+            <a href="https://keseckerproperties.com/about" target="_self" onClick="{{ closeMobileMenu }}" style="font-size: clamp(16px, 2vw, 24px); font-weight: 500; letter-spacing: -0.02em; line-height: 1; color: #ffffff; text-decoration: none; padding-bottom: 4px; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 2px; transition: background-size 0.3s ease;" style-hover="background-size: 100% 2px;">{{ t.navAbout }}</a>
+            <a href="#" onClick="{{ openContactModalFromMenu }}" style="font-size: clamp(16px, 2vw, 24px); font-weight: 500; letter-spacing: -0.02em; line-height: 1; color: #ffffff; text-decoration: none; padding-bottom: 4px; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 2px; transition: background-size 0.3s ease;" style-hover="background-size: 100% 2px;">{{ t.navContact }}</a>
+            <a href="#" onClick="{{ toggleLang }}" style="margin-top: 12px; font-size: clamp(13px, 1.1vw, 16px); font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: rgba(255,255,255,0.65); text-decoration: none; transition: color 0.25s ease;" style-hover="color: #ffffff;">{{ langToggleLabel }}</a>
           </div>
         </div>
       </sc-if>
@@ -376,21 +376,37 @@
       <img src="uploads/(White) JKR.png" alt="JKR" style="height: clamp(26px, 8.6vw, 90px); width: auto; flex-shrink: 0;">
       <a href="https://www.kwcoastalestates.com" target="_blank" rel="noopener noreferrer" style="display: inline-flex; flex-shrink: 0;"><img src="uploads/(White) Keller Williams-b7681c76.png" alt="Keller Williams" style="height: clamp(48px, 16vw, 168px); width: auto;"></a>
     </div>
-    <div style="display: flex; align-items: center; justify-content: center; gap: 28px; flex-wrap: wrap; margin-top: -20px;">
-      <a href="https://keseckerproperties.com/listings" target="_self" style="font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.2s ease;" style-hover="color: #ffffff;">{{ t.navListings }}</a>
-      <a href="https://keseckerproperties.com/communities" target="_self" style="font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.2s ease;" style-hover="color: #ffffff;">{{ t.navNeighborhoods }}</a>
-      <a href="https://keseckerproperties.com/about" target="_self" style="font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.2s ease;" style-hover="color: #ffffff;">{{ t.navAbout }}</a>
-      <a href="#" onClick="{{ openContactModal }}" style="font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.2s ease;" style-hover="color: #ffffff;">{{ t.navContact }}</a>
+    <div id="footer-legal-secondary-row" style="display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 24px; margin-top: -20px;">
+      <div style="display: flex; align-items: center; gap: 10px; justify-self: end;">
+        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram" style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.4); box-sizing: border-box; transition: border-color 0.2s ease, background 0.2s ease;" style-hover="border-color: #ffffff; background: rgba(255,255,255,0.08);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.6" fill="#ffffff" stroke="none"></circle></svg>
+        </a>
+        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Facebook" style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.4); box-sizing: border-box; transition: border-color 0.2s ease, background 0.2s ease;" style-hover="border-color: #ffffff; background: rgba(255,255,255,0.08);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2h-3a5 5 0 0 0-5 5v3H6v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+        </a>
+        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.4); box-sizing: border-box; transition: border-color 0.2s ease, background 0.2s ease;" style-hover="border-color: #ffffff; background: rgba(255,255,255,0.08);">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="3"></rect><line x1="7" y1="10" x2="7" y2="17"></line><circle cx="7" cy="6.5" r="0.6" fill="#ffffff" stroke="none"></circle><path d="M11 17v-4.5a2.5 2.5 0 0 1 5 0V17"></path><line x1="11" y1="10" x2="11" y2="17"></line></svg>
+        </a>
+        <a href="#" target="_blank" rel="noopener noreferrer" aria-label="YouTube" style="display: flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 50%; border: 3px solid rgba(255,255,255,0.4); box-sizing: border-box; transition: border-color 0.2s ease, background 0.2s ease;" style-hover="border-color: #ffffff; background: rgba(255,255,255,0.08);">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="4"></rect><path d="M10 9l5 3-5 3z" fill="#ffffff" stroke="none"></path></svg>
+        </a>
+      </div>
+      <div style="display: flex; align-items: center; gap: 28px; flex-wrap: wrap; justify-self: center;">
+        <a href="https://keseckerproperties.com/listings" target="_self" style="font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.2s ease;" style-hover="color: #ffffff;">{{ t.navListings }}</a>
+        <a href="https://keseckerproperties.com/communities" target="_self" style="font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.2s ease;" style-hover="color: #ffffff;">{{ t.navNeighborhoods }}</a>
+        <a href="https://keseckerproperties.com/about" target="_self" style="font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.2s ease;" style-hover="color: #ffffff;">{{ t.navAbout }}</a>
+        <a href="#" onClick="{{ openContactModal }}" style="font-size: 13px; color: rgba(255,255,255,0.7); transition: color 0.2s ease;" style-hover="color: #ffffff;">{{ t.navContact }}</a>
+      </div>
+      <div style="display: flex; align-items: center; gap: 14px; justify-self: start;">
+        <img src="uploads/(White) EHO.png" alt="Equal Housing Opportunity" style="height: 32px; width: auto;">
+        <img src="uploads/(White) REALTOR.png" alt="Realtor" style="height: 32px; width: auto;">
+        <img src="uploads/MLS-transparent.png" alt="MLS Listings" style="height: 32px; width: auto;">
+      </div>
     </div>
     <p style="font-size: 11px; line-height: 1.7; color: rgba(255,255,255,0.55); text-align: center; max-width: 720px; margin: 32px 0 0;">{{ t.legalDisclaimer }}</p>
   </div>
-  <div id="footer-bottom-bar" style="height: 130px; background: #000000; position: relative; box-sizing: border-box;">
-    <div id="footer-bottom-logos" style="position: absolute; left: 100px; bottom: 90px; display: flex; align-items: center; gap: 16px;">
-      <img src="uploads/(White) EHO.png" alt="Equal Housing Opportunity" style="height: 40px; width: auto;">
-      <img src="uploads/(White) REALTOR.png" alt="Realtor" style="height: 40px; width: auto;">
-      <img src="uploads/MLS-transparent.png" alt="MLS Listings" style="height: 40px; width: auto;">
-    </div>
-    <div id="footer-bottom-copyright" style="position: absolute; left: 50%; bottom: 90px; transform: translateX(-50%); font-size: 12px; color: rgba(255,255,255,0.55); text-align: center; white-space: nowrap;">{{ t.footerCopyright }}</div>
+  <div id="footer-bottom-bar" style="height: 60px; background: #000000; position: relative; box-sizing: border-box;">
+    <div id="footer-bottom-copyright" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 12px; color: rgba(255,255,255,0.55); text-align: center; white-space: nowrap;">{{ t.footerCopyright }}</div>
   </div>
 
   <!-- CONTACT MODAL -->
@@ -1201,7 +1217,7 @@ class Component extends DCLogic {
       const m = img.src.match(/\/property\/[A-Za-z]+\/(\d+)\//);
       if (!m) return;
       card._ihfLinkFixed = true;
-      link.setAttribute('href', 'https://keseckerproperties.com/listing?id=ML' + m[1]);
+      link.setAttribute('href', 'https://keseckerproperties.com/listing?id=MLSL' + m[1]);
     });
   };
   _ihfFixAllShadowRoots = () => {
@@ -1224,13 +1240,17 @@ class Component extends DCLogic {
         + ".ihf-email-field, .ui-form-control { max-width: 320px !important; margin-left: auto !important; margin-right: auto !important; }";
       document.head.appendChild(s);
     }
-    setInterval(() => this._ihfFixAllShadowRoots(), 500);
+    if (!this._ihfMo) {
+      this._ihfMo = new MutationObserver(() => this._ihfFixAllShadowRoots());
+      this._ihfMo.observe(document.body, { childList: true, subtree: true });
+    }
+    this._ihfFixAllShadowRoots();
   };
   featuredListingsRef = (node) => {
     if (!node || node.dataset.ihfMounted) return;
     node.setAttribute('data-ihf-dark-cards', '1');
-    const mount = () => {
-      if (!window.ihfKestrel || !window.ihfKestrel.render) { setTimeout(mount, 150); return; }
+    const doMount = () => {
+      if (node.dataset.ihfMounted) return;
       node.dataset.ihfMounted = '1';
       node.appendChild(window.ihfKestrel.render({
         component: 'featuredListingSearchWidget',
@@ -1241,12 +1261,14 @@ class Component extends DCLogic {
       }));
       this._ihfStartCaseFix();
     };
-    mount();
+    if (window.ihfKestrel && window.ihfKestrel.render) { doMount(); return; }
+    const ks = document.querySelector('script[src*="ihf-kestrel.js"]');
+    if (ks) ks.addEventListener('load', doMount, { once: true });
   };
   notableSalesRef = (node) => {
     if (!node || node.dataset.ihfMounted) return;
-    const mount = () => {
-      if (!window.ihfKestrel || !window.ihfKestrel.render) { setTimeout(mount, 150); return; }
+    const doMount = () => {
+      if (node.dataset.ihfMounted) return;
       node.dataset.ihfMounted = '1';
       node.appendChild(window.ihfKestrel.render({
         component: 'featuredListingSearchWidget',
@@ -1257,7 +1279,9 @@ class Component extends DCLogic {
       }));
       this._ihfStartCaseFix();
     };
-    mount();
+    if (window.ihfKestrel && window.ihfKestrel.render) { doMount(); return; }
+    const ks = document.querySelector('script[src*="ihf-kestrel.js"]');
+    if (ks) ks.addEventListener('load', doMount, { once: true });
   };
   marqueeOffset = 0;
   marqueePaused = false;
