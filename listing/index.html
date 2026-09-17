@@ -287,7 +287,13 @@ class Component extends DCLogic {
         priceEl.style.setProperty('font-size', '30px', 'important');
         priceEl.style.setProperty('margin', '2px 0 0', 'important');
         priceEl.style.setProperty('padding-left', '0', 'important');
+        priceEl.style.setProperty('text-align', 'left', 'important');
+        priceEl.style.setProperty('justify-content', 'flex-start', 'important');
+        priceEl.style.setProperty('width', 'fit-content', 'important');
+        priceEl.style.setProperty('margin-left', '-2px', 'important');
       }
+      if (addr1) { addr1.style.setProperty('text-align', 'left', 'important'); addr1.style.setProperty('justify-content', 'flex-start', 'important'); addr1.style.setProperty('width', 'fit-content', 'important'); }
+      if (addr2) { addr2.style.setProperty('text-align', 'left', 'important'); addr2.style.setProperty('justify-content', 'flex-start', 'important'); addr2.style.setProperty('width', 'fit-content', 'important'); }
       const zeroInset = (el) => {
         let n = el;
         for (let i = 0; i < 4 && n; i++) { n.style.setProperty('margin-left', '0', 'important'); n.style.setProperty('padding-left', '0', 'important'); n = n.parentElement; }
