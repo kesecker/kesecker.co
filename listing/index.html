@@ -254,29 +254,33 @@ class Component extends DCLogic {
       const labelEl = Array.from(container.querySelectorAll('*')).find((el) => !el.children.length && /^list price$/i.test(directText(el)));
       if (labelEl) { labelEl.style.setProperty('display', 'none', 'important'); priceRow.dataset.ihfLabelHidden = '1'; }
     }
+    priceLeaf.style.setProperty('margin', '0', 'important');
+    priceLeaf.style.setProperty('padding-left', '0', 'important');
     const badgeEl = leaves.find((el) => /^(Active|Pending|Sold|Contingent|Coming Soon)$/i.test(directText(el)));
-    if (badgeEl) {
-      badgeEl.style.setProperty('font-weight', '700', 'important');
-      badgeEl.style.setProperty('text-transform', 'uppercase', 'important');
-      badgeEl.style.setProperty('letter-spacing', '0.04em', 'important');
-      badgeEl.style.setProperty('font-size', '11px', 'important');
-    }
+    if (badgeEl) badgeEl.style.setProperty('font-weight', '700', 'important');
     const streetSuffixNames = Object.values(this._ihfStreetSuffixes);
     const streetRe = new RegExp('^\\d+\\s+.+(' + streetSuffixNames.join('|') + ')$');
     const streetEl = leaves.find((el) => streetRe.test(directText(el)));
-    if (streetEl && !streetEl.dataset.ihfMoved) {
-      streetEl.dataset.ihfMoved = '1';
+    const cityZipRe = /^[A-Za-z .'-]+,\s*[A-Z]{2}\s*\d{5}$/;
+    const cityZipEl = leaves.find((el) => cityZipRe.test(directText(el)));
+    if (streetEl) {
       streetEl.style.setProperty('text-align', 'left', 'important');
-      streetEl.style.setProperty('font-size', '15px', 'important');
+      streetEl.style.setProperty('font-size', '16px', 'important');
       streetEl.style.setProperty('font-weight', '400', 'important');
-      streetEl.style.setProperty('margin', '4px 0 0', 'important');
-      priceRow.parentElement.insertBefore(streetEl, priceRow.nextSibling);
+      streetEl.style.setProperty('margin', '2px 0 0', 'important');
+      streetEl.style.setProperty('padding-left', '0', 'important');
+      if (!streetEl.dataset.ihfMoved) { streetEl.dataset.ihfMoved = '1'; priceRow.parentElement.insertBefore(streetEl, priceRow.nextSibling); }
+    }
+    if (cityZipEl) {
+      cityZipEl.style.setProperty('font-size', '16px', 'important');
+      cityZipEl.style.setProperty('margin', '2px 0 0', 'important');
+      cityZipEl.style.setProperty('padding-left', '0', 'important');
     }
     if (!this._ihfTitleObserverBound) {
       this._ihfTitleObserverBound = true;
       const fixTitle = () => {
         const t = document.title;
-        const fixed = t.replace(/\b([A-Za-z .'-]+),\s*([A-Z]{2})\b/g, (m, city, st) => city !== city.toUpperCase() ? m : city.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase()) + ', ' + st);
+        const fixed = t.replace(/\b([A-Z]{2,}(?:[ .'-][A-Z]{2,})*),\s*([A-Z]{2})\b/g, (m, city, st) => city.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase()) + ', ' + st);
         if (fixed !== t) document.title = fixed;
       };
       const titleEl = document.querySelector('title');
