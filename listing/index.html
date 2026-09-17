@@ -254,14 +254,34 @@ class Component extends DCLogic {
       const labelEl = Array.from(container.querySelectorAll('*')).find((el) => !el.children.length && /^list price$/i.test(directText(el)));
       if (labelEl) { labelEl.style.setProperty('display', 'none', 'important'); priceRow.dataset.ihfLabelHidden = '1'; }
     }
-    const h1 = root.querySelector('h1');
-    if (h1 && !h1.dataset.ihfMoved) {
-      h1.dataset.ihfMoved = '1';
-      h1.style.setProperty('text-align', 'left', 'important');
-      h1.style.setProperty('font-size', '15px', 'important');
-      h1.style.setProperty('font-weight', '400', 'important');
-      h1.style.setProperty('margin', '4px 0 0', 'important');
-      priceRow.parentElement.insertBefore(h1, priceRow.nextSibling);
+    const badgeEl = leaves.find((el) => /^(Active|Pending|Sold|Contingent|Coming Soon)$/i.test(directText(el)));
+    if (badgeEl) {
+      badgeEl.style.setProperty('font-weight', '700', 'important');
+      badgeEl.style.setProperty('text-transform', 'uppercase', 'important');
+      badgeEl.style.setProperty('letter-spacing', '0.04em', 'important');
+      badgeEl.style.setProperty('font-size', '11px', 'important');
+    }
+    const streetSuffixNames = Object.values(this._ihfStreetSuffixes);
+    const streetRe = new RegExp('^\\d+\\s+.+(' + streetSuffixNames.join('|') + ')$');
+    const streetEl = leaves.find((el) => streetRe.test(directText(el)));
+    if (streetEl && !streetEl.dataset.ihfMoved) {
+      streetEl.dataset.ihfMoved = '1';
+      streetEl.style.setProperty('text-align', 'left', 'important');
+      streetEl.style.setProperty('font-size', '15px', 'important');
+      streetEl.style.setProperty('font-weight', '400', 'important');
+      streetEl.style.setProperty('margin', '4px 0 0', 'important');
+      priceRow.parentElement.insertBefore(streetEl, priceRow.nextSibling);
+    }
+    if (!this._ihfTitleObserverBound) {
+      this._ihfTitleObserverBound = true;
+      const fixTitle = () => {
+        const t = document.title;
+        const fixed = t.replace(/\b([A-Za-z .'-]+),\s*([A-Z]{2})\b/g, (m, city, st) => city !== city.toUpperCase() ? m : city.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase()) + ', ' + st);
+        if (fixed !== t) document.title = fixed;
+      };
+      const titleEl = document.querySelector('title');
+      if (titleEl) new MutationObserver(fixTitle).observe(titleEl, { childList: true, characterData: true, subtree: true });
+      fixTitle();
     }
   };
   _ihfFixFormValues = (root) => {
