@@ -286,13 +286,15 @@ class Component extends DCLogic {
       if (priceEl) {
         priceEl.style.setProperty('font-size', '30px', 'important');
         priceEl.style.setProperty('margin', '2px 0 0', 'important');
-        priceEl.style.setProperty('margin-left', '0', 'important');
         priceEl.style.setProperty('padding-left', '0', 'important');
-        if (priceEl.parentElement) {
-          priceEl.parentElement.style.setProperty('margin-left', '0', 'important');
-          priceEl.parentElement.style.setProperty('padding-left', '0', 'important');
-        }
       }
+      const zeroInset = (el) => {
+        let n = el;
+        for (let i = 0; i < 4 && n; i++) { n.style.setProperty('margin-left', '0', 'important'); n.style.setProperty('padding-left', '0', 'important'); n = n.parentElement; }
+      };
+      if (priceEl) zeroInset(priceEl.parentElement);
+      if (addr1) zeroInset(addr1.parentElement);
+      if (addr2) zeroInset(addr2.parentElement);
       if (addr1) addr1.style.setProperty('font-size', '18px', 'important');
       if (addr2) addr2.style.setProperty('font-size', '18px', 'important');
       if (!header.dataset.ihfBreadcrumb && addr1 && addr2) {
