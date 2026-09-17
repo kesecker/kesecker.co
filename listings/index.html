@@ -237,10 +237,10 @@ class Component extends DCLogic {
       const img = card.querySelector('img[src*="/property/"]');
       const link = card.querySelector('a[href]');
       if (!img || !link) return;
-      const m = img.src.match(/\/property\/[A-Za-z]+\/(\d+)\//);
+      const m = img.src.match(/\/property\/([A-Za-z]+)\/(\d+)\//);
       if (!m) return;
       card._ihfLinkFixed = true;
-      link.setAttribute('href', 'https://keseckerproperties.com/listing?id=MLSL' + m[1]);
+      link.setAttribute('href', 'https://keseckerproperties.com/listing?id=' + m[2]);
     });
   };
   _ihfFixCloseButtons = (root) => {
