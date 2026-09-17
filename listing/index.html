@@ -284,6 +284,30 @@ class Component extends DCLogic {
         header.parentElement.insertBefore(bc, header);
       }
     }
+    const statsRow = root.querySelector('.listing-attributes');
+    if (statsRow && !statsRow.dataset.ihfStyled) {
+      statsRow.dataset.ihfStyled = '1';
+      statsRow.style.setProperty('display', 'flex', 'important');
+      statsRow.style.setProperty('gap', '10px', 'important');
+      statsRow.style.setProperty('flex-wrap', 'wrap', 'important');
+      Array.from(statsRow.children).forEach((cell) => {
+        cell.style.setProperty('border', '1px solid #e0e0e0', 'important');
+        cell.style.setProperty('border-radius', '8px', 'important');
+        cell.style.setProperty('padding', '10px 16px', 'important');
+        cell.style.setProperty('flex', '1 1 120px', 'important');
+        cell.style.setProperty('box-sizing', 'border-box', 'important');
+      });
+    }
+    const sidebar = root.querySelector('.listing-sidebar');
+    if (sidebar && !sidebar.dataset.ihfStyled) {
+      sidebar.dataset.ihfStyled = '1';
+      sidebar.style.setProperty('border', '1px solid #e0e0e0', 'important');
+      sidebar.style.setProperty('border-radius', '10px', 'important');
+      sidebar.style.setProperty('padding', '20px', 'important');
+      sidebar.style.setProperty('box-shadow', '0 4px 16px rgba(0,0,0,0.06)', 'important');
+      sidebar.style.setProperty('box-sizing', 'border-box', 'important');
+      sidebar.querySelectorAll('button').forEach((btn) => btn.style.setProperty('border-radius', '6px', 'important'));
+    }
     if (!this._ihfTitleObserverBound) {
       this._ihfTitleObserverBound = true;
       const fixTitle = () => {
