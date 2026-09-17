@@ -306,11 +306,23 @@ class Component extends DCLogic {
     if (badgeTextEl) {
       let n = badgeTextEl;
       for (let i = 0; i < 3 && n; i++) {
-        n.style.setProperty('background-color', '#2f6d31', 'important');
-        n.style.setProperty('color', '#ffffff', 'important');
-        n.style.setProperty('font-weight', '700', 'important');
-        n.style.setProperty('border-radius', '4px', 'important');
+        n.style.setProperty('background-color', '#ffffff', 'important');
+        n.style.setProperty('color', '#1a1a1a', 'important');
+        n.style.setProperty('font-weight', '600', 'important');
+        n.style.setProperty('border-radius', '999px', 'important');
+        n.style.setProperty('border', '1px solid #e0e0e0', 'important');
+        n.style.setProperty('font-size', '13px', 'important');
+        n.style.setProperty('padding', '4px 14px 4px 10px', 'important');
+        n.style.setProperty('display', 'inline-flex', 'important');
+        n.style.setProperty('align-items', 'center', 'important');
+        n.style.setProperty('gap', '6px', 'important');
         n = n.parentElement;
+      }
+      if (!badgeTextEl.dataset.ihfDot) {
+        badgeTextEl.dataset.ihfDot = '1';
+        const dot = document.createElement('span');
+        dot.style.cssText = 'display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0;';
+        badgeTextEl.insertBefore(dot, badgeTextEl.firstChild);
       }
     }
     allLeaves.forEach((el) => {
