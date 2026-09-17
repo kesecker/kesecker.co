@@ -283,7 +283,12 @@ class Component extends DCLogic {
         });
         if (chip) chip.style.setProperty('padding', '2px 10px', 'important');
       }
-      if (priceEl) priceEl.style.setProperty('font-size', '30px', 'important');
+      if (priceEl) {
+        priceEl.style.setProperty('font-size', '30px', 'important');
+        priceEl.style.setProperty('margin', '2px 0 0', 'important');
+        priceEl.style.setProperty('margin-left', '0', 'important');
+        priceEl.style.setProperty('padding-left', '0', 'important');
+      }
       if (addr1) addr1.style.setProperty('font-size', '18px', 'important');
       if (addr2) addr2.style.setProperty('font-size', '18px', 'important');
       if (!header.dataset.ihfBreadcrumb && addr1 && addr2) {
@@ -297,10 +302,27 @@ class Component extends DCLogic {
     const tabLabels = ['Details', 'Map', 'Similar Listings', 'Mortgage Calc', 'Schools', 'Walk Score'];
     const allLeaves = Array.from(root.querySelectorAll('*')).filter((el) => !el.children.length);
     let firstTabEl = null;
+    const badgeTextEl = allLeaves.find((el) => /^(Active|Pending|Sold|Contingent|Coming Soon)$/i.test((el.textContent || '').trim()));
+    if (badgeTextEl) {
+      let n = badgeTextEl;
+      for (let i = 0; i < 3 && n; i++) {
+        n.style.setProperty('background-color', '#2f6d31', 'important');
+        n.style.setProperty('color', '#ffffff', 'important');
+        n.style.setProperty('font-weight', '700', 'important');
+        n.style.setProperty('border-radius', '4px', 'important');
+        n = n.parentElement;
+      }
+    }
     allLeaves.forEach((el) => {
       const t = (el.textContent || '').trim();
       if (!tabLabels.includes(t)) return;
       if (!firstTabEl) firstTabEl = el;
+      if (!firstTabEl.dataset.ihfShifted) {
+        let rowEl = el.parentElement;
+        let hops = 0;
+        while (rowEl && rowEl.children.length < 6 && rowEl.parentElement && hops < 4) { rowEl = rowEl.parentElement; hops++; }
+        if (rowEl) { firstTabEl.dataset.ihfShifted = '1'; rowEl.style.setProperty('padding-left', '60px', 'important'); }
+      }
       if (el.dataset.ihfTabHover) return;
       el.dataset.ihfTabHover = '1';
       el.style.setProperty('background-image', 'linear-gradient(#000000, #000000)', 'important');
@@ -313,23 +335,23 @@ class Component extends DCLogic {
       el.addEventListener('mouseleave', () => el.style.setProperty('background-size', '0 2px', 'important'));
     });
     const bcRow = root.querySelector('.listing-header') && root.querySelector('.listing-header').previousElementSibling;
-    if (firstTabEl && bcRow && bcRow.style && !bcRow.dataset.ihfAligned) {
+    if (firstTabEl && bcRow && bcRow.style) {
       const wantX = firstTabEl.getBoundingClientRect().left;
-      const gotX = bcRow.getBoundingClientRect().left;
+      const gotX = bcRow.getBoundingClientRect().left - (parseFloat(bcRow.style.marginLeft) || 0);
       const diff = Math.round(wantX - gotX);
-      if (diff) { bcRow.dataset.ihfAligned = '1'; bcRow.style.marginLeft = diff + 'px'; }
+      bcRow.style.marginLeft = diff + 'px';
     }
     const carousel = root.querySelector('.listing-photo-carousel');
     if (carousel && !carousel.dataset.ihfResized) {
       carousel.dataset.ihfResized = '1';
-      carousel.style.setProperty('max-height', '380px', 'important');
+      carousel.style.setProperty('max-height', '255px', 'important');
       carousel.style.setProperty('overflow', 'hidden', 'important');
       carousel.querySelectorAll('.carousel-root, .carousel, .slider-wrapper, ul.slider, li.slide').forEach((el) => {
-        el.style.setProperty('height', '380px', 'important');
-        el.style.setProperty('max-height', '380px', 'important');
+        el.style.setProperty('height', '255px', 'important');
+        el.style.setProperty('max-height', '255px', 'important');
       });
       carousel.querySelectorAll('li.slide img').forEach((img) => {
-        img.style.setProperty('height', '380px', 'important');
+        img.style.setProperty('height', '255px', 'important');
         img.style.setProperty('object-fit', 'cover', 'important');
         img.style.setProperty('width', '100%', 'important');
       });
