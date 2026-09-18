@@ -407,7 +407,8 @@ class Component extends DCLogic {
         bcEl.dataset.ihfLeveled = '1';
         rowEl.parentElement.style.setProperty('display', 'flex', 'important');
         rowEl.parentElement.style.setProperty('align-items', 'center', 'important');
-        rowEl.parentElement.style.setProperty('justify-content', 'space-between', 'important');
+        rowEl.parentElement.style.setProperty('justify-content', 'flex-start', 'important');
+        rowEl.parentElement.style.setProperty('gap', '48px', 'important');
         rowEl.parentElement.insertBefore(bcEl, rowEl);
       }
     }
