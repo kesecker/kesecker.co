@@ -239,6 +239,7 @@ class Component extends DCLogic {
     }
     try { this._ihfMoveResultsCount(root); } catch (e) {}
     try { this._ihfTraceHearts(root); } catch (e) {}
+    try { this._ihfFixDetailLayout(root); } catch (e) {}
     try { this._ihfFixFormValues(root); } catch (e) {}
     root.querySelectorAll('*').forEach((el) => { if (el.shadowRoot) this._ihfFixTextInRoot(el.shadowRoot); });
   };
