@@ -340,11 +340,16 @@ class Component extends DCLogic {
         dot.style.cssText = 'display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0;';
         badgeTextEl.insertBefore(dot, badgeTextEl.firstChild);
       }
-      if (header && !badgeTextEl.dataset.ihfFloated) {
+      if (carousel && !badgeTextEl.dataset.ihfFloated) {
         badgeTextEl.dataset.ihfFloated = '1';
-        badgeTextEl.style.setProperty('align-self', 'flex-start', 'important');
-        badgeTextEl.style.setProperty('margin-bottom', '8px', 'important');
-        header.insertBefore(badgeTextEl, header.firstChild);
+        carousel.style.setProperty('position', 'relative', 'important');
+        badgeTextEl.style.setProperty('position', 'absolute', 'important');
+        badgeTextEl.style.setProperty('top', '16px', 'important');
+        badgeTextEl.style.setProperty('left', '16px', 'important');
+        badgeTextEl.style.setProperty('z-index', '20', 'important');
+        badgeTextEl.style.setProperty('margin', '0', 'important');
+        badgeTextEl.style.setProperty('box-shadow', '0 2px 8px rgba(0,0,0,0.25)', 'important');
+        carousel.appendChild(badgeTextEl);
       }
     }
     const openHouseEl = allLeaves.find((el) => /^open house$/i.test((el.textContent || '').trim()));
@@ -426,7 +431,7 @@ class Component extends DCLogic {
       const css = '.listing-photo-carousel, .listing-photo-carousel .carousel-root, .listing-photo-carousel .carousel, .listing-photo-carousel .slider-wrapper, .listing-photo-carousel ul.slider, .listing-photo-carousel li.slide { height:' + CAROUSEL_PX + 'px !important; max-height:' + CAROUSEL_PX + 'px !important; min-height:' + CAROUSEL_PX + 'px !important; }'
         + '.listing-photo-carousel { max-width:1100px !important; margin:24px auto 0 !important; overflow:hidden !important; padding:0 !important; box-sizing:border-box !important; }'
         + '.listing-photo-carousel > div { position:static !important; top:auto !important; padding:0 !important; }'
-        + '.listing-photo-carousel li.slide img { height:' + CAROUSEL_PX + 'px !important; object-fit:cover !important; width:100% !important; }';
+        + '.listing-photo-carousel li.slide img { height:' + CAROUSEL_PX + 'px !important; object-fit:contain !important; background:#000 !important; width:100% !important; }';
       const styleEl = document.createElement('style');
       styleEl.textContent = css;
       if (root.nodeType === 11) { root.appendChild(styleEl); } else { document.head.appendChild(styleEl); }
@@ -453,7 +458,8 @@ class Component extends DCLogic {
       });
       carousel.querySelectorAll('li.slide img').forEach((img) => {
         img.style.setProperty('height', CAROUSEL_PX + 'px', 'important');
-        img.style.setProperty('object-fit', 'cover', 'important');
+        img.style.setProperty('object-fit', 'contain', 'important');
+        img.style.setProperty('background', '#000', 'important');
         img.style.setProperty('width', '100%', 'important');
         let n = img.parentElement;
         for (let i = 0; i < 6 && n && n !== carousel; i++) {
