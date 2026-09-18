@@ -407,11 +407,12 @@ class Component extends DCLogic {
         wrap.style.setProperty('width', '100%', 'important');
         wrap.style.setProperty('max-width', 'none', 'important');
         wrap.style.setProperty('overflow', 'visible', 'important');
-        wrap.style.setProperty('flex-wrap', 'nowrap', 'important');
-        rowEl.style.setProperty('flex-shrink', '1', 'important');
+        wrap.style.setProperty('flex-wrap', 'wrap', 'important');
+        wrap.style.setProperty('row-gap', '8px', 'important');
+        rowEl.style.setProperty('flex-shrink', '0', 'important');
         rowEl.style.setProperty('overflow', 'visible', 'important');
-        rowEl.style.setProperty('gap', '20px', 'important');
         bcEl.style.setProperty('flex-shrink', '0', 'important');
+        bcEl.style.setProperty('font-size', '14px', 'important');
         wrap.insertBefore(bcEl, rowEl);
       }
     }
