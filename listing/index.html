@@ -420,14 +420,26 @@ class Component extends DCLogic {
       const diff = Math.round(wantX - gotX);
       bcRow.style.marginLeft = diff + 'px';
     }
+    if (carousel && !root.__ihfCarouselCssInjected) {
+      root.__ihfCarouselCssInjected = true;
+      const css = '.listing-photo-carousel, .listing-photo-carousel .carousel-root, .listing-photo-carousel .carousel, .listing-photo-carousel .slider-wrapper, .listing-photo-carousel ul.slider, .listing-photo-carousel li.slide { height:400px !important; max-height:400px !important; min-height:400px !important; }'
+        + '.listing-photo-carousel { max-width:760px !important; margin:0 auto !important; overflow:hidden !important; }'
+        + '.listing-photo-carousel li.slide img { height:400px !important; object-fit:cover !important; width:100% !important; }';
+      const styleEl = document.createElement('style');
+      styleEl.textContent = css;
+      if (root.nodeType === 11) { root.appendChild(styleEl); } else { document.head.appendChild(styleEl); }
+    }
     if (carousel) {
+      carousel.style.setProperty('height', '400px', 'important');
       carousel.style.setProperty('max-height', '400px', 'important');
+      carousel.style.setProperty('min-height', '400px', 'important');
       carousel.style.setProperty('overflow', 'hidden', 'important');
       carousel.style.setProperty('max-width', '760px', 'important');
       carousel.style.setProperty('margin', '0 auto', 'important');
       carousel.querySelectorAll('.carousel-root, .carousel, .slider-wrapper, ul.slider, li.slide').forEach((el) => {
         el.style.setProperty('height', '400px', 'important');
         el.style.setProperty('max-height', '400px', 'important');
+        el.style.setProperty('min-height', '400px', 'important');
       });
       carousel.querySelectorAll('li.slide img').forEach((img) => {
         img.style.setProperty('height', '400px', 'important');
@@ -437,6 +449,7 @@ class Component extends DCLogic {
         for (let i = 0; i < 6 && n && n !== carousel; i++) {
           n.style.setProperty('height', '400px', 'important');
           n.style.setProperty('max-height', '400px', 'important');
+          n.style.setProperty('min-height', '400px', 'important');
           n = n.parentElement;
         }
       });
