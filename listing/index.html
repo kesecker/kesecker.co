@@ -246,6 +246,7 @@ class Component extends DCLogic {
   _ihfFixDetailLayout = (root) => {
     const carousel = root.querySelector('.listing-photo-carousel');
     const header = root.querySelector('.listing-header');
+    let firstTabEl = null;
     if (header) {
       const priceEl = header.querySelector('.list-price');
       const addr1 = header.querySelector('.listing-address-1');
@@ -328,7 +329,6 @@ class Component extends DCLogic {
     }
     const tabLabels = ['Details', 'Map', 'Similar Listings', 'Mortgage Calc', 'Schools', 'Walk Score'];
     const allLeaves = Array.from(root.querySelectorAll('*')).filter((el) => !el.children.length);
-    let firstTabEl = null;
     const badgeTextEl = allLeaves.find((el) => /^(Active|Pending|Sold|Contingent|Coming Soon)$/i.test((el.textContent || '').trim()));
     if (badgeTextEl) {
       badgeTextEl.style.setProperty('background-color', '#ffffff', 'important');
