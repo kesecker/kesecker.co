@@ -376,12 +376,7 @@ class Component extends DCLogic {
       const t = (el.textContent || '').trim();
       if (!tabLabels.includes(t)) return;
       if (!firstTabEl) firstTabEl = el;
-      if (!firstTabEl.dataset.ihfShifted) {
-        let rowEl = el.parentElement;
-        let hops = 0;
-        while (rowEl && rowEl.children.length < 6 && rowEl.parentElement && hops < 4) { rowEl = rowEl.parentElement; hops++; }
-        if (rowEl) { firstTabEl.dataset.ihfShifted = '1'; rowEl.style.setProperty('padding-left', '60px', 'important'); }
-      }
+
       if (t === 'Details' && !el.dataset.ihfActiveSet) {
         el.dataset.ihfActiveSet = '1';
         el.style.setProperty('font-weight', '700', 'important');
@@ -405,11 +400,19 @@ class Component extends DCLogic {
       while (rowEl && rowEl.children.length < 6 && rowEl.parentElement && hops < 4) { rowEl = rowEl.parentElement; hops++; }
       if (rowEl && rowEl.parentElement) {
         bcEl.dataset.ihfLeveled = '1';
-        rowEl.parentElement.style.setProperty('display', 'flex', 'important');
-        rowEl.parentElement.style.setProperty('align-items', 'center', 'important');
-        rowEl.parentElement.style.setProperty('justify-content', 'flex-start', 'important');
-        rowEl.parentElement.style.setProperty('gap', '48px', 'important');
-        rowEl.parentElement.insertBefore(bcEl, rowEl);
+        const wrap = rowEl.parentElement;
+        wrap.style.setProperty('display', 'flex', 'important');
+        wrap.style.setProperty('align-items', 'center', 'important');
+        wrap.style.setProperty('justify-content', 'space-between', 'important');
+        wrap.style.setProperty('width', '100%', 'important');
+        wrap.style.setProperty('max-width', 'none', 'important');
+        wrap.style.setProperty('overflow', 'visible', 'important');
+        wrap.style.setProperty('flex-wrap', 'nowrap', 'important');
+        rowEl.style.setProperty('flex-shrink', '1', 'important');
+        rowEl.style.setProperty('overflow', 'visible', 'important');
+        rowEl.style.setProperty('gap', '20px', 'important');
+        bcEl.style.setProperty('flex-shrink', '0', 'important');
+        wrap.insertBefore(bcEl, rowEl);
       }
     }
     const bcRow = root.querySelector('.listing-header') && root.querySelector('.listing-header').previousElementSibling;
