@@ -307,9 +307,23 @@ class Component extends DCLogic {
       if (!header.dataset.ihfBreadcrumb && addr1 && addr2) {
         header.dataset.ihfBreadcrumb = '1';
         const bc = document.createElement('div');
-        bc.style.cssText = 'font-size:15px;color:#888;margin:0 0 16px;';
+        bc.dataset.ihfBc = '1';
+        bc.style.cssText = 'font-size:15px;color:#888;white-space:nowrap;display:flex;align-items:center;';
         bc.innerHTML = '<a href="https://keseckerproperties.com/listings" style="color:#888;text-decoration:none;">Home Search</a><span style="margin:0 6px;">\u203a</span><span style="color:#1a1a1a;">' + addr1.textContent + ', ' + addr2.textContent + '</span>';
         header.parentElement.insertBefore(bc, header);
+      }
+    }
+    const bcEl = root.querySelector('[data-ihf-bc]');
+    if (firstTabEl && bcEl && !bcEl.dataset.ihfLeveled) {
+      let rowEl = firstTabEl.parentElement;
+      let hops = 0;
+      while (rowEl && rowEl.children.length < 6 && rowEl.parentElement && hops < 4) { rowEl = rowEl.parentElement; hops++; }
+      if (rowEl && rowEl.parentElement) {
+        bcEl.dataset.ihfLeveled = '1';
+        rowEl.parentElement.style.setProperty('display', 'flex', 'important');
+        rowEl.parentElement.style.setProperty('align-items', 'center', 'important');
+        rowEl.parentElement.style.setProperty('justify-content', 'space-between', 'important');
+        rowEl.parentElement.insertBefore(bcEl, rowEl);
       }
     }
     const tabLabels = ['Details', 'Map', 'Similar Listings', 'Mortgage Calc', 'Schools', 'Walk Score'];
@@ -341,15 +355,11 @@ class Component extends DCLogic {
         dot.style.cssText = 'display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0;';
         badgeTextEl.insertBefore(dot, badgeTextEl.firstChild);
       }
-      if (carousel && !badgeTextEl.dataset.ihfFloated) {
+      if (header && !badgeTextEl.dataset.ihfFloated) {
         badgeTextEl.dataset.ihfFloated = '1';
-        carousel.style.setProperty('position', 'relative', 'important');
-        badgeTextEl.style.setProperty('position', 'absolute', 'important');
-        badgeTextEl.style.setProperty('top', '16px', 'important');
-        badgeTextEl.style.setProperty('left', '16px', 'important');
-        badgeTextEl.style.setProperty('z-index', '5', 'important');
-        badgeTextEl.style.setProperty('box-shadow', '0 2px 8px rgba(0,0,0,0.15)', 'important');
-        carousel.insertBefore(badgeTextEl, carousel.firstChild);
+        badgeTextEl.style.setProperty('align-self', 'flex-start', 'important');
+        badgeTextEl.style.setProperty('margin-bottom', '8px', 'important');
+        header.insertBefore(badgeTextEl, header.firstChild);
       }
     }
     const openHouseEl = allLeaves.find((el) => /^open house$/i.test((el.textContent || '').trim()));
@@ -464,15 +474,10 @@ class Component extends DCLogic {
       if (carousel) {
         let sharedParent = carousel.parentElement;
         while (sharedParent && !sharedParent.contains(sidebar)) sharedParent = sharedParent.parentElement;
-        if (sharedParent) {
-          sharedParent.style.setProperty('position', 'relative', 'important');
-          carousel.style.setProperty('width', '100%', 'important');
-        }
-        sidebar.style.setProperty('position', 'absolute', 'important');
-        sidebar.style.setProperty('top', '20px', 'important');
-        sidebar.style.setProperty('right', '20px', 'important');
-        sidebar.style.setProperty('z-index', '6', 'important');
+        if (sharedParent) sharedParent.style.setProperty('position', 'relative', 'important');
+        carousel.style.setProperty('width', '100%', 'important');
       }
+      sidebar.style.setProperty('display', 'none', 'important');
     }
     if (!this._ihfTitleObserverBound) {
       this._ihfTitleObserverBound = true;
