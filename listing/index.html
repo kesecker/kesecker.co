@@ -244,7 +244,10 @@ class Component extends DCLogic {
     root.querySelectorAll('*').forEach((el) => { if (el.shadowRoot) this._ihfFixTextInRoot(el.shadowRoot); });
   };
   _ihfFixDetailLayout = (root) => {
+<<<<<<< HEAD
     const carousel = root.querySelector('.listing-photo-carousel');
+=======
+>>>>>>> f96ff4d292ca2a1782a62fcc75ed4ef067551e74
     const header = root.querySelector('.listing-header');
     if (header) {
       const priceEl = header.querySelector('.list-price');
@@ -341,6 +344,7 @@ class Component extends DCLogic {
         dot.style.cssText = 'display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0;';
         badgeTextEl.insertBefore(dot, badgeTextEl.firstChild);
       }
+<<<<<<< HEAD
       if (carousel && !badgeTextEl.dataset.ihfFloated) {
         badgeTextEl.dataset.ihfFloated = '1';
         carousel.style.setProperty('position', 'relative', 'important');
@@ -351,6 +355,8 @@ class Component extends DCLogic {
         badgeTextEl.style.setProperty('box-shadow', '0 2px 8px rgba(0,0,0,0.15)', 'important');
         carousel.insertBefore(badgeTextEl, carousel.firstChild);
       }
+=======
+>>>>>>> f96ff4d292ca2a1782a62fcc75ed4ef067551e74
     }
     const openHouseEl = allLeaves.find((el) => /^open house$/i.test((el.textContent || '').trim()));
     if (openHouseEl) {
@@ -384,12 +390,15 @@ class Component extends DCLogic {
         while (rowEl && rowEl.children.length < 6 && rowEl.parentElement && hops < 4) { rowEl = rowEl.parentElement; hops++; }
         if (rowEl) { firstTabEl.dataset.ihfShifted = '1'; rowEl.style.setProperty('padding-left', '60px', 'important'); }
       }
+<<<<<<< HEAD
       if (t === 'Details' && !el.dataset.ihfActiveSet) {
         el.dataset.ihfActiveSet = '1';
         el.style.setProperty('font-weight', '700', 'important');
         el.style.setProperty('color', '#1a1a1a', 'important');
         el.style.setProperty('background-size', '100% 2px', 'important');
       }
+=======
+>>>>>>> f96ff4d292ca2a1782a62fcc75ed4ef067551e74
       if (el.dataset.ihfTabHover) return;
       el.dataset.ihfTabHover = '1';
       el.style.setProperty('background-image', 'linear-gradient(#000000, #000000)', 'important');
@@ -436,6 +445,7 @@ class Component extends DCLogic {
         cell.style.setProperty('box-sizing', 'border-box', 'important');
       });
     }
+<<<<<<< HEAD
     if (header && statsRow && !header.dataset.ihfRowBuilt) {
       header.dataset.ihfRowBuilt = '1';
       const row = document.createElement('div');
@@ -448,6 +458,8 @@ class Component extends DCLogic {
       statsRow.style.setProperty('max-width', '520px', 'important');
       if (carousel && carousel.parentElement) carousel.parentElement.insertBefore(row, carousel.nextSibling);
     }
+=======
+>>>>>>> f96ff4d292ca2a1782a62fcc75ed4ef067551e74
     const sidebar = root.querySelector('.listing-sidebar');
     if (sidebar && !sidebar.dataset.ihfStyled) {
       sidebar.dataset.ihfStyled = '1';
