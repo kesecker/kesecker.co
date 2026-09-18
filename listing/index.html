@@ -8,6 +8,7 @@
 <body>
 <x-dc>
 <helmet>
+  <title>Home Search | Jackson Kesecker</title>
   <link rel="icon" type="image/png" href="assets/favicon-dark.png" media="(prefers-color-scheme: dark)">
   <link rel="icon" type="image/png" href="assets/favicon-light.png" media="(prefers-color-scheme: light)">
   <link rel="icon" type="image/png" href="assets/favicon-light.png">
@@ -77,7 +78,7 @@
     <dc-import name="ContactModal" hint-size="0,0"></dc-import>
   </div>
 
-  <div style="height: calc(100vh - 92px); overflow-y: auto;">
+  <div style="height: calc(100vh - 92px); overflow-y: auto; scroll-behavior: smooth;">
     <div id="ihf-listing-detail" ref="{{ ihfListingDetailRef }}" style="width: 100%; min-height: 100%; padding: 24px 36px; box-sizing: border-box;"></div>
   </div>
 
@@ -207,6 +208,7 @@ class Component extends DCLogic {
         + "[role=\"menu\"] { border: none !important; border-radius: 0 !important; box-shadow: none !important; background: transparent !important; padding: 0 !important; margin: 0 !important; }"
         + ".ihf-listing-result-cell, [class*='listing-card' i], [class*='result-cell' i], [class*='gallery-card' i] { border: none !important; box-shadow: none !important; background: none !important; background-color: transparent !important; }"
         + "[class*='price' i] { font-weight: 700 !important; }"
+        + "[class*='status' i] { font-weight: 700 !important; }"
         + ".MuiButtonBase-root:hover, .MuiIconButton-root:hover, .MuiFormControl-root:hover, .MuiAutocomplete-root:hover, .MuiInputBase-root:hover, .MuiOutlinedInput-root:hover, .MuiFilledInput-root:hover, [class*='Input' i]:hover, [class^='ihf' i]:hover { background-color: transparent !important; }"
         + ".MuiFormControl-root, .MuiAutocomplete-root, .MuiInputBase-root { background-image: linear-gradient(#000000, #000000) !important; background-repeat: no-repeat !important; background-position: left bottom !important; background-size: 0 2px !important; transition: background-size 0.3s ease !important; }"
         + ".MuiFormControl-root:hover, .MuiAutocomplete-root:hover, .MuiInputBase-root:hover, .MuiFormControl-root:focus-within, .MuiAutocomplete-root:focus-within, .MuiInputBase-root:focus-within { background-size: 100% 2px !important; }"
@@ -237,7 +239,253 @@ class Component extends DCLogic {
     }
     this._ihfMoveResultsCount(root);
     this._ihfTraceHearts(root);
+    this._ihfFixDetailLayout(root);
+    this._ihfFixFormValues(root);
     root.querySelectorAll('*').forEach((el) => { if (el.shadowRoot) this._ihfFixTextInRoot(el.shadowRoot); });
+  };
+  _ihfFixDetailLayout = (root) => {
+    const carousel = root.querySelector('.listing-photo-carousel');
+    const header = root.querySelector('.listing-header');
+    if (header) {
+      const priceEl = header.querySelector('.list-price');
+      const addr1 = header.querySelector('.listing-address-1');
+      const addr2 = header.querySelector('.listing-address-2');
+      const statusWrap = header.querySelector('[class*="listing-status-"]');
+      const labelEl = Array.from(header.querySelectorAll('*')).find((el) => !el.children.length && /^list price$/i.test((el.textContent || '').trim()));
+      if (labelEl) labelEl.style.setProperty('display', 'none', 'important');
+      if (priceEl) {
+        priceEl.style.setProperty('font-weight', '700', 'important');
+        priceEl.style.setProperty('margin', '2px 0 0', 'important');
+        priceEl.style.setProperty('padding-left', '0', 'important');
+      }
+      if (addr1) {
+        addr1.style.setProperty('font-size', '16px', 'important');
+        addr1.style.setProperty('font-weight', '400', 'important');
+        addr1.style.setProperty('text-align', 'left', 'important');
+        addr1.style.setProperty('margin', '3px 0 0', 'important');
+        addr1.style.setProperty('line-height', '1.3', 'important');
+      }
+      if (addr2) {
+        addr2.style.setProperty('font-size', '16px', 'important');
+        addr2.style.setProperty('font-weight', '400', 'important');
+        addr2.style.setProperty('margin', '1px 0 6px', 'important');
+        addr2.style.setProperty('line-height', '1.3', 'important');
+      }
+      if (statusWrap) {
+        const chip = statusWrap.querySelector('.MuiChip-root');
+        const chipLabel = statusWrap.querySelector('.MuiChip-label');
+        [chip, chipLabel].forEach((el) => {
+          if (!el) return;
+          el.style.setProperty('background-color', '#2f6d31', 'important');
+          el.style.setProperty('color', '#ffffff', 'important');
+          el.style.setProperty('font-weight', '700', 'important');
+          el.style.setProperty('border-radius', '4px', 'important');
+          el.style.setProperty('font-size', '12px', 'important');
+        });
+        if (chip) chip.style.setProperty('padding', '2px 10px', 'important');
+      }
+      if (priceEl) {
+        priceEl.style.setProperty('font-size', '30px', 'important');
+        priceEl.style.setProperty('margin', '2px 0 0', 'important');
+        priceEl.style.setProperty('padding-left', '0', 'important');
+        priceEl.style.setProperty('text-align', 'left', 'important');
+        priceEl.style.setProperty('justify-content', 'flex-start', 'important');
+        priceEl.style.setProperty('width', 'fit-content', 'important');
+        priceEl.style.setProperty('margin-left', '-2px', 'important');
+      }
+      if (addr1) { addr1.style.setProperty('text-align', 'left', 'important'); addr1.style.setProperty('justify-content', 'flex-start', 'important'); addr1.style.setProperty('width', 'fit-content', 'important'); }
+      if (addr2) { addr2.style.setProperty('text-align', 'left', 'important'); addr2.style.setProperty('justify-content', 'flex-start', 'important'); addr2.style.setProperty('width', 'fit-content', 'important'); }
+      const zeroInset = (el) => {
+        let n = el;
+        for (let i = 0; i < 4 && n; i++) { n.style.setProperty('margin-left', '0', 'important'); n.style.setProperty('padding-left', '0', 'important'); n = n.parentElement; }
+      };
+      if (priceEl) zeroInset(priceEl.parentElement);
+      if (addr1) zeroInset(addr1.parentElement);
+      if (addr2) zeroInset(addr2.parentElement);
+      if (addr1) addr1.style.setProperty('font-size', '18px', 'important');
+      if (addr2) addr2.style.setProperty('font-size', '18px', 'important');
+      if (!header.dataset.ihfBreadcrumb && addr1 && addr2) {
+        header.dataset.ihfBreadcrumb = '1';
+        const bc = document.createElement('div');
+        bc.style.cssText = 'font-size:15px;color:#888;margin:0 0 16px;';
+        bc.innerHTML = '<a href="https://keseckerproperties.com/listings" style="color:#888;text-decoration:none;">Home Search</a><span style="margin:0 6px;">\u203a</span><span style="color:#1a1a1a;">' + addr1.textContent + ', ' + addr2.textContent + '</span>';
+        header.parentElement.insertBefore(bc, header);
+      }
+    }
+    const tabLabels = ['Details', 'Map', 'Similar Listings', 'Mortgage Calc', 'Schools', 'Walk Score'];
+    const allLeaves = Array.from(root.querySelectorAll('*')).filter((el) => !el.children.length);
+    let firstTabEl = null;
+    const badgeTextEl = allLeaves.find((el) => /^(Active|Pending|Sold|Contingent|Coming Soon)$/i.test((el.textContent || '').trim()));
+    if (badgeTextEl) {
+      badgeTextEl.style.setProperty('background-color', '#ffffff', 'important');
+      badgeTextEl.style.setProperty('color', '#1a1a1a', 'important');
+      badgeTextEl.style.setProperty('font-weight', '600', 'important');
+      badgeTextEl.style.setProperty('border-radius', '999px', 'important');
+      badgeTextEl.style.setProperty('border', '1px solid #e0e0e0', 'important');
+      badgeTextEl.style.setProperty('font-size', '13px', 'important');
+      badgeTextEl.style.setProperty('padding', '4px 14px 4px 10px', 'important');
+      badgeTextEl.style.setProperty('display', 'inline-flex', 'important');
+      badgeTextEl.style.setProperty('align-items', 'center', 'important');
+      badgeTextEl.style.setProperty('gap', '6px', 'important');
+      let p = badgeTextEl.parentElement;
+      for (let i = 0; i < 2 && p; i++) {
+        p.style.setProperty('background', 'transparent', 'important');
+        p.style.setProperty('border', 'none', 'important');
+        p.style.setProperty('padding', '0', 'important');
+        p.style.setProperty('box-shadow', 'none', 'important');
+        p = p.parentElement;
+      }
+      if (!badgeTextEl.dataset.ihfDot) {
+        badgeTextEl.dataset.ihfDot = '1';
+        const dot = document.createElement('span');
+        dot.style.cssText = 'display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0;';
+        badgeTextEl.insertBefore(dot, badgeTextEl.firstChild);
+      }
+      if (carousel && !badgeTextEl.dataset.ihfFloated) {
+        badgeTextEl.dataset.ihfFloated = '1';
+        carousel.style.setProperty('position', 'relative', 'important');
+        badgeTextEl.style.setProperty('position', 'absolute', 'important');
+        badgeTextEl.style.setProperty('top', '16px', 'important');
+        badgeTextEl.style.setProperty('left', '16px', 'important');
+        badgeTextEl.style.setProperty('z-index', '5', 'important');
+        badgeTextEl.style.setProperty('box-shadow', '0 2px 8px rgba(0,0,0,0.15)', 'important');
+        carousel.insertBefore(badgeTextEl, carousel.firstChild);
+      }
+    }
+    const openHouseEl = allLeaves.find((el) => /^open house$/i.test((el.textContent || '').trim()));
+    if (openHouseEl) {
+      const fullText = openHouseEl.getAttribute('title') || openHouseEl.getAttribute('aria-label') || (openHouseEl.parentElement && openHouseEl.parentElement.getAttribute('title'));
+      if (fullText && fullText.length > openHouseEl.textContent.trim().length) openHouseEl.textContent = fullText;
+      openHouseEl.style.setProperty('background-color', '#ffffff', 'important');
+      openHouseEl.style.setProperty('color', '#1a1a1a', 'important');
+      openHouseEl.style.setProperty('font-weight', '600', 'important');
+      openHouseEl.style.setProperty('border-radius', '999px', 'important');
+      openHouseEl.style.setProperty('border', '1px solid #1a1a1a', 'important');
+      openHouseEl.style.setProperty('font-size', '13px', 'important');
+      openHouseEl.style.setProperty('padding', '4px 14px', 'important');
+      openHouseEl.style.setProperty('display', 'inline-flex', 'important');
+      openHouseEl.style.setProperty('align-items', 'center', 'important');
+      let op = openHouseEl.parentElement;
+      for (let i = 0; i < 2 && op; i++) {
+        op.style.setProperty('background', 'transparent', 'important');
+        op.style.setProperty('border', 'none', 'important');
+        op.style.setProperty('padding', '0', 'important');
+        op.style.setProperty('box-shadow', 'none', 'important');
+        op = op.parentElement;
+      }
+    }
+    allLeaves.forEach((el) => {
+      const t = (el.textContent || '').trim();
+      if (!tabLabels.includes(t)) return;
+      if (!firstTabEl) firstTabEl = el;
+      if (!firstTabEl.dataset.ihfShifted) {
+        let rowEl = el.parentElement;
+        let hops = 0;
+        while (rowEl && rowEl.children.length < 6 && rowEl.parentElement && hops < 4) { rowEl = rowEl.parentElement; hops++; }
+        if (rowEl) { firstTabEl.dataset.ihfShifted = '1'; rowEl.style.setProperty('padding-left', '60px', 'important'); }
+      }
+      if (t === 'Details' && !el.dataset.ihfActiveSet) {
+        el.dataset.ihfActiveSet = '1';
+        el.style.setProperty('font-weight', '700', 'important');
+        el.style.setProperty('color', '#1a1a1a', 'important');
+        el.style.setProperty('background-size', '100% 2px', 'important');
+      }
+      if (el.dataset.ihfTabHover) return;
+      el.dataset.ihfTabHover = '1';
+      el.style.setProperty('background-image', 'linear-gradient(#000000, #000000)', 'important');
+      el.style.setProperty('background-repeat', 'no-repeat', 'important');
+      el.style.setProperty('background-position', 'left bottom', 'important');
+      el.style.setProperty('background-size', '0 2px', 'important');
+      el.style.setProperty('transition', 'background-size 0.3s ease', 'important');
+      el.style.setProperty('padding-bottom', '4px', 'important');
+      el.addEventListener('mouseenter', () => el.style.setProperty('background-size', '100% 2px', 'important'));
+      el.addEventListener('mouseleave', () => el.style.setProperty('background-size', '0 2px', 'important'));
+    });
+    const bcRow = root.querySelector('.listing-header') && root.querySelector('.listing-header').previousElementSibling;
+    if (firstTabEl && bcRow && bcRow.style) {
+      const wantX = firstTabEl.getBoundingClientRect().left;
+      const gotX = bcRow.getBoundingClientRect().left - (parseFloat(bcRow.style.marginLeft) || 0);
+      const diff = Math.round(wantX - gotX);
+      bcRow.style.marginLeft = diff + 'px';
+    }
+    const carousel = root.querySelector('.listing-photo-carousel');
+    if (carousel) {
+      carousel.style.setProperty('max-height', '255px', 'important');
+      carousel.style.setProperty('overflow', 'hidden', 'important');
+      carousel.querySelectorAll('.carousel-root, .carousel, .slider-wrapper, ul.slider, li.slide').forEach((el) => {
+        el.style.setProperty('height', '255px', 'important');
+        el.style.setProperty('max-height', '255px', 'important');
+      });
+      carousel.querySelectorAll('li.slide img').forEach((img) => {
+        img.style.setProperty('height', '255px', 'important');
+        img.style.setProperty('object-fit', 'cover', 'important');
+        img.style.setProperty('width', '100%', 'important');
+      });
+    }
+    const statsRow = root.querySelector('.listing-attributes');
+    if (statsRow && !statsRow.dataset.ihfStyled) {
+      statsRow.dataset.ihfStyled = '1';
+      statsRow.style.setProperty('display', 'flex', 'important');
+      statsRow.style.setProperty('gap', '10px', 'important');
+      statsRow.style.setProperty('flex-wrap', 'wrap', 'important');
+      Array.from(statsRow.children).forEach((cell) => {
+        cell.style.setProperty('border', '1px solid #e0e0e0', 'important');
+        cell.style.setProperty('border-radius', '8px', 'important');
+        cell.style.setProperty('padding', '10px 16px', 'important');
+        cell.style.setProperty('flex', '1 1 120px', 'important');
+        cell.style.setProperty('box-sizing', 'border-box', 'important');
+      });
+    }
+    if (header && statsRow && !header.dataset.ihfRowBuilt) {
+      header.dataset.ihfRowBuilt = '1';
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-top:18px;';
+      const left = document.createElement('div');
+      left.appendChild(header);
+      row.appendChild(left);
+      row.appendChild(statsRow);
+      statsRow.style.setProperty('flex', '0 1 auto', 'important');
+      statsRow.style.setProperty('max-width', '520px', 'important');
+      if (carousel && carousel.parentElement) carousel.parentElement.insertBefore(row, carousel.nextSibling);
+    }
+    const sidebar = root.querySelector('.listing-sidebar');
+    if (sidebar && !sidebar.dataset.ihfStyled) {
+      sidebar.dataset.ihfStyled = '1';
+      sidebar.style.setProperty('border', '1px solid #e0e0e0', 'important');
+      sidebar.style.setProperty('border-radius', '10px', 'important');
+      sidebar.style.setProperty('padding', '20px', 'important');
+      sidebar.style.setProperty('box-shadow', '0 4px 16px rgba(0,0,0,0.06)', 'important');
+      sidebar.style.setProperty('box-sizing', 'border-box', 'important');
+      sidebar.style.setProperty('max-width', '340px', 'important');
+      sidebar.style.setProperty('height', 'fit-content', 'important');
+      sidebar.style.setProperty('align-self', 'flex-start', 'important');
+      sidebar.style.setProperty('position', 'sticky', 'important');
+      sidebar.style.setProperty('top', '20px', 'important');
+      sidebar.querySelectorAll('button').forEach((btn) => btn.style.setProperty('border-radius', '6px', 'important'));
+    }
+    if (!this._ihfTitleObserverBound) {
+      this._ihfTitleObserverBound = true;
+      const fixTitle = () => {
+        const t = document.title;
+        let fixed = t.replace(/\b([A-Z]{2,}(?:[ .'-][A-Z]{2,})*),\s*([A-Z]{2})\b/g, (m, city, st) => city.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase()) + ', ' + st);
+        if (/\{listingAddress\}/.test(fixed)) fixed = 'Home Search | Jackson Kesecker';
+        if (fixed !== t) document.title = fixed;
+      };
+      const titleEl = document.querySelector('title');
+      if (titleEl) new MutationObserver(fixTitle).observe(titleEl, { childList: true, characterData: true, subtree: true });
+      fixTitle();
+    }
+  };
+  _ihfFixFormValues = (root) => {
+    root.querySelectorAll('textarea').forEach((ta) => {
+      if (ta.dataset.ihfValueFixed || !ta.value) return;
+      let fixed = ta.value.replace(/\b([A-Za-z .'-]+),\s*([A-Z]{2})\s*(\d{5})\b/g, (m, city, st, zip) => {
+        if (city !== city.toUpperCase()) return m;
+        return city.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase()) + ', ' + st + ' ' + zip;
+      });
+      fixed = fixed.replace(/\b([A-Za-z]{2,6})\b\.?/g, (word, base) => this._ihfStreetSuffixes[base.toUpperCase()] || word);
+      if (fixed !== ta.value) { ta.value = fixed; ta.dataset.ihfValueFixed = '1'; }
+    });
   };
   _ihfMoveResultsCount = (root) => {
     const leaves = Array.from(root.querySelectorAll('*'));
