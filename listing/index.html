@@ -405,7 +405,8 @@ class Component extends DCLogic {
         const wrap = rowEl.parentElement;
         wrap.style.setProperty('display', 'flex', 'important');
         wrap.style.setProperty('align-items', 'center', 'important');
-        wrap.style.setProperty('justify-content', 'space-between', 'important');
+        wrap.style.setProperty('justify-content', 'center', 'important');
+        wrap.style.setProperty('gap', '48px', 'important');
         wrap.style.setProperty('width', '100%', 'important');
         wrap.style.setProperty('max-width', 'none', 'important');
         wrap.style.setProperty('overflow', 'visible', 'important');
@@ -418,20 +419,13 @@ class Component extends DCLogic {
         wrap.insertBefore(bcEl, rowEl);
       }
     }
-    const bcRow = root.querySelector('.listing-header') && root.querySelector('.listing-header').previousElementSibling;
-    if (firstTabEl && bcRow && bcRow.style) {
-      const wantX = firstTabEl.getBoundingClientRect().left;
-      const gotX = bcRow.getBoundingClientRect().left - (parseFloat(bcRow.style.marginLeft) || 0);
-      const diff = Math.round(wantX - gotX);
-      bcRow.style.marginLeft = diff + 'px';
-    }
-    const CAROUSEL_PX = 620;
+    const CAROUSEL_PX = 720;
     if (carousel && !root.__ihfCarouselCssInjected) {
       root.__ihfCarouselCssInjected = true;
       const css = '.listing-photo-carousel, .listing-photo-carousel .carousel-root, .listing-photo-carousel .carousel, .listing-photo-carousel .slider-wrapper, .listing-photo-carousel ul.slider, .listing-photo-carousel li.slide { height:' + CAROUSEL_PX + 'px !important; max-height:' + CAROUSEL_PX + 'px !important; min-height:' + CAROUSEL_PX + 'px !important; }'
-        + '.listing-photo-carousel { max-width:1100px !important; margin:24px auto 0 !important; overflow:hidden !important; padding:0 !important; box-sizing:border-box !important; }'
+        + '.listing-photo-carousel { max-width:1300px !important; margin:24px auto 0 !important; overflow:hidden !important; padding:0 !important; box-sizing:border-box !important; }'
         + '.listing-photo-carousel > div { position:static !important; top:auto !important; padding:0 !important; }'
-        + '.listing-photo-carousel li.slide img { height:' + CAROUSEL_PX + 'px !important; object-fit:contain !important; background:#000 !important; width:100% !important; }';
+        + '.listing-photo-carousel li.slide img { height:' + CAROUSEL_PX + 'px !important; object-fit:cover !important; width:100% !important; }';
       const styleEl = document.createElement('style');
       styleEl.textContent = css;
       if (root.nodeType === 11) { root.appendChild(styleEl); } else { document.head.appendChild(styleEl); }
@@ -441,7 +435,7 @@ class Component extends DCLogic {
       carousel.style.setProperty('max-height', CAROUSEL_PX + 'px', 'important');
       carousel.style.setProperty('min-height', CAROUSEL_PX + 'px', 'important');
       carousel.style.setProperty('overflow', 'hidden', 'important');
-      carousel.style.setProperty('max-width', '1100px', 'important');
+      carousel.style.setProperty('max-width', '1300px', 'important');
       carousel.style.setProperty('margin', '0 auto', 'important');
       carousel.style.setProperty('padding', '0', 'important');
       carousel.style.setProperty('box-sizing', 'border-box', 'important');
@@ -458,8 +452,7 @@ class Component extends DCLogic {
       });
       carousel.querySelectorAll('li.slide img').forEach((img) => {
         img.style.setProperty('height', CAROUSEL_PX + 'px', 'important');
-        img.style.setProperty('object-fit', 'contain', 'important');
-        img.style.setProperty('background', '#000', 'important');
+        img.style.setProperty('object-fit', 'cover', 'important');
         img.style.setProperty('width', '100%', 'important');
         let n = img.parentElement;
         for (let i = 0; i < 6 && n && n !== carousel; i++) {
