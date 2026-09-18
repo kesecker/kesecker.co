@@ -237,10 +237,10 @@ class Component extends DCLogic {
         + ".heart-trace-clone path { transition: stroke-dashoffset 0.6s ease; } .ihf-listing-result-badge-fav:hover .heart-trace-clone path, .ihf-listing-result-badge-fav svg[fill=\"currentColor\"] ~ .heart-trace-clone path { stroke-dashoffset: 0 !important; }";
       (root === document ? document.head : root).appendChild(style);
     }
-    this._ihfMoveResultsCount(root);
-    this._ihfTraceHearts(root);
-    this._ihfFixDetailLayout(root);
-    this._ihfFixFormValues(root);
+    try { this._ihfMoveResultsCount(root); } catch (e) {}
+    try { this._ihfTraceHearts(root); } catch (e) {}
+    try { this._ihfFixDetailLayout(root); } catch (e) {}
+    try { this._ihfFixFormValues(root); } catch (e) {}
     root.querySelectorAll('*').forEach((el) => { if (el.shadowRoot) this._ihfFixTextInRoot(el.shadowRoot); });
   };
   _ihfFixDetailLayout = (root) => {
@@ -563,10 +563,10 @@ class Component extends DCLogic {
     });
   };
   _ihfFixAllShadowRoots = () => {
-    this._ihfFixTextInRoot(document);
-    this._ihfFixCloseButtons(document);
+    try { this._ihfFixTextInRoot(document); } catch (e) {}
+    try { this._ihfFixCloseButtons(document); } catch (e) {}
     document.querySelectorAll('*').forEach((el) => {
-      if (el.shadowRoot) { this._ihfFixTextInRoot(el.shadowRoot); this._ihfFixCloseButtons(el.shadowRoot); }
+      if (el.shadowRoot) { try { this._ihfFixTextInRoot(el.shadowRoot); } catch (e) {} try { this._ihfFixCloseButtons(el.shadowRoot); } catch (e) {} }
     });
   };
   _ihfStartCaseFix = () => {
