@@ -11,18 +11,6 @@
   <link rel="icon" type="image/png" href="assets/favicon-dark.png" media="(prefers-color-scheme: dark)">
   <link rel="icon" type="image/png" href="assets/favicon-light.png" media="(prefers-color-scheme: light)">
   <link rel="icon" type="image/png" href="assets/favicon-light.png">
-  <link rel="stylesheet" href="_ds/realty-hub-design-system-dc2b1855-61ad-4be7-8677-8c19514f7cae/styles.css">
-  <script>
-    (function loadDsBundle() {
-      if (window.React) {
-        var s = document.createElement('script');
-        s.src = '_ds/realty-hub-design-system-dc2b1855-61ad-4be7-8677-8c19514f7cae/_ds_bundle.js';
-        document.head.appendChild(s);
-      } else {
-        setTimeout(loadDsBundle, 10);
-      }
-    })();
-  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Lexend:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -31,6 +19,15 @@
       --rh-accent: #1a1a1a;
       --rh-accent-hover: #000000;
       --rh-accent-light: #ededed;
+      --rh-bg: #ffffff;
+      --rh-surface: #f9f9f9;
+      --rh-text-primary: #1a1a1a;
+      --rh-text-secondary: #666666;
+      --rh-text-muted: #999999;
+      --rh-border: #e0e0e0;
+      --rh-radius-btn: 6px;
+      --rh-radius-card: 0px;
+      --rh-radius-input: 0px;
     }
     html, body { margin: 0; overflow-x: hidden; background: var(--rh-bg); letter-spacing: 0.015em; }
     a { color: var(--rh-accent); text-decoration: none; }
@@ -72,7 +69,7 @@ That's where I come in.
 
 If you or someone you know requires a trusted and competent real estate advisor in Monterey County, a place I am honored and grateful to call home, please don't hesitate to call me. I live to serve and I am thrilled to help.</p>
         <div style="margin-top: 4px;">
-          <span class="rh-btn-secondary"><x-import component-from-global-scope="RealtyHub.Button" hint-size="140px,44px" variant="secondary" onClick="{{ openContactModal }}">Get in Touch</x-import></span>
+          <button onClick="{{ openContactModal }}" style="font-family: var(--rh-font); font-weight: 600; letter-spacing: 0.01em; font-size: 14px; padding: 9px 18px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; background: #ffffff; color: var(--rh-accent); border: 1px solid var(--rh-border); transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;" style-hover="background: #000000; color: #ffffff; border-color: #000000;">Get in Touch</button>
         </div>
       </div>
       <div style="flex: 1 1 340px; min-width: 240px; max-width: 420px;">

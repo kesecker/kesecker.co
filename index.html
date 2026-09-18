@@ -12,18 +12,6 @@
   <link rel="icon" type="image/png" href="assets/favicon-dark.png" media="(prefers-color-scheme: dark)">
   <link rel="icon" type="image/png" href="assets/favicon-light.png" media="(prefers-color-scheme: light)">
   <link rel="icon" type="image/png" href="assets/favicon-light.png">
-  <link rel="stylesheet" href="_ds/realty-hub-design-system-dc2b1855-61ad-4be7-8677-8c19514f7cae/styles.css">
-  <script>
-    (function loadDsBundle() {
-      if (window.React) {
-        var s = document.createElement('script');
-        s.src = '_ds/realty-hub-design-system-dc2b1855-61ad-4be7-8677-8c19514f7cae/_ds_bundle.js';
-        document.head.appendChild(s);
-      } else {
-        setTimeout(loadDsBundle, 10);
-      }
-    })();
-  </script>
   <script src="./image-slot.js"></script>
   <script src="https://kestrel.idxhome.com/ihf-kestrel.js"></script>
   <script>
@@ -44,6 +32,15 @@
       --rh-priority-high: #1a1a1a;
       --rh-priority-medium: #4d4d4d;
       --rh-priority-low: #808080;
+      --rh-bg: #ffffff;
+      --rh-surface: #f9f9f9;
+      --rh-text-primary: #1a1a1a;
+      --rh-text-secondary: #666666;
+      --rh-text-muted: #999999;
+      --rh-border: #e0e0e0;
+      --rh-radius-btn: 6px;
+      --rh-radius-card: 0px;
+      --rh-radius-input: 0px;
     }
     body { margin: 0; background: var(--rh-bg); letter-spacing: 0.015em; }
     a { color: var(--rh-accent); text-decoration: none; }
@@ -111,8 +108,6 @@
     * { scrollbar-width: thin; scrollbar-color: #000000 transparent; }
     body { scrollbar-gutter: stable; }
     image-slot::part(ring) { display: none !important; }
-    .rh-btn-secondary button:hover { background: #000000 !important; color: #ffffff !important; border-color: #000000 !important; }
-    .rh-btn-primary button:hover { background: #ffffff !important; color: #000000 !important; border-color: #000000 !important; }
   </style>
 </helmet>
 
@@ -138,8 +133,8 @@
         <h1 style="font-size: clamp(28px, 5vw, 56px); font-weight: 700; line-height: 1.04; letter-spacing: -0.01em; margin: 0;">Real estate,<br>represented with care.</h1>
         <p style="font-size: 17px; line-height: 1.6; color: var(--rh-text-secondary); max-width: 460px; margin: 0;">Camille Voss and the Voss &amp; Co. team guide buyers and sellers across the North Shore — from first showing to closing day.</p>
         <div style="display: flex; gap: 14px; margin-top: 8px;">
-          <span class="rh-btn-primary"><x-import component-from-global-scope="RealtyHub.Button" hint-size="160px,48px" variant="primary">View Listings</x-import></span>
-          <span class="rh-btn-secondary"><x-import component-from-global-scope="RealtyHub.Button" hint-size="180px,48px" variant="secondary">Get a Home Valuation</x-import></span>
+          <span style="font-family: var(--rh-font); font-weight: 600; letter-spacing: 0.01em; font-size: 14px; padding: 9px 18px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; background: var(--rh-accent); color: #ffffff; border: 1px solid var(--rh-accent);">View Listings</span>
+          <span style="font-family: var(--rh-font); font-weight: 600; letter-spacing: 0.01em; font-size: 14px; padding: 9px 18px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; background: #ffffff; color: var(--rh-accent); border: 1px solid var(--rh-border);">Get a Home Valuation</span>
         </div>
       </div>
       <image-slot id="hero-split" shape="rect" placeholder="Drop a hero property or lifestyle photo" style="width: 100%; height: 100%;"></image-slot>
@@ -216,7 +211,7 @@
       <h2 ref="{{ revealRefAbout }}" style="font-size: clamp(22px, 4vw, 34px); font-weight: 600; margin: 0; letter-spacing: -0.01em; text-transform: uppercase; {{ revealAbout }}">Jackson Kesecker</h2>
       <p style="font-size: 16px; line-height: 1.7; color: var(--rh-text-secondary); margin: 0; white-space: pre-wrap;">{{ t.aboutParagraph }}</p>
       <div style="margin-top: 4px;">
-        <span class="rh-btn-secondary"><x-import component-from-global-scope="RealtyHub.Button" hint-size="140px,44px" variant="secondary" onClick="{{ openBioModal }}">{{ t.learnMore }}</x-import></span>
+        <button onClick="{{ openBioModal }}" style="font-family: var(--rh-font); font-weight: 600; letter-spacing: 0.01em; font-size: 14px; padding: 9px 18px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; background: #ffffff; color: var(--rh-accent); border: 1px solid var(--rh-border); transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;" style-hover="background: #000000; color: #ffffff; border-color: #000000;">{{ t.learnMore }}</button>
       </div>
     </div><div id="agent-portrait-wrapper" style="flex: 1 1 380px; min-width: 260px; max-width: 480px;">
       <div style="position: relative; width: 100%; padding-top: 100%;">
@@ -255,8 +250,8 @@
       </div>
     </div>
     <div style="display: flex; justify-content: center; gap: 16px; margin-top: 44px; flex-wrap: wrap;">
-      <a id="reviews-btn-see-all" class="rh-btn-secondary" href="https://share.google/pm278uGUf3NH3Ig6i" target="_blank" rel="noopener noreferrer" style="text-decoration: none; display: inline-block;"><x-import component-from-global-scope="RealtyHub.Button" hint-size="160px,44px" variant="secondary">{{ t.seeAllReviews }}</x-import></a>
-      <a id="reviews-btn-write" class="rh-btn-primary" href="https://g.page/r/CaIlKE-YTpcnEBM/review" target="_blank" rel="noopener noreferrer" style="text-decoration: none; display: inline-block;"><x-import component-from-global-scope="RealtyHub.Button" hint-size="160px,44px" variant="primary">{{ t.writeAReview }}</x-import></a>
+      <a id="reviews-btn-see-all" href="https://share.google/pm278uGUf3NH3Ig6i" target="_blank" rel="noopener noreferrer" style="font-family: var(--rh-font); font-weight: 600; letter-spacing: 0.01em; font-size: 14px; padding: 9px 18px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; text-decoration: none; background: #ffffff; color: var(--rh-accent); border: 1px solid var(--rh-border); transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;" style-hover="background: #000000; color: #ffffff; border-color: #000000;">{{ t.seeAllReviews }}</a>
+      <a id="reviews-btn-write" href="https://g.page/r/CaIlKE-YTpcnEBM/review" target="_blank" rel="noopener noreferrer" style="font-family: var(--rh-font); font-weight: 600; letter-spacing: 0.01em; font-size: 14px; padding: 9px 18px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; text-decoration: none; background: var(--rh-accent); color: #ffffff; border: 1px solid var(--rh-accent); transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;" style-hover="background: #ffffff; color: #000000; border-color: #000000;">{{ t.writeAReview }}</a>
     </div>
     <sc-if value="{{ isReviewModalVisible }}" hint-placeholder-val="{{ false }}">
       <div onClick="{{ closeReviewModal }}" style="position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 40px; animation: {{ reviewOverlayAnimation }};">
@@ -288,7 +283,7 @@
     <div style="max-width: 560px;">
       <h2 ref="{{ revealRefCta }}" style="font-size: clamp(22px, 3.8vw, 30px); font-weight: 600; color: #ffffff; margin: 0 0 10px; letter-spacing: -0.01em; text-transform: uppercase; {{ revealCta }}">{{ t.ctaHeading }}</h2><p style="font-size: 15px; color: rgba(255,255,255,0.85); margin: 0; line-height: 1.6;">{{ t.ctaParagraph }}</p>
     </div>
-    <a class="rh-btn-secondary" href="https://jacksonkesecker.realscout.com/whats-my-home-worth" target="_blank" rel="noopener noreferrer" style="text-decoration: none; display: inline-block;"><x-import component-from-global-scope="RealtyHub.Button" hint-size="180px,44px" variant="secondary">{{ t.ctaButton }}</x-import></a>
+    <a href="https://jacksonkesecker.realscout.com/whats-my-home-worth" target="_blank" rel="noopener noreferrer" style="font-family: var(--rh-font); font-weight: 600; letter-spacing: 0.01em; font-size: 14px; padding: 9px 18px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; text-decoration: none; background: #ffffff; color: var(--rh-accent); border: 1px solid var(--rh-border); transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;" style-hover="background: #000000; color: #ffffff; border-color: #000000;">{{ t.ctaButton }}</a>
   </div>
 
   <!-- NEIGHBORHOODS -->

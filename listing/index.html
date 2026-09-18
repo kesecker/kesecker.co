@@ -33,18 +33,6 @@
       activationToken: "84ee0119-74ff-4a71-885e-a3cc7e030850",
     };
   </script>
-  <link rel="stylesheet" href="_ds/realty-hub-design-system-dc2b1855-61ad-4be7-8677-8c19514f7cae/styles.css">
-  <script>
-    (function loadDsBundle() {
-      if (window.React) {
-        var s = document.createElement('script');
-        s.src = '_ds/realty-hub-design-system-dc2b1855-61ad-4be7-8677-8c19514f7cae/_ds_bundle.js';
-        document.head.appendChild(s);
-      } else {
-        setTimeout(loadDsBundle, 10);
-      }
-    })();
-  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Lexend:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -53,6 +41,15 @@
       --rh-accent: #1a1a1a;
       --rh-accent-hover: #000000;
       --rh-accent-light: #ededed;
+      --rh-bg: #ffffff;
+      --rh-surface: #f9f9f9;
+      --rh-text-primary: #1a1a1a;
+      --rh-text-secondary: #666666;
+      --rh-text-muted: #999999;
+      --rh-border: #e0e0e0;
+      --rh-radius-btn: 6px;
+      --rh-radius-card: 0px;
+      --rh-radius-input: 0px;
     }
     html, body { margin: 0; overflow-x: hidden; background: var(--rh-bg); letter-spacing: 0.015em; }
     @keyframes modal-fade-in { from { opacity: 0; } to { opacity: 1; } }
@@ -426,6 +423,9 @@ class Component extends DCLogic {
     if (carousel) {
       carousel.style.setProperty('max-height', '255px', 'important');
       carousel.style.setProperty('overflow', 'hidden', 'important');
+      carousel.style.setProperty('flex', '1 1 420px', 'important');
+      carousel.style.setProperty('max-width', '560px', 'important');
+      carousel.style.setProperty('margin-left', 'auto', 'important');
       carousel.querySelectorAll('.carousel-root, .carousel, .slider-wrapper, ul.slider, li.slide').forEach((el) => {
         el.style.setProperty('height', '255px', 'important');
         el.style.setProperty('max-height', '255px', 'important');
@@ -452,15 +452,20 @@ class Component extends DCLogic {
     }
     if (header && statsRow && !header.dataset.ihfRowBuilt) {
       header.dataset.ihfRowBuilt = '1';
-      const row = document.createElement('div');
-      row.style.cssText = 'display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-top:18px;';
-      const left = document.createElement('div');
-      left.appendChild(header);
-      row.appendChild(left);
-      row.appendChild(statsRow);
-      statsRow.style.setProperty('flex', '0 1 auto', 'important');
-      statsRow.style.setProperty('max-width', '520px', 'important');
-      if (carousel && carousel.parentElement) carousel.parentElement.insertBefore(row, carousel.nextSibling);
+      const col = document.createElement('div');
+      col.style.cssText = 'display:flex;flex-direction:column;gap:20px;flex:0 0 380px;max-width:380px;box-sizing:border-box;margin-top:18px;';
+      col.appendChild(header);
+      col.appendChild(statsRow);
+      statsRow.style.setProperty('flex', 'none', 'important');
+      statsRow.style.setProperty('max-width', '100%', 'important');
+      if (carousel && carousel.parentElement) {
+        const container = carousel.parentElement;
+        container.style.setProperty('display', 'flex', 'important');
+        container.style.setProperty('align-items', 'flex-start', 'important');
+        container.style.setProperty('gap', '28px', 'important');
+        container.style.setProperty('flex-wrap', 'wrap', 'important');
+        container.insertBefore(col, carousel);
+      }
     }
     let sidebar = root.querySelector('.listing-sidebar');
     if (!sidebar) {
@@ -492,7 +497,6 @@ class Component extends DCLogic {
         let sharedParent = carousel.parentElement;
         while (sharedParent && !sharedParent.contains(sidebar)) sharedParent = sharedParent.parentElement;
         if (sharedParent) sharedParent.style.setProperty('position', 'relative', 'important');
-        carousel.style.setProperty('width', '100%', 'important');
       }
       sidebar.style.setProperty('display', 'none', 'important');
     }
