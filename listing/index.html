@@ -457,7 +457,14 @@ class Component extends DCLogic {
       statsRow.style.setProperty('max-width', '520px', 'important');
       if (carousel && carousel.parentElement) carousel.parentElement.insertBefore(row, carousel.nextSibling);
     }
-    const sidebar = root.querySelector('.listing-sidebar');
+    let sidebar = root.querySelector('.listing-sidebar');
+    if (!sidebar) {
+      const dateLeaf = Array.from(root.querySelectorAll('*')).find((el) => !el.children.length && /select your date preference/i.test((el.textContent || '').trim()));
+      if (dateLeaf) {
+        let n = dateLeaf.parentElement;
+        for (let i = 0; i < 8 && n; i++) { if (n.getBoundingClientRect().height > 200) { sidebar = n; break; } n = n.parentElement; }
+      }
+    }
     if (sidebar && !sidebar.dataset.ihfStyled) {
       sidebar.dataset.ihfStyled = '1';
       sidebar.style.setProperty('border', '1px solid #e0e0e0', 'important');
