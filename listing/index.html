@@ -420,11 +420,11 @@ class Component extends DCLogic {
       const diff = Math.round(wantX - gotX);
       bcRow.style.marginLeft = diff + 'px';
     }
-    const CAROUSEL_PX = 500;
+    const CAROUSEL_PX = 620;
     if (carousel && !root.__ihfCarouselCssInjected) {
       root.__ihfCarouselCssInjected = true;
       const css = '.listing-photo-carousel, .listing-photo-carousel .carousel-root, .listing-photo-carousel .carousel, .listing-photo-carousel .slider-wrapper, .listing-photo-carousel ul.slider, .listing-photo-carousel li.slide { height:' + CAROUSEL_PX + 'px !important; max-height:' + CAROUSEL_PX + 'px !important; min-height:' + CAROUSEL_PX + 'px !important; }'
-        + '.listing-photo-carousel { max-width:900px !important; margin:0 auto !important; overflow:hidden !important; padding:0 !important; box-sizing:border-box !important; }'
+        + '.listing-photo-carousel { max-width:1100px !important; margin:24px auto 0 !important; overflow:hidden !important; padding:0 !important; box-sizing:border-box !important; }'
         + '.listing-photo-carousel > div { position:static !important; top:auto !important; padding:0 !important; }'
         + '.listing-photo-carousel li.slide img { height:' + CAROUSEL_PX + 'px !important; object-fit:cover !important; width:100% !important; }';
       const styleEl = document.createElement('style');
@@ -436,10 +436,11 @@ class Component extends DCLogic {
       carousel.style.setProperty('max-height', CAROUSEL_PX + 'px', 'important');
       carousel.style.setProperty('min-height', CAROUSEL_PX + 'px', 'important');
       carousel.style.setProperty('overflow', 'hidden', 'important');
-      carousel.style.setProperty('max-width', '900px', 'important');
+      carousel.style.setProperty('max-width', '1100px', 'important');
       carousel.style.setProperty('margin', '0 auto', 'important');
       carousel.style.setProperty('padding', '0', 'important');
       carousel.style.setProperty('box-sizing', 'border-box', 'important');
+      carousel.style.setProperty('margin-top', '24px', 'important');
       Array.from(carousel.children).forEach((child) => {
         child.style.setProperty('position', 'static', 'important');
         child.style.setProperty('top', 'auto', 'important');
