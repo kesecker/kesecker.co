@@ -315,18 +315,6 @@ class Component extends DCLogic {
       }
     }
     const bcEl = root.querySelector('[data-ihf-bc]');
-    if (firstTabEl && bcEl && !bcEl.dataset.ihfLeveled) {
-      let rowEl = firstTabEl.parentElement;
-      let hops = 0;
-      while (rowEl && rowEl.children.length < 6 && rowEl.parentElement && hops < 4) { rowEl = rowEl.parentElement; hops++; }
-      if (rowEl && rowEl.parentElement) {
-        bcEl.dataset.ihfLeveled = '1';
-        rowEl.parentElement.style.setProperty('display', 'flex', 'important');
-        rowEl.parentElement.style.setProperty('align-items', 'center', 'important');
-        rowEl.parentElement.style.setProperty('justify-content', 'space-between', 'important');
-        rowEl.parentElement.insertBefore(bcEl, rowEl);
-      }
-    }
     const tabLabels = ['Details', 'Map', 'Similar Listings', 'Mortgage Calc', 'Schools', 'Walk Score'];
     const allLeaves = Array.from(root.querySelectorAll('*')).filter((el) => !el.children.length);
     const badgeTextEl = allLeaves.find((el) => /^(Active|Pending|Sold|Contingent|Coming Soon)$/i.test((el.textContent || '').trim()));
@@ -411,6 +399,18 @@ class Component extends DCLogic {
       el.addEventListener('mouseenter', () => el.style.setProperty('background-size', '100% 2px', 'important'));
       el.addEventListener('mouseleave', () => el.style.setProperty('background-size', '0 2px', 'important'));
     });
+    if (firstTabEl && bcEl && !bcEl.dataset.ihfLeveled) {
+      let rowEl = firstTabEl.parentElement;
+      let hops = 0;
+      while (rowEl && rowEl.children.length < 6 && rowEl.parentElement && hops < 4) { rowEl = rowEl.parentElement; hops++; }
+      if (rowEl && rowEl.parentElement) {
+        bcEl.dataset.ihfLeveled = '1';
+        rowEl.parentElement.style.setProperty('display', 'flex', 'important');
+        rowEl.parentElement.style.setProperty('align-items', 'center', 'important');
+        rowEl.parentElement.style.setProperty('justify-content', 'space-between', 'important');
+        rowEl.parentElement.insertBefore(bcEl, rowEl);
+      }
+    }
     const bcRow = root.querySelector('.listing-header') && root.querySelector('.listing-header').previousElementSibling;
     if (firstTabEl && bcRow && bcRow.style) {
       const wantX = firstTabEl.getBoundingClientRect().left;
