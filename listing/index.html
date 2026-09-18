@@ -462,10 +462,15 @@ class Component extends DCLogic {
       const dateLeaf = Array.from(root.querySelectorAll('*')).find((el) => !el.children.length && /select your date preference/i.test((el.textContent || '').trim()));
       if (dateLeaf) {
         let n = dateLeaf.parentElement;
-        for (let i = 0; i < 8 && n; i++) { if (n.getBoundingClientRect().height > 200) { sidebar = n; break; } n = n.parentElement; }
+        for (let i = 0; i < 8 && n; i++) {
+          if (n === document.body || n === document.documentElement || n === document || n.tagName === 'HTML' || n.tagName === 'BODY') break;
+          const rect = n.getBoundingClientRect();
+          if (rect.height > 200 && rect.height < 900 && rect.width < 600) { sidebar = n; break; }
+          n = n.parentElement;
+        }
       }
     }
-    if (sidebar && !sidebar.dataset.ihfStyled) {
+    if (sidebar && sidebar !== document.body && sidebar !== document.documentElement && !sidebar.dataset.ihfStyled) {
       sidebar.dataset.ihfStyled = '1';
       sidebar.style.setProperty('border', '1px solid #e0e0e0', 'important');
       sidebar.style.setProperty('border-radius', '10px', 'important');
