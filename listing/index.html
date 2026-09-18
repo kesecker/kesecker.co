@@ -433,6 +433,12 @@ class Component extends DCLogic {
         img.style.setProperty('height', '400px', 'important');
         img.style.setProperty('object-fit', 'cover', 'important');
         img.style.setProperty('width', '100%', 'important');
+        let n = img.parentElement;
+        for (let i = 0; i < 6 && n && n !== carousel; i++) {
+          n.style.setProperty('height', '400px', 'important');
+          n.style.setProperty('max-height', '400px', 'important');
+          n = n.parentElement;
+        }
       });
     }
     const statsRow = root.querySelector('.listing-attributes');
