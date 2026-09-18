@@ -420,39 +420,49 @@ class Component extends DCLogic {
       const diff = Math.round(wantX - gotX);
       bcRow.style.marginLeft = diff + 'px';
     }
+    const CAROUSEL_PX = 620;
     if (carousel && !root.__ihfCarouselCssInjected) {
       root.__ihfCarouselCssInjected = true;
-      const css = '.listing-photo-carousel, .listing-photo-carousel .carousel-root, .listing-photo-carousel .carousel, .listing-photo-carousel .slider-wrapper, .listing-photo-carousel ul.slider, .listing-photo-carousel li.slide { height:400px !important; max-height:400px !important; min-height:400px !important; }'
-        + '.listing-photo-carousel { max-width:760px !important; margin:0 auto !important; overflow:hidden !important; }'
-        + '.listing-photo-carousel li.slide img { height:400px !important; object-fit:cover !important; width:100% !important; }';
+      const css = '.listing-photo-carousel, .listing-photo-carousel .carousel-root, .listing-photo-carousel .carousel, .listing-photo-carousel .slider-wrapper, .listing-photo-carousel ul.slider, .listing-photo-carousel li.slide { height:' + CAROUSEL_PX + 'px !important; max-height:' + CAROUSEL_PX + 'px !important; min-height:' + CAROUSEL_PX + 'px !important; }'
+        + '.listing-photo-carousel { max-width:1000px !important; margin:0 auto !important; overflow:hidden !important; }'
+        + '.listing-photo-carousel li.slide img { height:' + CAROUSEL_PX + 'px !important; object-fit:cover !important; width:100% !important; }'
+        + '[data-ihf-shrink-anc="1"] { height:auto !important; min-height:0 !important; max-height:none !important; padding-top:0 !important; padding-bottom:0 !important; margin-top:0 !important; margin-bottom:0 !important; background:transparent !important; }';
       const styleEl = document.createElement('style');
       styleEl.textContent = css;
       if (root.nodeType === 11) { root.appendChild(styleEl); } else { document.head.appendChild(styleEl); }
     }
     if (carousel) {
-      carousel.style.setProperty('height', '400px', 'important');
-      carousel.style.setProperty('max-height', '400px', 'important');
-      carousel.style.setProperty('min-height', '400px', 'important');
+      carousel.style.setProperty('height', CAROUSEL_PX + 'px', 'important');
+      carousel.style.setProperty('max-height', CAROUSEL_PX + 'px', 'important');
+      carousel.style.setProperty('min-height', CAROUSEL_PX + 'px', 'important');
       carousel.style.setProperty('overflow', 'hidden', 'important');
-      carousel.style.setProperty('max-width', '760px', 'important');
+      carousel.style.setProperty('max-width', '1000px', 'important');
       carousel.style.setProperty('margin', '0 auto', 'important');
       carousel.querySelectorAll('.carousel-root, .carousel, .slider-wrapper, ul.slider, li.slide').forEach((el) => {
-        el.style.setProperty('height', '400px', 'important');
-        el.style.setProperty('max-height', '400px', 'important');
-        el.style.setProperty('min-height', '400px', 'important');
+        el.style.setProperty('height', CAROUSEL_PX + 'px', 'important');
+        el.style.setProperty('max-height', CAROUSEL_PX + 'px', 'important');
+        el.style.setProperty('min-height', CAROUSEL_PX + 'px', 'important');
       });
       carousel.querySelectorAll('li.slide img').forEach((img) => {
-        img.style.setProperty('height', '400px', 'important');
+        img.style.setProperty('height', CAROUSEL_PX + 'px', 'important');
         img.style.setProperty('object-fit', 'cover', 'important');
         img.style.setProperty('width', '100%', 'important');
         let n = img.parentElement;
         for (let i = 0; i < 6 && n && n !== carousel; i++) {
-          n.style.setProperty('height', '400px', 'important');
-          n.style.setProperty('max-height', '400px', 'important');
-          n.style.setProperty('min-height', '400px', 'important');
+          n.style.setProperty('height', CAROUSEL_PX + 'px', 'important');
+          n.style.setProperty('max-height', CAROUSEL_PX + 'px', 'important');
+          n.style.setProperty('min-height', CAROUSEL_PX + 'px', 'important');
           n = n.parentElement;
         }
       });
+      // Ancestors of the carousel can carry the widget's own fixed-height gray
+      // background (a wrapper taller than the carousel itself). Mark them so
+      // the persistent stylesheet above collapses them to fit their content.
+      let anc = carousel.parentElement;
+      for (let i = 0; i < 6 && anc && anc !== root && anc.tagName !== 'BODY'; i++) {
+        anc.setAttribute('data-ihf-shrink-anc', '1');
+        anc = anc.parentElement;
+      }
     }
     const statsRow = root.querySelector('.listing-attributes');
     if (statsRow && !statsRow.dataset.ihfStyled) {
