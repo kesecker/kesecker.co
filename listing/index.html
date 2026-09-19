@@ -486,7 +486,6 @@ class Component extends DCLogic {
     }
     if (header && statsRow && !header.dataset.ihfRowBuilt) {
       header.dataset.ihfRowBuilt = '1';
-      let origParent = header.parentElement;
       const col = document.createElement('div');
       col.style.cssText = 'display:flex;flex-direction:column;gap:20px;margin-top:24px;';
       col.appendChild(header);
@@ -494,14 +493,6 @@ class Component extends DCLogic {
       statsRow.style.setProperty('flex', 'none', 'important');
       statsRow.style.setProperty('max-width', '100%', 'important');
       if (carousel && carousel.parentElement) carousel.parentElement.insertBefore(col, carousel.nextSibling);
-      for (let i = 0; i < 3 && origParent && origParent !== root; i++) {
-        origParent.style.setProperty('height', '0', 'important');
-        origParent.style.setProperty('min-height', '0', 'important');
-        origParent.style.setProperty('padding', '0', 'important');
-        origParent.style.setProperty('margin', '0', 'important');
-        origParent.style.setProperty('overflow', 'hidden', 'important');
-        origParent = origParent.parentElement;
-      }
     }
     let sidebar = root.querySelector('.listing-sidebar');
     if (!sidebar) {
