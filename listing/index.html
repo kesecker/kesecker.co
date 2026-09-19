@@ -344,6 +344,10 @@ class Component extends DCLogic {
       }
       if (el.dataset.ihfTabHover) return;
       el.dataset.ihfTabHover = '1';
+      el.style.setProperty('padding-left', '0', 'important');
+      el.style.setProperty('padding-right', '0', 'important');
+      el.style.setProperty('display', 'inline-block', 'important');
+      el.style.setProperty('width', 'fit-content', 'important');
       el.style.setProperty('background-image', 'linear-gradient(#000000, #000000)', 'important');
       el.style.setProperty('background-repeat', 'no-repeat', 'important');
       el.style.setProperty('background-position', 'left bottom', 'important');
@@ -387,6 +391,29 @@ class Component extends DCLogic {
         });
       }
     }
+    if (!root.__ihfDupTabsChecked) {
+      root.__ihfDupTabsChecked = true;
+      const detailsLeaves = Array.from(root.querySelectorAll('*')).filter((el) => el.children.length === 0 && (el.textContent || '').trim() === 'Details');
+      const rows = detailsLeaves.map((leaf) => {
+        let r = leaf.parentElement;
+        let hops = 0;
+        while (r && r.children.length < 6 && r.parentElement && hops < 4) { r = r.parentElement; hops++; }
+        return r;
+      }).filter(Boolean);
+      const uniqueRows = [...new Set(rows)];
+      uniqueRows.slice(1).forEach((rowCandidate) => {
+        let hideTarget = rowCandidate;
+        if (hideTarget.parentElement && hideTarget.parentElement.children.length === 1) hideTarget = hideTarget.parentElement;
+        hideTarget.style.setProperty('display', 'none', 'important');
+      });
+    }
+    Array.from(root.querySelectorAll('*')).forEach((el) => {
+      const t = (el.textContent || '').trim();
+      if (el.children.length === 0 && (/^©\s*\d{4}\s*MLSListings/i.test(t) || /data relating to real estate/i.test(t))) {
+        el.style.setProperty('text-align', 'left', 'important');
+        if (el.parentElement) el.parentElement.style.setProperty('text-align', 'left', 'important');
+      }
+    });
     const CAROUSEL_PX = 860;
     if (carousel) {
       carousel.style.setProperty('height', CAROUSEL_PX + 'px', 'important');
