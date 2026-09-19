@@ -387,6 +387,13 @@ class Component extends DCLogic {
         el.style.setProperty('font-weight', '700', 'important');
         el.style.setProperty('color', '#1a1a1a', 'important');
         el.style.setProperty('background-size', '100% 2px', 'important');
+        el.style.setProperty('border-bottom', 'none', 'important');
+        el.style.setProperty('box-shadow', 'none', 'important');
+        el.style.setProperty('text-decoration', 'none', 'important');
+        if (el.parentElement) {
+          el.parentElement.style.setProperty('border-bottom', 'none', 'important');
+          el.parentElement.style.setProperty('box-shadow', 'none', 'important');
+        }
       }
       if (el.dataset.ihfTabHover) return;
       el.dataset.ihfTabHover = '1';
@@ -408,8 +415,9 @@ class Component extends DCLogic {
         const wrap = rowEl.parentElement;
         wrap.style.setProperty('display', 'flex', 'important');
         wrap.style.setProperty('align-items', 'center', 'important');
-        wrap.style.setProperty('justify-content', 'center', 'important');
-        wrap.style.setProperty('gap', '48px', 'important');
+        wrap.style.setProperty('justify-content', 'space-between', 'important');
+        wrap.style.setProperty('max-width', '1300px', 'important');
+        wrap.style.setProperty('margin', '0 auto', 'important');
         wrap.style.setProperty('width', '100%', 'important');
         wrap.style.setProperty('max-width', 'none', 'important');
         wrap.style.setProperty('overflow', 'visible', 'important');
@@ -475,18 +483,20 @@ class Component extends DCLogic {
       });
     }
     const statsRow = root.querySelector('.listing-attributes');
-    if (statsRow && !statsRow.dataset.ihfStyled) {
-      statsRow.dataset.ihfStyled = '1';
-      statsRow.style.setProperty('display', 'flex', 'important');
-      statsRow.style.setProperty('gap', '10px', 'important');
-      statsRow.style.setProperty('flex-wrap', 'wrap', 'important');
-      Array.from(statsRow.children).forEach((cell) => {
-        cell.style.setProperty('border', '1px solid #e0e0e0', 'important');
-        cell.style.setProperty('border-radius', '8px', 'important');
-        cell.style.setProperty('padding', '10px 16px', 'important');
-        cell.style.setProperty('flex', '1 1 120px', 'important');
-        cell.style.setProperty('box-sizing', 'border-box', 'important');
+    if (statsRow && !statsRow.dataset.ihfCloned) {
+      statsRow.dataset.ihfCloned = '1';
+      const cellsData = Array.from(statsRow.children).map((cell) => (cell.textContent || '').trim());
+      const cloneRow = document.createElement('div');
+      cloneRow.className = 'ihf-stats-clone';
+      cloneRow.style.cssText = 'display:flex;gap:10px;flex-wrap:wrap;';
+      cellsData.forEach((text) => {
+        const cellDiv = document.createElement('div');
+        cellDiv.style.cssText = 'border:1px solid #e0e0e0;border-radius:8px;padding:10px 16px;flex:1 1 120px;box-sizing:border-box;font-size:14px;color:var(--rh-text-primary);text-align:center;';
+        cellDiv.textContent = text;
+        cloneRow.appendChild(cellDiv);
       });
+      statsRow.style.setProperty('display', 'none', 'important');
+      statsRow.parentElement.insertBefore(cloneRow, statsRow.nextSibling);
     }
     if (header && statsRow && !header.dataset.ihfRowBuilt) {
       header.dataset.ihfRowBuilt = '1';
@@ -494,7 +504,7 @@ class Component extends DCLogic {
       col.className = 'ihf-info-col';
       col.style.cssText = 'display:flex;flex-direction:column;gap:20px;margin-top:-190px;background:#ffffff;position:relative;z-index:2;padding-top:16px;';
       col.appendChild(header);
-      col.appendChild(statsRow);
+      col.appendChild(statsRow.parentElement.querySelector('.ihf-stats-clone') || statsRow);
       statsRow.style.setProperty('flex', 'none', 'important');
       statsRow.style.setProperty('max-width', '100%', 'important');
       if (carousel && carousel.parentElement) carousel.parentElement.insertBefore(col, carousel.nextSibling);
@@ -505,10 +515,17 @@ class Component extends DCLogic {
       if (agentEl && agentEl.textContent.trim()) {
         infoCol.dataset.ihfAgentMoved = '1';
         agentEl.style.setProperty('display', 'none', 'important');
-        const clone = document.createElement('p');
-        clone.textContent = agentEl.textContent.trim();
-        clone.style.cssText = 'text-align:left;font-size:13px;color:var(--rh-text-secondary);margin:0 0 10px 0;';
-        infoCol.insertBefore(clone, infoCol.firstChild);
+        const fullText = agentEl.textContent.trim();
+        const parts = fullText.split(/(?=Listing\s*#)/i);
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'display:flex;flex-direction:column;gap:6px;margin-bottom:10px;';
+        parts.forEach((part) => {
+          const line = document.createElement('p');
+          line.textContent = part.trim();
+          line.style.cssText = 'text-align:left;font-size:13px;color:var(--rh-text-secondary);margin:0;';
+          wrap.appendChild(line);
+        });
+        infoCol.insertBefore(wrap, infoCol.firstChild);
       }
     }
     const mlsEl = root.querySelector('.ihf-info-col') && Array.from(root.querySelectorAll('*')).find((el) => el.children.length === 0 && /^listing\s*#/i.test((el.textContent || '').trim()));
