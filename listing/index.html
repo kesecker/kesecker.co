@@ -391,9 +391,16 @@ class Component extends DCLogic {
         });
       }
     }
-    if (!root.__ihfDupTabsChecked) {
-      root.__ihfDupTabsChecked = true;
-      const detailsLeaves = Array.from(root.querySelectorAll('*')).filter((el) => el.children.length === 0 && (el.textContent || '').trim() === 'Details');
+    if (!this._ihfDupTabsChecked) {
+      this._ihfDupTabsChecked = true;
+      const collectDeep = (node, out) => {
+        node.querySelectorAll('*').forEach((el) => {
+          if (el.children.length === 0 && (el.textContent || '').trim() === 'Details') out.push(el);
+          if (el.shadowRoot) collectDeep(el.shadowRoot, out);
+        });
+      };
+      const detailsLeaves = [];
+      collectDeep(document, detailsLeaves);
       const rows = detailsLeaves.map((leaf) => {
         let r = leaf.parentElement;
         let hops = 0;
@@ -409,7 +416,7 @@ class Component extends DCLogic {
     }
     Array.from(root.querySelectorAll('*')).forEach((el) => {
       const t = (el.textContent || '').trim();
-      if (el.children.length === 0 && (/^©\s*\d{4}\s*MLSListings/i.test(t) || /data relating to real estate/i.test(t))) {
+      if ((/^©\s*\d{4}\s*MLSListings/i.test(t) || /data relating to real estate/i.test(t)) && t.length < 1200) {
         el.style.setProperty('text-align', 'left', 'important');
         if (el.parentElement) el.parentElement.style.setProperty('text-align', 'left', 'important');
       }
