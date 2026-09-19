@@ -391,8 +391,7 @@ class Component extends DCLogic {
         });
       }
     }
-    if (!this._ihfDupTabsChecked) {
-      this._ihfDupTabsChecked = true;
+    if (!this._ihfDupTabsHidden) {
       const collectDeep = (node, out) => {
         node.querySelectorAll('*').forEach((el) => {
           if (el.children.length === 0 && (el.textContent || '').trim() === 'Details') out.push(el);
@@ -408,11 +407,14 @@ class Component extends DCLogic {
         return r;
       }).filter(Boolean);
       const uniqueRows = [...new Set(rows)];
-      uniqueRows.slice(1).forEach((rowCandidate) => {
-        let hideTarget = rowCandidate;
-        if (hideTarget.parentElement && hideTarget.parentElement.children.length === 1) hideTarget = hideTarget.parentElement;
-        hideTarget.style.setProperty('display', 'none', 'important');
-      });
+      if (uniqueRows.length > 1) {
+        this._ihfDupTabsHidden = true;
+        uniqueRows.slice(1).forEach((rowCandidate) => {
+          let hideTarget = rowCandidate;
+          if (hideTarget.parentElement && hideTarget.parentElement.children.length === 1) hideTarget = hideTarget.parentElement;
+          hideTarget.style.setProperty('display', 'none', 'important');
+        });
+      }
     }
     Array.from(root.querySelectorAll('*')).forEach((el) => {
       const t = (el.textContent || '').trim();
