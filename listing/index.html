@@ -355,8 +355,20 @@ class Component extends DCLogic {
       el.style.setProperty('transition', 'background-size 0.3s ease', 'important');
       el.style.setProperty('padding-bottom', '4px', 'important');
       el.addEventListener('mouseenter', () => el.style.setProperty('background-size', '100% 2px', 'important'));
-      el.addEventListener('mouseleave', () => el.style.setProperty('background-size', '0 2px', 'important'));
+      el.addEventListener('mouseleave', () => { if (!el.dataset.ihfActiveSet) el.style.setProperty('background-size', '0 2px', 'important'); });
     });
+    const tablistEl = root.querySelector('[role="tablist"]');
+    if (tablistEl && tablistEl.parentElement && !tablistEl.parentElement.dataset.ihfIndicatorStripped) {
+      tablistEl.parentElement.dataset.ihfIndicatorStripped = '1';
+      Array.from(tablistEl.parentElement.children).forEach((sib) => {
+        if (sib === tablistEl) return;
+        Array.from(sib.querySelectorAll('*')).concat([sib]).forEach((cand) => {
+          const cs = getComputedStyle(cand);
+          const r = cand.getBoundingClientRect();
+          if (cs.position === 'absolute' && r.height > 0 && r.height <= 6) cand.style.setProperty('display', 'none', 'important');
+        });
+      });
+    }
     if (firstTabEl && bcEl && !bcEl.dataset.ihfLeveled) {
       let rowEl = firstTabEl.parentElement;
       let hops = 0;
@@ -427,7 +439,8 @@ class Component extends DCLogic {
         if (el.parentElement) el.parentElement.style.setProperty('padding-bottom', '0', 'important');
       }
       if (/powered by ihomefinder/i.test(t) && t.length < 60) {
-        el.style.setProperty('margin-top', '-24px', 'important');
+        el.style.setProperty('margin-top', '0', 'important');
+        if (el.parentElement) el.parentElement.style.setProperty('margin-top', '0', 'important');
       }
     });
     const CAROUSEL_PX = 860;
