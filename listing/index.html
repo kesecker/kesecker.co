@@ -245,6 +245,9 @@ class Component extends DCLogic {
     const header = root.querySelector('.listing-header');
     let firstTabEl = null;
     if (header) {
+      header.style.setProperty('padding', '0', 'important');
+      header.style.setProperty('margin', '0', 'important');
+      header.style.setProperty('min-height', '0', 'important');
       const priceEl = header.querySelector('.list-price');
       const addr1 = header.querySelector('.listing-address-1');
       const addr2 = header.querySelector('.listing-address-2');
@@ -340,8 +343,7 @@ class Component extends DCLogic {
         dot.style.cssText = 'display:inline-block;width:8px;height:8px;border-radius:50%;background:#22c55e;flex-shrink:0;';
         badgeTextEl.insertBefore(dot, badgeTextEl.firstChild);
       }
-      if (carousel && !badgeTextEl.dataset.ihfFloated) {
-        badgeTextEl.dataset.ihfFloated = '1';
+      if (carousel) {
         carousel.style.setProperty('position', 'relative', 'important');
         badgeTextEl.style.setProperty('position', 'absolute', 'important');
         badgeTextEl.style.setProperty('top', '16px', 'important');
