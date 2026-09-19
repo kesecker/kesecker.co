@@ -112,13 +112,11 @@ class Component extends DCLogic {
     }
     if (paper && !paper.dataset.ihfGalleryStripped) {
       const backLink = Array.from(root.querySelectorAll('*')).find((el) => el.children.length === 0 && /back to listing/i.test((el.textContent || '').trim()));
+      const shareLeaf = Array.from(root.querySelectorAll('*')).find((el) => el.children.length === 0 && (el.textContent || '').trim() === 'Share');
       const scheduleBtn = Array.from(root.querySelectorAll('*')).find((el) => el.children.length === 0 && /schedule tour/i.test((el.textContent || '').trim()));
-      if (backLink && scheduleBtn) {
+      if (backLink && shareLeaf && scheduleBtn) {
         let topBar = backLink;
-        for (let i = 0; i < 6 && topBar.parentElement; i++) {
-          topBar = topBar.parentElement;
-          if (topBar.children.length >= 2) break;
-        }
+        for (let i = 0; i < 8 && topBar.parentElement && !topBar.contains(shareLeaf); i++) topBar = topBar.parentElement;
         let sidebar = scheduleBtn;
         for (let i = 0; i < 8 && sidebar.parentElement; i++) {
           sidebar = sidebar.parentElement;
@@ -128,10 +126,11 @@ class Component extends DCLogic {
         const sidebarAnchor = sidebar && sidebar.parentElement;
         const commonParent = sidebarAnchor && sidebarAnchor.parentElement;
         const photoCol = commonParent ? Array.from(commonParent.children).find((c) => c !== sidebarAnchor) : null;
-        if (topBar && sidebar && sidebarAnchor && commonParent && photoCol) {
+        if (topBar && topBar.contains(shareLeaf) && sidebar && sidebarAnchor && commonParent && photoCol) {
           paper.dataset.ihfGalleryStripped = '1';
           topBar.style.setProperty('display', 'none', 'important');
           sidebarAnchor.style.setProperty('display', 'none', 'important');
+          commonParent.style.setProperty('display', 'block', 'important');
           commonParent.style.setProperty('width', '100%', 'important');
           commonParent.style.setProperty('padding', '0', 'important');
           photoCol.style.setProperty('width', '100%', 'important');
@@ -140,6 +139,8 @@ class Component extends DCLogic {
           photoCol.style.setProperty('padding', '0 24px', 'important');
           photoCol.style.setProperty('margin', '0 auto', 'important');
           paper.style.setProperty('padding', '0', 'important');
+          paper.style.setProperty('width', '100%', 'important');
+          paper.style.setProperty('max-width', 'none', 'important');
         }
       }
     }
