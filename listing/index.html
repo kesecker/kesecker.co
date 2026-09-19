@@ -426,7 +426,7 @@ class Component extends DCLogic {
     if (carousel && !root.__ihfCarouselCssInjected) {
       root.__ihfCarouselCssInjected = true;
       const css = '.listing-photo-carousel, .listing-photo-carousel .carousel-root, .listing-photo-carousel .carousel, .listing-photo-carousel .slider-wrapper, .listing-photo-carousel ul.slider, .listing-photo-carousel li.slide { height:' + CAROUSEL_PX + 'px !important; max-height:' + CAROUSEL_PX + 'px !important; min-height:' + CAROUSEL_PX + 'px !important; }'
-        + '.listing-photo-carousel { max-width:1300px !important; margin:8px auto 0 !important; overflow:hidden !important; padding:0 !important; box-sizing:border-box !important; }'
+        + '.listing-photo-carousel { max-width:1300px !important; margin:-220px auto 0 !important; position:relative !important; z-index:1 !important; overflow:hidden !important; padding:0 !important; box-sizing:border-box !important; }'
         + '.listing-photo-carousel > div { position:static !important; top:auto !important; padding:0 !important; margin:0 !important; height:100% !important; box-sizing:border-box !important; }'
         + '.listing-photo-carousel > div > div, .listing-photo-carousel > div > div > div { padding:0 !important; margin:0 !important; height:100% !important; box-sizing:border-box !important; }'
         + '.listing-photo-carousel li.slide img { height:' + CAROUSEL_PX + 'px !important; object-fit:contain !important; background:#ffffff !important; width:100% !important; }';
@@ -440,7 +440,9 @@ class Component extends DCLogic {
       carousel.style.setProperty('min-height', CAROUSEL_PX + 'px', 'important');
       carousel.style.setProperty('overflow', 'hidden', 'important');
       carousel.style.setProperty('max-width', '1300px', 'important');
-      carousel.style.setProperty('margin', '8px auto 0', 'important');
+      carousel.style.setProperty('margin', '-220px auto 0', 'important');
+      carousel.style.setProperty('position', 'relative', 'important');
+      carousel.style.setProperty('z-index', '1', 'important');
       carousel.style.setProperty('padding', '0', 'important');
       carousel.style.setProperty('box-sizing', 'border-box', 'important');
       Array.from(carousel.children).forEach((child) => {
