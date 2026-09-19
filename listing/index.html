@@ -111,9 +111,14 @@ class Component extends DCLogic {
       paper.style.setProperty('max-height', 'calc(100vh - 64px)', 'important');
     }
     if (paper) {
-      const backLink = Array.from(root.querySelectorAll('*')).find((el) => el.children.length === 0 && /back to listing/i.test((el.textContent || '').trim()));
-      const shareLeaf = Array.from(root.querySelectorAll('*')).find((el) => el.children.length === 0 && (el.textContent || '').trim() === 'Share');
-      const scheduleBtn = Array.from(root.querySelectorAll('*')).find((el) => el.children.length === 0 && /schedule tour/i.test((el.textContent || '').trim()));
+      const findSmallestMatch = (text) => {
+        const matches = Array.from(root.querySelectorAll('*')).filter((el) => (el.textContent || '').trim() === text);
+        if (!matches.length) return null;
+        return matches.reduce((a, b) => (a.querySelectorAll('*').length <= b.querySelectorAll('*').length ? a : b));
+      };
+      const backLink = findSmallestMatch('Back to listing') || Array.from(root.querySelectorAll('*')).find((el) => /back to listing/i.test((el.textContent || '').trim()));
+      const shareLeaf = findSmallestMatch('Share');
+      const scheduleBtn = findSmallestMatch('Schedule Tour') || Array.from(root.querySelectorAll('*')).find((el) => /schedule tour/i.test((el.textContent || '').trim()));
       if (backLink && shareLeaf && scheduleBtn) {
         let topBar = backLink;
         for (let i = 0; i < 8 && topBar.parentElement && !topBar.contains(shareLeaf); i++) topBar = topBar.parentElement;
