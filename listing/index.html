@@ -501,13 +501,14 @@ class Component extends DCLogic {
     }
     const infoCol = root.querySelector('.ihf-info-col');
     if (infoCol && !infoCol.dataset.ihfAgentMoved) {
-      const agentEl = Array.from(root.querySelectorAll('*')).find((el) => el.children.length <= 2 && /listed by/i.test((el.textContent || '').trim()) && (el.textContent || '').trim().length < 80);
-      if (agentEl) {
+      const agentEl = Array.from(root.querySelectorAll('*')).find((el) => el.children.length <= 2 && /listed by/i.test((el.textContent || '').trim()) && (el.textContent || '').trim().length < 160);
+      if (agentEl && agentEl.textContent.trim()) {
         infoCol.dataset.ihfAgentMoved = '1';
-        agentEl.style.setProperty('text-align', 'left', 'important');
-        agentEl.style.setProperty('font-size', '13px', 'important');
-        agentEl.style.setProperty('color', 'var(--rh-text-secondary)', 'important');
-        infoCol.insertBefore(agentEl, infoCol.firstChild);
+        agentEl.style.setProperty('display', 'none', 'important');
+        const clone = document.createElement('p');
+        clone.textContent = agentEl.textContent.trim();
+        clone.style.cssText = 'text-align:left;font-size:13px;color:var(--rh-text-secondary);margin:0;';
+        infoCol.insertBefore(clone, infoCol.firstChild);
       }
     }
     let sidebar = root.querySelector('.listing-sidebar');
