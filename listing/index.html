@@ -143,8 +143,9 @@ class Component extends DCLogic {
           photoCol.style.setProperty('padding', '0 24px', 'important');
           photoCol.style.setProperty('margin', '0 auto', 'important');
           paper.style.setProperty('padding', '0', 'important');
-          paper.style.setProperty('width', '100%', 'important');
-          paper.style.setProperty('max-width', 'none', 'important');
+          paper.style.setProperty('width', 'calc(100vw - 48px)', 'important');
+          paper.style.setProperty('max-width', 'calc(100vw - 48px)', 'important');
+          paper.style.setProperty('margin', '24px', 'important');
         }
       }
     }
