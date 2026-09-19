@@ -422,6 +422,13 @@ class Component extends DCLogic {
         el.style.setProperty('text-align', 'left', 'important');
         if (el.parentElement) el.parentElement.style.setProperty('text-align', 'left', 'important');
       }
+      if (/data last updated/i.test(t) && t.length < 120) {
+        el.style.setProperty('margin-bottom', '0', 'important');
+        if (el.parentElement) el.parentElement.style.setProperty('padding-bottom', '0', 'important');
+      }
+      if (/powered by ihomefinder/i.test(t) && t.length < 60) {
+        el.style.setProperty('margin-top', '-24px', 'important');
+      }
     });
     const CAROUSEL_PX = 860;
     if (carousel) {
