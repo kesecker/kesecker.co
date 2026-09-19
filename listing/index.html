@@ -110,9 +110,15 @@ class Component extends DCLogic {
       paper.style.setProperty('overflow-y', 'auto', 'important');
       paper.style.setProperty('max-height', 'calc(100vh - 64px)', 'important');
     }
-    if (paper && !paper.dataset.ihfGalleryRestructured) {
+    if (paper && !paper.dataset.ihfGalleryStripped) {
+      const backLink = Array.from(root.querySelectorAll('*')).find((el) => el.children.length === 0 && /back to listing/i.test((el.textContent || '').trim()));
       const scheduleBtn = Array.from(root.querySelectorAll('*')).find((el) => el.children.length === 0 && /schedule tour/i.test((el.textContent || '').trim()));
-      if (scheduleBtn) {
+      if (backLink && scheduleBtn) {
+        let topBar = backLink;
+        for (let i = 0; i < 6 && topBar.parentElement; i++) {
+          topBar = topBar.parentElement;
+          if (topBar.children.length >= 2) break;
+        }
         let sidebar = scheduleBtn;
         for (let i = 0; i < 8 && sidebar.parentElement; i++) {
           sidebar = sidebar.parentElement;
@@ -122,33 +128,18 @@ class Component extends DCLogic {
         const sidebarAnchor = sidebar && sidebar.parentElement;
         const commonParent = sidebarAnchor && sidebarAnchor.parentElement;
         const photoCol = commonParent ? Array.from(commonParent.children).find((c) => c !== sidebarAnchor) : null;
-        if (sidebar && sidebarAnchor && commonParent && photoCol) {
-          paper.dataset.ihfGalleryRestructured = '1';
-          commonParent.style.setProperty('display', 'flex', 'important');
-          commonParent.style.setProperty('flex-direction', 'column', 'important');
+        if (topBar && sidebar && sidebarAnchor && commonParent && photoCol) {
+          paper.dataset.ihfGalleryStripped = '1';
+          topBar.style.setProperty('display', 'none', 'important');
+          sidebarAnchor.style.setProperty('display', 'none', 'important');
           commonParent.style.setProperty('width', '100%', 'important');
-          sidebarAnchor.style.setProperty('position', 'static', 'important');
-          sidebarAnchor.style.setProperty('top', 'auto', 'important');
-          sidebarAnchor.style.setProperty('left', 'auto', 'important');
-          sidebarAnchor.style.setProperty('width', '100%', 'important');
-          sidebarAnchor.style.setProperty('height', 'auto', 'important');
-          sidebar.style.setProperty('position', 'static', 'important');
-          sidebar.style.setProperty('top', 'auto', 'important');
-          sidebar.style.setProperty('left', 'auto', 'important');
-          sidebar.style.setProperty('right', 'auto', 'important');
-          sidebar.style.setProperty('width', '100%', 'important');
-          sidebar.style.setProperty('min-width', '100%', 'important');
-          sidebar.style.setProperty('height', 'auto', 'important');
-          sidebar.style.setProperty('display', 'flex', 'important');
-          sidebar.style.setProperty('flex-wrap', 'wrap', 'important');
-          sidebar.style.setProperty('align-items', 'center', 'important');
-          sidebar.style.setProperty('justify-content', 'space-between', 'important');
-          sidebar.style.setProperty('gap', '16px', 'important');
-          sidebar.style.setProperty('padding', '16px 20px', 'important');
-          sidebar.style.setProperty('box-sizing', 'border-box', 'important');
-          sidebar.style.setProperty('border-bottom', '1px solid #e0e0e0', 'important');
+          commonParent.style.setProperty('padding', '0', 'important');
           photoCol.style.setProperty('width', '100%', 'important');
-          commonParent.insertBefore(sidebarAnchor, photoCol);
+          photoCol.style.setProperty('max-width', 'none', 'important');
+          photoCol.style.setProperty('box-sizing', 'border-box', 'important');
+          photoCol.style.setProperty('padding', '0 24px', 'important');
+          photoCol.style.setProperty('margin', '0 auto', 'important');
+          paper.style.setProperty('padding', '0', 'important');
         }
       }
     }
