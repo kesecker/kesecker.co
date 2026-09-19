@@ -110,24 +110,46 @@ class Component extends DCLogic {
       paper.style.setProperty('overflow-y', 'auto', 'important');
       paper.style.setProperty('max-height', 'calc(100vh - 64px)', 'important');
     }
-    const scheduleBtn = Array.from(root.querySelectorAll('*')).find((el) => el.children.length === 0 && /schedule tour/i.test((el.textContent || '').trim()));
-    if (scheduleBtn) {
-      let sidebar = scheduleBtn;
-      for (let i = 0; i < 8 && sidebar.parentElement; i++) {
-        sidebar = sidebar.parentElement;
-        if (getComputedStyle(sidebar).position === 'fixed') break;
-      }
-      if (sidebar && getComputedStyle(sidebar).position === 'fixed' && !sidebar.dataset.ihfSidebarFixed) {
-        sidebar.dataset.ihfSidebarFixed = '1';
-        sidebar.style.setProperty('position', 'sticky', 'important');
-        sidebar.style.setProperty('top', '24px', 'important');
-        sidebar.style.setProperty('left', 'auto', 'important');
-        sidebar.style.setProperty('right', 'auto', 'important');
-        sidebar.style.setProperty('width', '280px', 'important');
-        sidebar.style.setProperty('min-width', '280px', 'important');
-        sidebar.style.setProperty('height', 'auto', 'important');
-        sidebar.style.setProperty('padding', '20px', 'important');
-        sidebar.style.setProperty('box-sizing', 'border-box', 'important');
+    if (paper && !paper.dataset.ihfGalleryRestructured) {
+      const scheduleBtn = Array.from(root.querySelectorAll('*')).find((el) => el.children.length === 0 && /schedule tour/i.test((el.textContent || '').trim()));
+      if (scheduleBtn) {
+        let sidebar = scheduleBtn;
+        for (let i = 0; i < 8 && sidebar.parentElement; i++) {
+          sidebar = sidebar.parentElement;
+          const pos = getComputedStyle(sidebar).position;
+          if (pos === 'fixed' || pos === 'sticky') break;
+        }
+        const sidebarAnchor = sidebar && sidebar.parentElement;
+        const commonParent = sidebarAnchor && sidebarAnchor.parentElement;
+        const photoCol = commonParent ? Array.from(commonParent.children).find((c) => c !== sidebarAnchor) : null;
+        if (sidebar && sidebarAnchor && commonParent && photoCol) {
+          paper.dataset.ihfGalleryRestructured = '1';
+          commonParent.style.setProperty('display', 'flex', 'important');
+          commonParent.style.setProperty('flex-direction', 'column', 'important');
+          commonParent.style.setProperty('width', '100%', 'important');
+          sidebarAnchor.style.setProperty('position', 'static', 'important');
+          sidebarAnchor.style.setProperty('top', 'auto', 'important');
+          sidebarAnchor.style.setProperty('left', 'auto', 'important');
+          sidebarAnchor.style.setProperty('width', '100%', 'important');
+          sidebarAnchor.style.setProperty('height', 'auto', 'important');
+          sidebar.style.setProperty('position', 'static', 'important');
+          sidebar.style.setProperty('top', 'auto', 'important');
+          sidebar.style.setProperty('left', 'auto', 'important');
+          sidebar.style.setProperty('right', 'auto', 'important');
+          sidebar.style.setProperty('width', '100%', 'important');
+          sidebar.style.setProperty('min-width', '100%', 'important');
+          sidebar.style.setProperty('height', 'auto', 'important');
+          sidebar.style.setProperty('display', 'flex', 'important');
+          sidebar.style.setProperty('flex-wrap', 'wrap', 'important');
+          sidebar.style.setProperty('align-items', 'center', 'important');
+          sidebar.style.setProperty('justify-content', 'space-between', 'important');
+          sidebar.style.setProperty('gap', '16px', 'important');
+          sidebar.style.setProperty('padding', '16px 20px', 'important');
+          sidebar.style.setProperty('box-sizing', 'border-box', 'important');
+          sidebar.style.setProperty('border-bottom', '1px solid #e0e0e0', 'important');
+          photoCol.style.setProperty('width', '100%', 'important');
+          commonParent.insertBefore(sidebarAnchor, photoCol);
+        }
       }
     }
   };
