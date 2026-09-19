@@ -238,7 +238,15 @@ class Component extends DCLogic {
     try { this._ihfTraceHearts(root); } catch (e) {}
     try { this._ihfFixDetailLayout(root); } catch (e) {}
     try { this._ihfFixFormValues(root); } catch (e) {}
-    root.querySelectorAll('*').forEach((el) => { if (el.shadowRoot) this._ihfFixTextInRoot(el.shadowRoot); });
+    root.querySelectorAll('*').forEach((el) => {
+      if (el.shadowRoot) {
+        this._ihfFixTextInRoot(el.shadowRoot);
+        if (!el.shadowRoot.__ihfObserved) {
+          el.shadowRoot.__ihfObserved = true;
+          new MutationObserver(() => { try { this._ihfFixTextInRoot(el.shadowRoot); } catch (e) {} }).observe(el.shadowRoot, { childList: true, subtree: true, characterData: true });
+        }
+      }
+    });
   };
   _ihfFixDetailLayout = (root) => {
     const carousel = root.querySelector('.listing-photo-carousel');
