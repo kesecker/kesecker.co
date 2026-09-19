@@ -110,7 +110,7 @@ class Component extends DCLogic {
       paper.style.setProperty('overflow-y', 'auto', 'important');
       paper.style.setProperty('max-height', 'calc(100vh - 64px)', 'important');
     }
-    if (paper && !paper.dataset.ihfGalleryStripped) {
+    if (paper) {
       const backLink = Array.from(root.querySelectorAll('*')).find((el) => el.children.length === 0 && /back to listing/i.test((el.textContent || '').trim()));
       const shareLeaf = Array.from(root.querySelectorAll('*')).find((el) => el.children.length === 0 && (el.textContent || '').trim() === 'Share');
       const scheduleBtn = Array.from(root.querySelectorAll('*')).find((el) => el.children.length === 0 && /schedule tour/i.test((el.textContent || '').trim()));
@@ -127,7 +127,6 @@ class Component extends DCLogic {
         const commonParent = sidebarAnchor && sidebarAnchor.parentElement;
         const photoCol = commonParent ? Array.from(commonParent.children).find((c) => c !== sidebarAnchor) : null;
         if (topBar && topBar.contains(shareLeaf) && sidebar && sidebarAnchor && commonParent && photoCol) {
-          paper.dataset.ihfGalleryStripped = '1';
           topBar.style.setProperty('display', 'none', 'important');
           sidebarAnchor.style.setProperty('display', 'none', 'important');
           commonParent.style.setProperty('display', 'block', 'important');
