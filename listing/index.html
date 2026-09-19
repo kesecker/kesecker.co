@@ -359,15 +359,19 @@ class Component extends DCLogic {
     });
     const tablistEl = root.querySelector('[role="tablist"]');
     if (tablistEl && tablistEl.parentElement && !tablistEl.parentElement.dataset.ihfIndicatorStripped) {
-      tablistEl.parentElement.dataset.ihfIndicatorStripped = '1';
+      const found = [];
       Array.from(tablistEl.parentElement.children).forEach((sib) => {
         if (sib === tablistEl) return;
         Array.from(sib.querySelectorAll('*')).concat([sib]).forEach((cand) => {
           const cs = getComputedStyle(cand);
           const r = cand.getBoundingClientRect();
-          if (cs.position === 'absolute' && r.height > 0 && r.height <= 6) cand.style.setProperty('display', 'none', 'important');
+          if (cs.position === 'absolute' && r.height > 0 && r.height <= 6) found.push(cand);
         });
       });
+      if (found.length) {
+        tablistEl.parentElement.dataset.ihfIndicatorStripped = '1';
+        found.forEach((cand) => cand.style.setProperty('display', 'none', 'important'));
+      }
     }
     if (firstTabEl && bcEl && !bcEl.dataset.ihfLeveled) {
       let rowEl = firstTabEl.parentElement;
