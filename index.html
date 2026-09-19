@@ -802,7 +802,7 @@ class Component extends DCLogic {
     if (this.introFailsafeTimer) clearTimeout(this.introFailsafeTimer);
     try { localStorage.setItem('jkr_intro_seen', '1'); } catch (e) {}
     if (this.introVideoEl) { try { this.introVideoEl.pause(); } catch (e) {} }
-    if (this.heroVideoRef.current) { try { this.heroVideoRef.current.play(); } catch (e) {} }
+    setTimeout(() => { if (this.heroVideoRef.current) { try { this.heroVideoRef.current.play(); } catch (e) {} } }, 1500);
     this.setState({ isIntroFading: true });
     setTimeout(() => {
       this.setState({ isIntroVisible: false, isIntroFading: false });
@@ -1350,7 +1350,7 @@ class Component extends DCLogic {
       : 'opacity:0;transform:translateX(-32px);transition:opacity 1.4s cubic-bezier(.16,1,.3,1),transform 1.4s cubic-bezier(.16,1,.3,1);';
   }
   componentDidMount() {
-    if (!this.state.isIntroVisible && this.heroVideoRef.current) { try { this.heroVideoRef.current.play(); } catch (e) {} }
+    if (!this.state.isIntroVisible && this.heroVideoRef.current) { setTimeout(() => { try { this.heroVideoRef.current.play(); } catch (e) {} }, 1500); }
     if (this.state.isIntroVisible) {
       this.introFailsafeTimer = setTimeout(() => { if (this.state.isIntroVisible && !this.state.isIntroFading) this.dismissIntro(); }, 6000);
     }
