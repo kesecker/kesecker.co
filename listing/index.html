@@ -111,6 +111,11 @@ class Component extends DCLogic {
       paper.style.setProperty('max-height', 'calc(100vh - 64px)', 'important');
     }
     if (paper) {
+      Array.from(paper.querySelectorAll('*')).forEach((el) => {
+        if (el.style && /^\d+%$/.test(el.style.width) && parseInt(el.style.width, 10) < 100) {
+          el.style.setProperty('width', '100%', 'important');
+        }
+      });
       const findSmallestMatch = (text) => {
         const matches = Array.from(root.querySelectorAll('*')).filter((el) => (el.textContent || '').trim() === text);
         if (!matches.length) return null;
