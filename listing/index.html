@@ -103,6 +103,34 @@
 class Component extends DCLogic {
   state = { isPhoneOpen: false };
   _ihfStreetSuffixes = { RD:'Road', ST:'Street', AVE:'Avenue', DR:'Drive', LN:'Lane', CT:'Court', WAY:'Way', BLVD:'Boulevard', PL:'Place', CIR:'Circle', TER:'Terrace', PKWY:'Parkway', HWY:'Highway', LOOP:'Loop', TRL:'Trail', SQ:'Square' };
+  _ihfFixGalleryModal = (root) => {
+    const paper = root.querySelector('[role="dialog"]');
+    if (paper && !paper.dataset.ihfGalleryFixed && paper.className && /MuiDialog-paper/.test(paper.className)) {
+      paper.dataset.ihfGalleryFixed = '1';
+      paper.style.setProperty('overflow-y', 'auto', 'important');
+      paper.style.setProperty('max-height', 'calc(100vh - 64px)', 'important');
+    }
+    const scheduleBtn = Array.from(root.querySelectorAll('*')).find((el) => el.children.length === 0 && /schedule tour/i.test((el.textContent || '').trim()));
+    if (scheduleBtn) {
+      let sidebar = scheduleBtn;
+      for (let i = 0; i < 8 && sidebar.parentElement; i++) {
+        sidebar = sidebar.parentElement;
+        if (getComputedStyle(sidebar).position === 'fixed') break;
+      }
+      if (sidebar && getComputedStyle(sidebar).position === 'fixed' && !sidebar.dataset.ihfSidebarFixed) {
+        sidebar.dataset.ihfSidebarFixed = '1';
+        sidebar.style.setProperty('position', 'sticky', 'important');
+        sidebar.style.setProperty('top', '24px', 'important');
+        sidebar.style.setProperty('left', 'auto', 'important');
+        sidebar.style.setProperty('right', 'auto', 'important');
+        sidebar.style.setProperty('width', '280px', 'important');
+        sidebar.style.setProperty('min-width', '280px', 'important');
+        sidebar.style.setProperty('height', 'auto', 'important');
+        sidebar.style.setProperty('padding', '20px', 'important');
+        sidebar.style.setProperty('box-sizing', 'border-box', 'important');
+      }
+    }
+  };
   _ihfFixTextInRoot = (root) => {
     const cityStateZipRe = /^([A-Za-z .'-]+),\s*([A-Z]{2})\s*(\d{5})$/;
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
@@ -184,6 +212,7 @@ class Component extends DCLogic {
     try { this._ihfMoveResultsCount(root); } catch (e) {}
     try { this._ihfTraceHearts(root); } catch (e) {}
     try { this._ihfFixDetailLayout(root); } catch (e) {}
+    try { this._ihfFixGalleryModal(root); } catch (e) {}
     try { this._ihfFixFormValues(root); } catch (e) {}
     root.querySelectorAll('*').forEach((el) => {
       if (el.shadowRoot) {
@@ -351,7 +380,7 @@ class Component extends DCLogic {
       el.style.setProperty('background-image', 'linear-gradient(#000000, #000000)', 'important');
       el.style.setProperty('background-repeat', 'no-repeat', 'important');
       el.style.setProperty('background-position', 'left bottom', 'important');
-      el.style.setProperty('background-size', '0 2px', 'important');
+      el.style.setProperty('background-size', el.dataset.ihfActiveSet ? '100% 2px' : '0 2px', 'important');
       el.style.setProperty('transition', 'background-size 0.3s ease', 'important');
       el.style.setProperty('padding-bottom', '4px', 'important');
       el.addEventListener('mouseenter', () => el.style.setProperty('background-size', '100% 2px', 'important'));
