@@ -406,6 +406,13 @@ class Component extends DCLogic {
       el.addEventListener('mouseenter', () => el.style.setProperty('background-size', '100% 2px', 'important'));
       el.addEventListener('mouseleave', () => el.style.setProperty('background-size', '0 2px', 'important'));
     });
+    if (firstTabEl && !root.__ihfIndicatorHidden) {
+      root.__ihfIndicatorHidden = true;
+      Array.from(root.querySelectorAll('[class*="indicator" i]')).forEach((el) => {
+        const r = el.getBoundingClientRect();
+        if (r.height > 0 && r.height <= 6) el.style.setProperty('display', 'none', 'important');
+      });
+    }
     if (firstTabEl && bcEl && !bcEl.dataset.ihfLeveled) {
       let rowEl = firstTabEl.parentElement;
       let hops = 0;
@@ -517,21 +524,34 @@ class Component extends DCLogic {
         agentEl.style.setProperty('display', 'none', 'important');
         const fullText = agentEl.textContent.trim();
         const parts = fullText.split(/(?=Listing\s*#)/i);
+        const agentText = (parts[0] || '').trim();
+        const mlsText = (parts[1] || '').trim();
+        const shareBtn = Array.from(root.querySelectorAll('*')).find((el) => el.children.length === 0 && /^share$/i.test((el.textContent || '').trim()));
+        const saveBtn = Array.from(root.querySelectorAll('*')).find((el) => el.children.length === 0 && /^save$/i.test((el.textContent || '').trim()));
+        let shareSaveRow = null;
+        if (shareBtn) {
+          let n = shareBtn;
+          for (let i = 0; i < 5 && n.parentElement; i++) {
+            n = n.parentElement;
+            if (saveBtn && n.contains(saveBtn)) { shareSaveRow = n; break; }
+          }
+        }
         const wrap = document.createElement('div');
-        wrap.style.cssText = 'display:flex;flex-direction:column;gap:6px;margin-bottom:10px;';
-        parts.forEach((part) => {
-          const line = document.createElement('p');
-          line.textContent = part.trim();
-          line.style.cssText = 'text-align:left;font-size:13px;color:var(--rh-text-secondary);margin:0;';
-          wrap.appendChild(line);
-        });
+        wrap.style.cssText = 'display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:10px;';
+        const leftP = document.createElement('p');
+        leftP.textContent = agentText;
+        leftP.style.cssText = 'text-align:left;font-size:13px;color:var(--rh-text-secondary);margin:0;';
+        wrap.appendChild(leftP);
+        const rightCol = document.createElement('div');
+        rightCol.style.cssText = 'display:flex;flex-direction:column;align-items:flex-end;gap:8px;';
+        const rightP = document.createElement('p');
+        rightP.textContent = mlsText;
+        rightP.style.cssText = 'text-align:right;font-size:13px;color:var(--rh-text-secondary);margin:0;';
+        rightCol.appendChild(rightP);
+        if (shareSaveRow) rightCol.appendChild(shareSaveRow);
+        wrap.appendChild(rightCol);
         infoCol.insertBefore(wrap, infoCol.firstChild);
       }
-    }
-    const mlsEl = root.querySelector('.ihf-info-col') && Array.from(root.querySelectorAll('*')).find((el) => el.children.length === 0 && /^listing\s*#/i.test((el.textContent || '').trim()));
-    if (mlsEl) {
-      mlsEl.style.setProperty('display', 'block', 'important');
-      mlsEl.style.setProperty('margin-top', '10px', 'important');
     }
     let sidebar = root.querySelector('.listing-sidebar');
     if (!sidebar) {
