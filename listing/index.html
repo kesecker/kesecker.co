@@ -266,6 +266,7 @@ class Component extends DCLogic {
     try { this._ihfMoveResultsCount(root); } catch (e) {}
     try { this._ihfTraceHearts(root); } catch (e) {}
     try { this._ihfFixDetailLayout(root); } catch (e) {}
+    try { this._ihfBuildScrollNav(root); } catch (e) {}
     try { this._ihfFixGalleryModal(root); } catch (e) {}
     try { this._ihfFixFormValues(root); } catch (e) {}
     root.querySelectorAll('*').forEach((el) => {
@@ -278,10 +279,57 @@ class Component extends DCLogic {
       }
     });
   };
+  _ihfBuildScrollNav = (root) => {
+    const section = root.querySelector('.listing-section');
+    if (!section || section.dataset.ihfScrollNavBuilt) return;
+    const mainCol = section.parentElement;
+    if (!mainCol) return;
+    const breadcrumb = Array.from(mainCol.children).find((c) => c !== section && /home search/i.test((c.textContent || '').trim()) && (c.textContent || '').trim().length < 200);
+    const carousel = root.querySelector('.listing-photo-carousel');
+    if (!breadcrumb || !carousel) return;
+    section.dataset.ihfScrollNavBuilt = '1';
+    const scrollBox = document.getElementById('ihf-listing-detail') && document.getElementById('ihf-listing-detail').parentElement;
+    const findChild = (cls) => Array.from(section.children).find((c) => c.classList && c.classList.contains(cls));
+    const sections = [
+      { label: 'Details', target: () => null },
+      { label: 'Map', target: () => { const c = findChild('listing-map'); return c && c.querySelector('h2'); } },
+      { label: 'Similar Listings', target: () => { const c = findChild('similar-listings'); return c && c.querySelector('h2'); } },
+      { label: 'Mortgage Calc', target: () => { const c = findChild('mortgage-calculator'); return c && c.querySelector('h2'); } },
+      { label: 'Schools', target: () => { const c = findChild('schools'); return c && c.querySelector('h2'); } },
+      { label: 'Walk Score', target: () => { const c = findChild('walk-score'); return c && c.querySelector('h2'); } },
+    ];
+    const bcClone = breadcrumb.cloneNode(true);
+    breadcrumb.style.setProperty('display', 'none', 'important');
+    bcClone.style.cssText = 'font-size:14px;color:#888;white-space:nowrap;display:flex;align-items:center;flex-shrink:0;';
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1300px;margin:0 auto;flex-wrap:wrap;row-gap:8px;position:sticky;top:0;z-index:5;background:#ffffff;padding:16px 0;';
+    const navRow = document.createElement('div');
+    navRow.style.cssText = 'display:flex;align-items:center;gap:26px;flex-wrap:wrap;';
+    sections.forEach(({ label, target }, i) => {
+      const link = document.createElement('span');
+      link.textContent = label;
+      link.style.cssText = 'font-family:Montserrat,system-ui,sans-serif;font-size:14px;font-weight:' + (i === 0 ? '700' : '500') + ';color:#1a1a1a;cursor:pointer;display:inline-block;width:fit-content;background-image:linear-gradient(#000000,#000000);background-repeat:no-repeat;background-position:left bottom;background-size:' + (i === 0 ? '100% 2px' : '0 2px') + ';transition:background-size 0.3s ease;padding-bottom:4px;';
+      link.addEventListener('mouseenter', () => link.style.setProperty('background-size', '100% 2px', 'important'));
+      link.addEventListener('mouseleave', () => { if (i !== 0) link.style.setProperty('background-size', '0 2px', 'important'); });
+      link.addEventListener('click', () => {
+        if (!scrollBox) return;
+        if (i === 0) { scrollBox.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+        const el = target();
+        if (!el) return;
+        const elRect = el.getBoundingClientRect();
+        const boxRect = scrollBox.getBoundingClientRect();
+        const navH = wrap.getBoundingClientRect().height;
+        scrollBox.scrollTo({ top: scrollBox.scrollTop + (elRect.top - boxRect.top) - navH - 16, behavior: 'smooth' });
+      });
+      navRow.appendChild(link);
+    });
+    wrap.appendChild(bcClone);
+    wrap.appendChild(navRow);
+    mainCol.insertBefore(wrap, section);
+  };
   _ihfFixDetailLayout = (root) => {
     const carousel = root.querySelector('.listing-photo-carousel');
     const header = root.querySelector('.listing-header');
-    let firstTabEl = null;
     if (header) {
       header.style.setProperty('min-height', 'auto', 'important');
       const priceEl = header.querySelector('.list-price');
@@ -333,17 +381,7 @@ class Component extends DCLogic {
       if (addr2) zeroInset(addr2.parentElement);
       if (addr1) addr1.style.setProperty('font-size', '18px', 'important');
       if (addr2) addr2.style.setProperty('font-size', '18px', 'important');
-      if (!header.dataset.ihfBreadcrumb && addr1 && addr2) {
-        header.dataset.ihfBreadcrumb = '1';
-        const bc = document.createElement('div');
-        bc.dataset.ihfBc = '1';
-        bc.style.cssText = 'font-size:15px;color:#888;white-space:nowrap;display:flex;align-items:center;';
-        bc.innerHTML = '<a href="https://keseckerproperties.com/listings" style="color:#888;text-decoration:none;">Home Search</a><span style="margin:0 6px;">\u203a</span><span style="color:#1a1a1a;">' + addr1.textContent + ', ' + addr2.textContent + '</span>';
-        header.parentElement.insertBefore(bc, header);
-      }
     }
-    const bcEl = root.querySelector('[data-ihf-bc]');
-    const tabLabels = ['Details', 'Map', 'Similar Listings', 'Mortgage Calc', 'Schools', 'Walk Score'];
     const allLeaves = Array.from(root.querySelectorAll('*')).filter((el) => !el.children.length);
     const badgeTextEl = allLeaves.find((el) => /^(Active|Pending|Sold|Contingent|Coming Soon)$/i.test((el.textContent || '').trim()));
     if (badgeTextEl) {
@@ -387,6 +425,11 @@ class Component extends DCLogic {
           const badgeClone = badgeTextEl.cloneNode(true);
           badgeTextEl.style.setProperty('display', 'none', 'important');
           carousel.appendChild(badgeClone);
+          Array.from(carousel.querySelectorAll('*')).forEach((dupe) => {
+            if (dupe !== badgeClone && !dupe.children.length && /^(Active|Pending|Sold|Contingent|Coming Soon)$/i.test((dupe.textContent || '').trim())) {
+              dupe.style.setProperty('display', 'none', 'important');
+            }
+          });
         }
       }
     }
@@ -581,6 +624,11 @@ class Component extends DCLogic {
           n = n.parentElement;
         }
       });
+      const nowTs = Date.now();
+      if (!this._ihfLastCarouselResizeNudge || nowTs - this._ihfLastCarouselResizeNudge > 300) {
+        this._ihfLastCarouselResizeNudge = nowTs;
+        requestAnimationFrame(() => window.dispatchEvent(new Event('resize')));
+      }
     }
     const statsRow = root.querySelector('.listing-attributes');
     if (statsRow && !statsRow.dataset.ihfCloned) {
