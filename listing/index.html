@@ -587,7 +587,7 @@ class Component extends DCLogic {
       carousel.style.setProperty('clip-path', 'inset(0)', 'important');
       carousel.style.setProperty('background', '#ffffff', 'important');
       carousel.style.setProperty('max-width', '1300px', 'important');
-      carousel.style.setProperty('margin', '-160px auto 0', 'important');
+      carousel.style.setProperty('margin', '0 auto', 'important');
       carousel.style.setProperty('position', 'relative', 'important');
       if (carousel.parentElement) {
         carousel.parentElement.style.setProperty('max-width', '1300px', 'important');
@@ -711,16 +711,15 @@ class Component extends DCLogic {
     const listingDetail = root.querySelector('.listing-detail');
     if (listingDetail && !listingDetail.dataset.ihfSidebarStripped) {
       const kids = Array.from(listingDetail.children);
-      const sidebarKids = kids.filter((k) => k.classList.contains('listing-sidebar') || k.querySelector('.listing-sidebar') || Array.from(k.querySelectorAll('*')).some((el) => !el.children.length && /select your date preference/i.test((el.textContent || '').trim())));
-      if (sidebarKids.length && sidebarKids.length < kids.length) {
+      const sidebarKid = kids.find((k) => k.classList.contains('listing-sidebar'));
+      if (sidebarKid) {
         listingDetail.dataset.ihfSidebarStripped = '1';
         listingDetail.style.setProperty('width', '100%', 'important');
-        sidebarKids.forEach((k) => {
-          k.style.setProperty('display', 'none', 'important');
-          k.style.setProperty('width', '0', 'important');
-          k.style.setProperty('flex', 'none', 'important');
-        });
-        kids.filter((k) => !sidebarKids.includes(k)).forEach((k) => {
+        sidebarKid.style.setProperty('display', 'none', 'important');
+        sidebarKid.style.setProperty('width', '0', 'important');
+        sidebarKid.style.setProperty('flex', 'none', 'important');
+        sidebarKid.style.setProperty('padding', '0', 'important');
+        kids.filter((k) => k !== sidebarKid).forEach((k) => {
           k.style.setProperty('flex', '1 1 100%', 'important');
           k.style.setProperty('width', '100%', 'important');
           k.style.setProperty('max-width', '100%', 'important');
