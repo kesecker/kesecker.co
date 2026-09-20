@@ -382,7 +382,12 @@ class Component extends DCLogic {
         badgeTextEl.style.setProperty('opacity', '1', 'important');
         badgeTextEl.style.setProperty('margin', '0', 'important');
         badgeTextEl.style.setProperty('box-shadow', '0 2px 8px rgba(0,0,0,0.25)', 'important');
-        carousel.appendChild(badgeTextEl);
+        if (!badgeTextEl.dataset.ihfBadgeCloned) {
+          badgeTextEl.dataset.ihfBadgeCloned = '1';
+          const badgeClone = badgeTextEl.cloneNode(true);
+          badgeTextEl.style.setProperty('display', 'none', 'important');
+          carousel.appendChild(badgeClone);
+        }
       }
     }
     const openHouseEl = allLeaves.find((el) => /^open house$/i.test((el.textContent || '').trim()));
@@ -598,8 +603,11 @@ class Component extends DCLogic {
       const col = document.createElement('div');
       col.className = 'ihf-info-col';
       col.style.cssText = 'display:flex;flex-direction:column;gap:20px;margin-top:-190px;background:#ffffff;position:relative;z-index:2;padding-top:16px;';
-      col.appendChild(header);
-      col.appendChild(statsRow.parentElement.querySelector('.ihf-stats-clone') || statsRow);
+      const headerClone = header.cloneNode(true);
+      header.style.setProperty('display', 'none', 'important');
+      col.appendChild(headerClone);
+      const statsClone = statsRow.parentElement.querySelector('.ihf-stats-clone');
+      if (statsClone) col.appendChild(statsClone);
       statsRow.style.setProperty('flex', 'none', 'important');
       statsRow.style.setProperty('max-width', '100%', 'important');
       if (carousel && carousel.parentElement) carousel.parentElement.insertBefore(col, carousel.nextSibling);
@@ -624,6 +632,17 @@ class Component extends DCLogic {
             if (saveBtn && n.contains(saveBtn)) { shareSaveRow = n; break; }
           }
         }
+        let shareSaveClone = null;
+        if (shareSaveRow) {
+          shareSaveClone = shareSaveRow.cloneNode(true);
+          const origBtns = Array.from(shareSaveRow.querySelectorAll('button, [role="button"], a'));
+          const cloneBtns = Array.from(shareSaveClone.querySelectorAll('button, [role="button"], a'));
+          cloneBtns.forEach((btn, i) => {
+            const orig = origBtns[i];
+            if (orig) btn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); orig.click(); });
+          });
+          shareSaveRow.style.setProperty('display', 'none', 'important');
+        }
         const wrap = document.createElement('div');
         wrap.style.cssText = 'display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:10px;';
         const leftP = document.createElement('p');
@@ -636,7 +655,7 @@ class Component extends DCLogic {
         rightP.textContent = mlsText;
         rightP.style.cssText = 'text-align:right;font-size:13px;color:var(--rh-text-secondary);margin:0;';
         rightCol.appendChild(rightP);
-        if (shareSaveRow) rightCol.appendChild(shareSaveRow);
+        if (shareSaveClone) rightCol.appendChild(shareSaveClone);
         wrap.appendChild(rightCol);
         infoCol.insertBefore(wrap, infoCol.firstChild);
       }
@@ -678,7 +697,7 @@ class Component extends DCLogic {
       this._ihfTitleObserverBound = true;
       const fixTitle = () => {
         const t = document.title;
-        let fixed = t.replace(/\b([A-Z]{2,}(?:[ .'-][A-Z]{2,})*),\s*([A-Z]{2})\b/g, (m, city, st) => city.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase()) + ', ' + st);
+        let fixed = t.replace(/\b([A-Z]{2,}(?:[ .'-][A-Z]{2,})*),\s*([A-Z]{2})\b/g, (m, city, st) => '| ' + city.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase()) + ', ' + st);
         if (/\{listingAddress\}/.test(fixed)) fixed = 'Home Search | Jackson Kesecker';
         if (fixed !== t) document.title = fixed;
       };
