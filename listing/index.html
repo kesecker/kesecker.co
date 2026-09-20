@@ -151,6 +151,27 @@ class Component extends DCLogic {
           paper.style.setProperty('width', 'calc(100vw - 48px)', 'important');
           paper.style.setProperty('max-width', 'calc(100vw - 48px)', 'important');
           paper.style.setProperty('margin', '24px', 'important');
+          if (!photoCol.dataset.ihfPadMatched) {
+            const firstChild = photoCol.firstElementChild;
+            if (firstChild) {
+              const topGap = firstChild.getBoundingClientRect().top - photoCol.getBoundingClientRect().top;
+              if (topGap > 0) {
+                photoCol.dataset.ihfPadMatched = '1';
+                photoCol.style.setProperty('padding-bottom', topGap + 'px', 'important');
+              }
+            }
+          }
+          if (!paper.dataset.ihfCloseBtnAdded) {
+            paper.dataset.ihfCloseBtnAdded = '1';
+            const closeBtn = document.createElement('button');
+            closeBtn.setAttribute('aria-label', 'Close');
+            closeBtn.innerHTML = '&times;';
+            closeBtn.style.cssText = 'position: fixed; top: 24px; right: clamp(20px, 4vw, 40px); background: none; border: none; font-size: 32px; line-height: 1; cursor: pointer; color: #000000; z-index: 2147483000; transition: opacity 0.2s ease; padding: 0;';
+            closeBtn.addEventListener('mouseenter', () => { closeBtn.style.opacity = '0.6'; });
+            closeBtn.addEventListener('mouseleave', () => { closeBtn.style.opacity = '1'; });
+            closeBtn.addEventListener('click', () => { backLink.click(); });
+            paper.appendChild(closeBtn);
+          }
         }
       }
     }
