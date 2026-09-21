@@ -301,6 +301,11 @@ class Component extends DCLogic {
     const bcClone = breadcrumb.cloneNode(true);
     breadcrumb.style.setProperty('display', 'none', 'important');
     bcClone.style.cssText = 'font-size:14px;color:#888;white-space:nowrap;display:flex;align-items:center;flex-shrink:0;';
+    Array.from(bcClone.querySelectorAll('a')).forEach((a) => {
+      a.style.cssText = 'font-family:Montserrat,system-ui,sans-serif;font-size:14px;color:#888;text-decoration:none;display:inline-block;width:fit-content;background-image:linear-gradient(#888888,#888888);background-repeat:no-repeat;background-position:left bottom;background-size:0 1px;transition:background-size 0.3s ease;padding-bottom:2px;';
+      a.addEventListener('mouseenter', () => a.style.setProperty('background-size', '100% 1px', 'important'));
+      a.addEventListener('mouseleave', () => a.style.setProperty('background-size', '0 1px', 'important'));
+    });
     const wrap = document.createElement('div');
     wrap.style.cssText = 'display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1300px;margin:0 auto;flex-wrap:wrap;row-gap:8px;position:sticky;top:0;z-index:5;background:#ffffff;padding:16px 0;';
     const navRow = document.createElement('div');
@@ -479,7 +484,7 @@ class Component extends DCLogic {
       carousel.style.setProperty('clip-path', 'inset(0)', 'important');
       carousel.style.setProperty('background', '#ffffff', 'important');
       carousel.style.setProperty('max-width', '1300px', 'important');
-      carousel.style.setProperty('margin', '-180px auto 0', 'important');
+      carousel.style.setProperty('margin', '-100px auto 0', 'important');
       carousel.style.setProperty('position', 'relative', 'important');
       if (carousel.parentElement) {
         carousel.parentElement.style.setProperty('max-width', '1300px', 'important');
