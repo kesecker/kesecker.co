@@ -645,7 +645,14 @@ class Component extends DCLogic {
       this._ihfTitleObserverBound = true;
       const fixTitle = () => {
         const t = document.title;
-        let fixed = t.replace(/\b([A-Z]{2,}(?:[ .'-][A-Z]{2,})*),\s*([A-Z]{2})\b/g, (m, city, st) => '| ' + city.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase()) + ', ' + st);
+        const suffixes = 'Street|St|Avenue|Ave|Road|Rd|Drive|Dr|Lane|Ln|Court|Ct|Way|Boulevard|Blvd|Place|Pl|Terrace|Ter|Circle|Cir|Parkway|Pkwy|Trail|Trl|Loop|Highway|Hwy|Square|Sq|Crossing|Xing|Point|Pt';
+        const suffixRe = new RegExp('\\b(' + suffixes + ')\\b\\s+([A-Za-z .\'-]+?),\\s*([A-Za-z]{2})\\b');
+        let fixed = t.replace(suffixRe, (m, suf, city, st) => {
+          const properSuf = suf.charAt(0).toUpperCase() + suf.slice(1).toLowerCase();
+          const properCity = city.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
+          return properSuf + ' | ' + properCity + ', ' + st.toUpperCase();
+        });
+        if (fixed === t) fixed = t.replace(/\b([A-Z]{2,}(?:[ .'-][A-Z]{2,})*),\s*([A-Z]{2})\b/g, (m, city, st) => '| ' + city.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase()) + ', ' + st);
         if (/\{listingAddress\}/.test(fixed)) fixed = 'Home Search | Jackson Kesecker';
         if (fixed !== t) document.title = fixed;
       };
