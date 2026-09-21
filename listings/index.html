@@ -20,18 +20,6 @@
       activationToken: "84ee0119-74ff-4a71-885e-a3cc7e030850",
     };
   </script>
-  <link rel="stylesheet" href="_ds/realty-hub-design-system-dc2b1855-61ad-4be7-8677-8c19514f7cae/styles.css">
-  <script>
-    (function loadDsBundle() {
-      if (window.React) {
-        var s = document.createElement('script');
-        s.src = '_ds/realty-hub-design-system-dc2b1855-61ad-4be7-8677-8c19514f7cae/_ds_bundle.js';
-        document.head.appendChild(s);
-      } else {
-        setTimeout(loadDsBundle, 10);
-      }
-    })();
-  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Lexend:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -40,6 +28,15 @@
       --rh-accent: #1a1a1a;
       --rh-accent-hover: #000000;
       --rh-accent-light: #ededed;
+      --rh-bg: #ffffff;
+      --rh-surface: #f9f9f9;
+      --rh-text-primary: #1a1a1a;
+      --rh-text-secondary: #666666;
+      --rh-text-muted: #999999;
+      --rh-border: #e0e0e0;
+      --rh-radius-btn: 6px;
+      --rh-radius-card: 0px;
+      --rh-radius-input: 0px;
     }
     html, body { margin: 0; height: 100%; overflow: hidden; background: var(--rh-bg); letter-spacing: 0.015em; }
     @keyframes modal-fade-in { from { opacity: 0; } to { opacity: 1; } }
@@ -255,19 +252,35 @@ class Component extends DCLogic {
       btn.addEventListener('mouseleave', () => { svg.style.removeProperty('color'); svg.querySelectorAll('line').forEach((l) => l.style.removeProperty('stroke')); });
     });
   };
+  _ihfFixTitleAttrs = (root) => {
+    root.querySelectorAll('[title]').forEach((el) => {
+      const raw = el.getAttribute('title');
+      if (!raw || el.dataset.ihfTitleFixed === raw) return;
+      const m = raw.match(/^(\d+\s+.+?)\s+([A-Za-z]{2,6})\.?\s+([A-Za-z .'-]+?),?\s*([A-Z]{2})[, ]+(\d{5})/);
+      if (!m) return;
+      const suf = this._ihfStreetSuffixes[m[2].toUpperCase()];
+      if (!suf) return;
+      const city = m[3].trim().toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
+      const fixed = m[1] + ' ' + suf + ', ' + city + ', ' + m[4].toUpperCase() + ' ' + m[5];
+      el.dataset.ihfTitleFixed = fixed;
+      el.setAttribute('title', fixed);
+    });
+  };
   _ihfFixAllShadowRoots = () => {
     this._ihfFixTextInRoot(document);
     this._ihfFixCloseButtons(document);
+    this._ihfFixTitleAttrs(document);
     if (!this._ihfShadowFadeRoots) this._ihfShadowFadeRoots = new WeakSet();
     document.querySelectorAll('*').forEach((el) => {
       const sr = el.shadowRoot;
       if (!sr) return;
       this._ihfFixTextInRoot(sr);
       this._ihfFixCloseButtons(sr);
+      this._ihfFixTitleAttrs(sr);
       if (this._ihfShadowFadeRoots.has(sr)) return;
       this._ihfShadowFadeRoots.add(sr);
       const srMo = new MutationObserver(() => this._ihfFixAllShadowRoots());
-      srMo.observe(sr, { childList: true, subtree: true });
+      srMo.observe(sr, { childList: true, subtree: true, attributes: true, attributeFilter: ['src', 'title'] });
     });
   };
   _ihfStartCaseFix = () => {
@@ -293,7 +306,7 @@ class Component extends DCLogic {
     }
     if (!this._ihfMo) {
       this._ihfMo = new MutationObserver(() => this._ihfFixAllShadowRoots());
-      this._ihfMo.observe(document.body, { childList: true, subtree: true });
+      this._ihfMo.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['src'] });
     }
     this._ihfFixAllShadowRoots();
   };

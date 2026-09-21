@@ -9,21 +9,10 @@
 <x-dc>
 <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="#1a1a1a"/><text x="100" y="112" font-size="64" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-weight="700">JK</text></svg></template>
 <helmet>
+  <title>Jackson Kesecker, Realtor®</title>
   <link rel="icon" type="image/png" href="assets/favicon-dark.png" media="(prefers-color-scheme: dark)">
   <link rel="icon" type="image/png" href="assets/favicon-light.png" media="(prefers-color-scheme: light)">
   <link rel="icon" type="image/png" href="assets/favicon-light.png">
-  <link rel="stylesheet" href="_ds/realty-hub-design-system-dc2b1855-61ad-4be7-8677-8c19514f7cae/styles.css">
-  <script>
-    (function loadDsBundle() {
-      if (window.React) {
-        var s = document.createElement('script');
-        s.src = '_ds/realty-hub-design-system-dc2b1855-61ad-4be7-8677-8c19514f7cae/_ds_bundle.js';
-        document.head.appendChild(s);
-      } else {
-        setTimeout(loadDsBundle, 10);
-      }
-    })();
-  </script>
   <script src="./image-slot.js"></script>
   <script src="https://kestrel.idxhome.com/ihf-kestrel.js"></script>
   <script>
@@ -34,7 +23,7 @@
     };
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&amp;family=Lexend:wght@400;500;600&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&amp;family=Lexend:wght@400;500;600&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <style>
     :root {
       --rh-font: 'Montserrat', system-ui, sans-serif;
@@ -44,6 +33,15 @@
       --rh-priority-high: #1a1a1a;
       --rh-priority-medium: #4d4d4d;
       --rh-priority-low: #808080;
+      --rh-bg: #ffffff;
+      --rh-surface: #f9f9f9;
+      --rh-text-primary: #1a1a1a;
+      --rh-text-secondary: #666666;
+      --rh-text-muted: #999999;
+      --rh-border: #e0e0e0;
+      --rh-radius-btn: 6px;
+      --rh-radius-card: 0px;
+      --rh-radius-input: 0px;
     }
     body { margin: 0; background: var(--rh-bg); letter-spacing: 0.015em; }
     a { color: var(--rh-accent); text-decoration: none; }
@@ -111,8 +109,6 @@
     * { scrollbar-width: thin; scrollbar-color: #000000 transparent; }
     body { scrollbar-gutter: stable; }
     image-slot::part(ring) { display: none !important; }
-    .rh-btn-secondary button:hover { background: #000000 !important; color: #ffffff !important; border-color: #000000 !important; }
-    .rh-btn-primary button:hover { background: #ffffff !important; color: #000000 !important; border-color: #000000 !important; }
   </style>
 </helmet>
 
@@ -138,8 +134,8 @@
         <h1 style="font-size: clamp(28px, 5vw, 56px); font-weight: 700; line-height: 1.04; letter-spacing: -0.01em; margin: 0;">Real estate,<br>represented with care.</h1>
         <p style="font-size: 17px; line-height: 1.6; color: var(--rh-text-secondary); max-width: 460px; margin: 0;">Camille Voss and the Voss &amp; Co. team guide buyers and sellers across the North Shore — from first showing to closing day.</p>
         <div style="display: flex; gap: 14px; margin-top: 8px;">
-          <span class="rh-btn-primary"><x-import component-from-global-scope="RealtyHub.Button" hint-size="160px,48px" variant="primary">View Listings</x-import></span>
-          <span class="rh-btn-secondary"><x-import component-from-global-scope="RealtyHub.Button" hint-size="180px,48px" variant="secondary">Get a Home Valuation</x-import></span>
+          <span style="font-family: var(--rh-font); font-weight: 600; letter-spacing: 0.01em; font-size: 14px; padding: 9px 18px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; background: var(--rh-accent); color: #ffffff; border: 1px solid var(--rh-accent);">View Listings</span>
+          <span style="font-family: var(--rh-font); font-weight: 600; letter-spacing: 0.01em; font-size: 14px; padding: 9px 18px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; background: #ffffff; color: var(--rh-accent); border: 1px solid var(--rh-border);">Get a Home Valuation</span>
         </div>
       </div>
       <image-slot id="hero-split" shape="rect" placeholder="Drop a hero property or lifestyle photo" style="width: 100%; height: 100%;"></image-slot>
@@ -162,8 +158,8 @@
         </div>
         <div style="align-self: center; width: 100%; box-sizing: border-box; transform: translateY(calc(-8vh - 40px));">
         <div id="hero-text-block" style="box-sizing: border-box; padding-left: clamp(20px, 6vw, 73px); padding-right: 24px; display: flex; flex-direction: column; gap: clamp(6px, 1vw, 10px); text-align: left; max-width: 774px;"><span id="hero-eyebrow-span" style="font-family: var(--rh-font); font-size: clamp(12px, 1.1vw, 17px); font-weight: 600; letter-spacing: 0.06em; color: #ffffff;">Keller Williams Coastal &amp; Salinas Valley Estates | DRE#02196405</span><div id="hero-heading-wrap" style="display: flex; align-items: center; overflow: hidden; min-height: clamp(68px, 12vw, 124px);">
-          <h1 id="hero-heading" style="font-size: clamp(24px, 3.4vw, 52px); font-weight: 700; line-height: 1.15; letter-spacing: -0.01em; margin: 0; color: #ffffff; text-align: left; opacity: {{ heroTextOpacity }}; transform: {{ heroTextTransform }}; transition: opacity 0.81s ease, transform 0.81s ease;">{{ rotatingHeroText }}</h1>
-        </div><p id="hero-paragraph" style="font-size: clamp(14px, 1.2vw, 18px); line-height: 1.6; color: rgba(255,255,255,0.88); max-width: 620px; margin: 0">{{ t.heroParagraph }}</p><a href="https://keseckerproperties.com/listings" onMouseEnter="{{ heroListingsHoverEnter }}" onMouseLeave="{{ heroListingsHoverLeave }}" style="margin-top: 22px; display: inline-block; width: fit-content;"><span style="position: relative; display: inline-block; font-size: 16px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #ffffff;">View All Listings<span style="position: absolute; left: 0; bottom: -4px; height: 2px; background: #ffffff; width: {{ heroListingsUnderlineWidth }}; transition: width 0.35s ease;"></span></span></a></div>
+          <h1 id="hero-heading" style="font-size: clamp(24px, 3.4vw, 52px); font-weight: 800; line-height: 1.15; letter-spacing: -0.01em; margin: 0; color: #ffffff; text-align: left; opacity: {{ heroTextOpacity }}; transform: {{ heroTextTransform }}; transition: opacity 0.81s ease, transform 0.81s ease;">{{ rotatingHeroText }}</h1>
+        </div><p id="hero-paragraph" style="font-size: clamp(14px, 1.2vw, 18px); line-height: 1.6; color: rgba(255,255,255,0.88); max-width: 620px; margin: 0">{{ t.heroParagraph }}</p><a href="https://keseckerproperties.com/listings" onMouseEnter="{{ heroListingsHoverEnter }}" onMouseLeave="{{ heroListingsHoverLeave }}" style="margin-top: 34px; display: inline-block; width: fit-content;"><span style="position: relative; display: inline-block; font-size: 16px; font-weight: 400; letter-spacing: normal; text-transform: none; color: #ffffff;">Search for Properties<span style="position: absolute; left: 0; bottom: -4px; height: 2px; background: #ffffff; width: {{ heroListingsUnderlineWidth }}; transition: width 0.35s ease;"></span></span></a></div>
         </div>
       </div>
       <div id="nav-burger-wrapper" style="position: fixed; top: 20px; right: clamp(16px, 3vw, 32px); z-index: 120; opacity: {{ burgerOpacity }}; pointer-events: {{ burgerPointerEvents }}; transition: opacity 0.35s ease;">
@@ -216,7 +212,7 @@
       <h2 ref="{{ revealRefAbout }}" style="font-size: clamp(22px, 4vw, 34px); font-weight: 600; margin: 0; letter-spacing: -0.01em; text-transform: uppercase; {{ revealAbout }}">Jackson Kesecker</h2>
       <p style="font-size: 16px; line-height: 1.7; color: var(--rh-text-secondary); margin: 0; white-space: pre-wrap;">{{ t.aboutParagraph }}</p>
       <div style="margin-top: 4px;">
-        <span class="rh-btn-secondary"><x-import component-from-global-scope="RealtyHub.Button" hint-size="140px,44px" variant="secondary" onClick="{{ openBioModal }}">{{ t.learnMore }}</x-import></span>
+        <button onClick="{{ openBioModal }}" style="font-family: var(--rh-font); font-weight: 600; letter-spacing: 0.01em; font-size: 14px; padding: 9px 18px; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; background: #ffffff; color: var(--rh-accent); border: 1px solid var(--rh-border); transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;" style-hover="background: #000000; color: #ffffff; border-color: #000000;">{{ t.learnMore }}</button>
       </div>
     </div><div id="agent-portrait-wrapper" style="flex: 1 1 380px; min-width: 260px; max-width: 480px;">
       <div style="position: relative; width: 100%; padding-top: 100%;">
@@ -255,8 +251,8 @@
       </div>
     </div>
     <div style="display: flex; justify-content: center; gap: 16px; margin-top: 44px; flex-wrap: wrap;">
-      <a id="reviews-btn-see-all" class="rh-btn-secondary" href="https://share.google/pm278uGUf3NH3Ig6i" target="_blank" rel="noopener noreferrer" style="text-decoration: none; display: inline-block;"><x-import component-from-global-scope="RealtyHub.Button" hint-size="160px,44px" variant="secondary">{{ t.seeAllReviews }}</x-import></a>
-      <a id="reviews-btn-write" class="rh-btn-primary" href="https://g.page/r/CaIlKE-YTpcnEBM/review" target="_blank" rel="noopener noreferrer" style="text-decoration: none; display: inline-block;"><x-import component-from-global-scope="RealtyHub.Button" hint-size="160px,44px" variant="primary">{{ t.writeAReview }}</x-import></a>
+      <a id="reviews-btn-see-all" href="https://share.google/pm278uGUf3NH3Ig6i" target="_blank" rel="noopener noreferrer" style="font-family: var(--rh-font); font-weight: 600; letter-spacing: 0.01em; font-size: 14px; padding: 9px 18px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; text-decoration: none; background: #ffffff; color: var(--rh-accent); border: 1px solid var(--rh-border); transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;" style-hover="background: #000000; color: #ffffff; border-color: #000000;">{{ t.seeAllReviews }}</a>
+      <a id="reviews-btn-write" href="https://g.page/r/CaIlKE-YTpcnEBM/review" target="_blank" rel="noopener noreferrer" style="font-family: var(--rh-font); font-weight: 600; letter-spacing: 0.01em; font-size: 14px; padding: 9px 18px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; text-decoration: none; background: var(--rh-accent); color: #ffffff; border: 1px solid var(--rh-accent); transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;" style-hover="background: #ffffff; color: #000000; border-color: #000000;">{{ t.writeAReview }}</a>
     </div>
     <sc-if value="{{ isReviewModalVisible }}" hint-placeholder-val="{{ false }}">
       <div onClick="{{ closeReviewModal }}" style="position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 40px; animation: {{ reviewOverlayAnimation }};">
@@ -288,7 +284,7 @@
     <div style="max-width: 560px;">
       <h2 ref="{{ revealRefCta }}" style="font-size: clamp(22px, 3.8vw, 30px); font-weight: 600; color: #ffffff; margin: 0 0 10px; letter-spacing: -0.01em; text-transform: uppercase; {{ revealCta }}">{{ t.ctaHeading }}</h2><p style="font-size: 15px; color: rgba(255,255,255,0.85); margin: 0; line-height: 1.6;">{{ t.ctaParagraph }}</p>
     </div>
-    <a class="rh-btn-secondary" href="https://jacksonkesecker.realscout.com/whats-my-home-worth" target="_blank" rel="noopener noreferrer" style="text-decoration: none; display: inline-block;"><x-import component-from-global-scope="RealtyHub.Button" hint-size="180px,44px" variant="secondary">{{ t.ctaButton }}</x-import></a>
+    <a href="https://jacksonkesecker.realscout.com/whats-my-home-worth" target="_blank" rel="noopener noreferrer" style="font-family: var(--rh-font); font-weight: 600; letter-spacing: 0.01em; font-size: 14px; padding: 9px 18px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; text-decoration: none; background: #ffffff; color: var(--rh-accent); border: 1px solid var(--rh-border); transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;" style-hover="background: #000000; color: #ffffff; border-color: #000000;">{{ t.ctaButton }}</a>
   </div>
 
   <!-- NEIGHBORHOODS -->
@@ -771,7 +767,7 @@ class Component extends DCLogic {
     if (el) {
       el.muted = true;
       el.defaultMuted = true;
-      const setRate = () => { el.playbackRate = 2; };
+      const setRate = () => { el.playbackRate = 1; };
       el.addEventListener('loadedmetadata', setRate);
       el.addEventListener('playing', setRate);
       try { el.load(); } catch (e) {}
@@ -806,7 +802,7 @@ class Component extends DCLogic {
     if (this.introFailsafeTimer) clearTimeout(this.introFailsafeTimer);
     try { localStorage.setItem('jkr_intro_seen', '1'); } catch (e) {}
     if (this.introVideoEl) { try { this.introVideoEl.pause(); } catch (e) {} }
-    if (this.heroVideoRef.current) { try { this.heroVideoRef.current.play(); } catch (e) {} }
+    setTimeout(() => { if (this.heroVideoRef.current) { try { this.heroVideoRef.current.play(); } catch (e) {} } }, 1500);
     this.setState({ isIntroFading: true });
     setTimeout(() => {
       this.setState({ isIntroVisible: false, isIntroFading: false });
@@ -1224,6 +1220,8 @@ class Component extends DCLogic {
     document.querySelectorAll('*').forEach((el) => {
       if (el.shadowRoot) { this._ihfFixTextInRoot(el.shadowRoot, !!el.closest('[data-ihf-dark-cards]')); this._ihfFixListingLinks(el.shadowRoot); }
     });
+    const notableRoot = document.getElementById('ihf-notable-sales');
+    if (notableRoot) this._ihfFixTextInRoot(notableRoot, false);
   };
   _ihfStartCaseFix = () => {
     if (this._ihfCaseFixStarted) return;
@@ -1354,7 +1352,7 @@ class Component extends DCLogic {
       : 'opacity:0;transform:translateX(-32px);transition:opacity 1.4s cubic-bezier(.16,1,.3,1),transform 1.4s cubic-bezier(.16,1,.3,1);';
   }
   componentDidMount() {
-    if (!this.state.isIntroVisible && this.heroVideoRef.current) { try { this.heroVideoRef.current.play(); } catch (e) {} }
+    if (!this.state.isIntroVisible && this.heroVideoRef.current) { setTimeout(() => { try { this.heroVideoRef.current.play(); } catch (e) {} }, 1500); }
     if (this.state.isIntroVisible) {
       this.introFailsafeTimer = setTimeout(() => { if (this.state.isIntroVisible && !this.state.isIntroFading) this.dismissIntro(); }, 6000);
     }
