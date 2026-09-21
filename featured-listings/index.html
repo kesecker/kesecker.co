@@ -218,6 +218,7 @@ class Component extends DCLogic {
         + "[class*='Input' i], [class*='Input' i]:hover, [class*='Input' i]:focus, [class*='Input' i].Mui-focused, [class*='Input' i] input { background-color: transparent !important; background-image: none !important; }"
         + ".MuiOutlinedInput-root:hover, .MuiFilledInput-root:hover, .MuiInputBase-root:hover { border-bottom-color: #888888 !important; }"
         + ".MuiOutlinedInput-root.Mui-focused, .MuiFilledInput-root.Mui-focused, .MuiInputBase-root.Mui-focused { border-bottom: 2px solid #000000 !important; }"
+        + ".ihf-listing-result-badge-fav svg[fill=\"currentColor\"], .ihf-listing-result-badge-fav svg[fill=\"currentColor\"] path { fill: #e53935 !important; color: #e53935 !important; }"
         + ".heart-trace-clone path { transition: stroke-dashoffset 0.6s ease; } .ihf-listing-result-badge-fav:hover .heart-trace-clone path, .ihf-listing-result-badge-fav svg[fill=\"currentColor\"] ~ .heart-trace-clone path { stroke-dashoffset: 0 !important; }";
       (root === document ? document.head : root).appendChild(style);
     }
