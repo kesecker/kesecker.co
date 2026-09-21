@@ -280,11 +280,7 @@ class Component extends DCLogic {
       if (this._ihfShadowFadeRoots.has(sr)) return;
       this._ihfShadowFadeRoots.add(sr);
       const srMo = new MutationObserver(() => this._ihfFixAllShadowRoots());
-<<<<<<< HEAD
       srMo.observe(sr, { childList: true, subtree: true, attributes: true, attributeFilter: ['src', 'title'] });
-=======
-      srMo.observe(sr, { childList: true, subtree: true, attributes: true, attributeFilter: ['src'] });
->>>>>>> 21373af114936822ea8de2231a4dd513219cb8c3
     });
   };
   _ihfStartCaseFix = () => {
