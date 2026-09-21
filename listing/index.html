@@ -479,7 +479,7 @@ class Component extends DCLogic {
       carousel.style.setProperty('clip-path', 'inset(0)', 'important');
       carousel.style.setProperty('background', '#ffffff', 'important');
       carousel.style.setProperty('max-width', '1300px', 'important');
-      carousel.style.setProperty('margin', '0 auto', 'important');
+      carousel.style.setProperty('margin', '-70px auto 0', 'important');
       carousel.style.setProperty('position', 'relative', 'important');
       if (carousel.parentElement) {
         carousel.parentElement.style.setProperty('max-width', '1300px', 'important');
@@ -633,6 +633,10 @@ class Component extends DCLogic {
           card.appendChild(h);
           card.appendChild(p);
           card.appendChild(btn);
+          const callP = document.createElement('p');
+          callP.textContent = 'For faster service, call/text (831) 821-0398';
+          callP.style.cssText = "margin:0;font-family:'Montserrat',system-ui,sans-serif;font-size:13px;line-height:1.5;color:#666666;";
+          card.appendChild(callP);
           sidebarKid.insertBefore(card, sidebarKid.firstChild);
         }
       }
