@@ -334,39 +334,3 @@ button[aria-label*="close" i]:hover svg,
   stroke: #999999 !important;
   opacity: 0.65 !important;
 }
-
-/* Listing DETAIL page photo carousel — enlarged, pulled up toward the tabs row,
-   hard-clipped so no photo (even a badly-cropped/portrait one) can spill past the
-   box. Moved here from a JS MutationObserver hack: that approach kept losing to the
-   widget's own re-renders, since injected CSS survives every re-render. */
-.listing-photo-carousel {
-  max-width: 1300px !important;
-  margin: -220px auto 0 !important;
-  position: relative !important;
-  z-index: 1 !important;
-  overflow: hidden !important;
-  clip-path: inset(0) !important;
-  padding: 0 !important;
-  box-sizing: border-box !important;
-  height: 860px !important;
-  max-height: 860px !important;
-  min-height: 860px !important;
-  background: #ffffff !important;
-}
-.listing-photo-carousel > div,
-.listing-photo-carousel > div > div,
-.listing-photo-carousel > div > div > div {
-  position: static !important;
-  top: auto !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  height: 100% !important;
-  box-sizing: border-box !important;
-  background: #ffffff !important;
-}
-.listing-photo-carousel li.slide img {
-  height: 860px !important;
-  object-fit: contain !important;
-  background: #ffffff !important;
-  width: 100% !important;
-}

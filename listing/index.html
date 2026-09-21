@@ -479,7 +479,7 @@ class Component extends DCLogic {
       carousel.style.setProperty('clip-path', 'inset(0)', 'important');
       carousel.style.setProperty('background', '#ffffff', 'important');
       carousel.style.setProperty('max-width', '1300px', 'important');
-      carousel.style.setProperty('margin', '-70px auto 0', 'important');
+      carousel.style.setProperty('margin', '-180px auto 0', 'important');
       carousel.style.setProperty('position', 'relative', 'important');
       if (carousel.parentElement) {
         carousel.parentElement.style.setProperty('max-width', '1300px', 'important');
@@ -644,17 +644,24 @@ class Component extends DCLogic {
     if (!this._ihfTitleObserverBound) {
       this._ihfTitleObserverBound = true;
       const fixTitle = () => {
+        if (this._ihfTitleFixed) return;
         const t = document.title;
         const suffixes = 'Street|St|Avenue|Ave|Road|Rd|Drive|Dr|Lane|Ln|Court|Ct|Way|Boulevard|Blvd|Place|Pl|Terrace|Ter|Circle|Cir|Parkway|Pkwy|Trail|Trl|Loop|Highway|Hwy|Square|Sq|Crossing|Xing|Point|Pt';
-        const suffixRe = new RegExp('\\b(' + suffixes + ')\\b\\s+([A-Za-z .\'-]+?),\\s*([A-Za-z]{2})\\b');
+        const suffixRe = new RegExp('\\b(' + suffixes + ')\\b\\s+([A-Za-z .\'-]+?),\\s*([A-Za-z]{2})\\b', 'i');
+        let matched = false;
         let fixed = t.replace(suffixRe, (m, suf, city, st) => {
+          matched = true;
           const properSuf = suf.charAt(0).toUpperCase() + suf.slice(1).toLowerCase();
           const properCity = city.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
           return properSuf + ' | ' + properCity + ', ' + st.toUpperCase();
         });
-        if (fixed === t) fixed = t.replace(/\b([A-Z]{2,}(?:[ .'-][A-Z]{2,})*),\s*([A-Z]{2})\b/g, (m, city, st) => '| ' + city.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase()) + ', ' + st);
-        if (/\{listingAddress\}/.test(fixed)) fixed = 'Home Search | Jackson Kesecker';
+        if (!matched) {
+          fixed = t.replace(/\b([A-Z]{2,}(?:[ .'-][A-Z]{2,})*),\s*([A-Z]{2})\b/g, (m, city, st) => { matched = true; return '| ' + city.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase()) + ', ' + st; });
+        }
+        const isFallback = /\{listingAddress\}/.test(fixed);
+        if (isFallback) fixed = 'Home Search | Jackson Kesecker';
         if (fixed !== t) document.title = fixed;
+        if (matched || isFallback) this._ihfTitleFixed = true;
       };
       const titleEl = document.querySelector('title');
       if (titleEl) new MutationObserver(fixTitle).observe(titleEl, { childList: true, characterData: true, subtree: true });
