@@ -284,9 +284,14 @@ class Component extends DCLogic {
     if (!section || section.dataset.ihfScrollNavBuilt) return;
     const mainCol = section.parentElement;
     if (!mainCol) return;
-    const breadcrumb = Array.from(mainCol.children).find((c) => c !== section && /home search/i.test((c.textContent || '').trim()) && (c.textContent || '').trim().length < 200);
     const carousel = root.querySelector('.listing-photo-carousel');
-    if (!breadcrumb || !carousel) return;
+    if (!carousel) return;
+    const bcCandidates = Array.from(root.querySelectorAll('*')).filter((el) => {
+      const t = (el.textContent || '').trim();
+      return /home search/i.test(t) && t.length < 200 && !el.contains(carousel);
+    });
+    const breadcrumb = bcCandidates.reduce((best, el) => (!best || el.querySelectorAll('*').length < best.querySelectorAll('*').length ? el : best), null);
+    if (!breadcrumb) return;
     section.dataset.ihfScrollNavBuilt = '1';
     const scrollBox = document.getElementById('ihf-listing-detail') && document.getElementById('ihf-listing-detail').parentElement;
     const findChild = (cls) => Array.from(section.children).find((c) => c.classList && c.classList.contains(cls));
