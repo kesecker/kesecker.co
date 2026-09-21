@@ -601,21 +601,40 @@ class Component extends DCLogic {
       }
     }
     const listingDetail = root.querySelector('.listing-detail');
-    if (listingDetail && !listingDetail.dataset.ihfSidebarStripped) {
+    if (listingDetail && !listingDetail.dataset.ihfSidebarFixed) {
       const kids = Array.from(listingDetail.children);
       const sidebarKid = kids.find((k) => k.classList.contains('listing-sidebar'));
       if (sidebarKid) {
-        listingDetail.dataset.ihfSidebarStripped = '1';
-        listingDetail.style.setProperty('width', '100%', 'important');
-        sidebarKid.style.setProperty('display', 'none', 'important');
-        sidebarKid.style.setProperty('width', '0', 'important');
-        sidebarKid.style.setProperty('flex', 'none', 'important');
-        sidebarKid.style.setProperty('padding', '0', 'important');
-        kids.filter((k) => k !== sidebarKid).forEach((k) => {
-          k.style.setProperty('flex', '1 1 100%', 'important');
-          k.style.setProperty('width', '100%', 'important');
-          k.style.setProperty('max-width', '100%', 'important');
+        listingDetail.dataset.ihfSidebarFixed = '1';
+        const leadFormCandidates = Array.from(sidebarKid.querySelectorAll('*')).filter((el) => {
+          const t = el.textContent || '';
+          return /select your date preference/i.test(t) && /request info/i.test(t);
         });
+        const leadForm = leadFormCandidates.reduce((best, el) => (!best || el.querySelectorAll('*').length < best.querySelectorAll('*').length ? el : best), null);
+        if (leadForm) leadForm.style.setProperty('display', 'none', 'important');
+        sidebarKid.style.setProperty('background', '#ffffff', 'important');
+        if (!sidebarKid.querySelector('.ihf-tour-card')) {
+          const card = document.createElement('div');
+          card.className = 'ihf-tour-card';
+          card.style.cssText = 'position:sticky;top:24px;background:#ffffff;border:1px solid #e0e0e0;padding:28px 24px;display:flex;flex-direction:column;gap:14px;box-sizing:border-box;';
+          const h = document.createElement('h3');
+          h.textContent = 'Schedule a Tour';
+          h.style.cssText = "margin:0;font-family:'Montserrat',system-ui,sans-serif;font-size:19px;font-weight:600;color:#1a1a1a;";
+          const p = document.createElement('p');
+          p.textContent = "Interested in this property? Reach out and I'll help you set up a private showing.";
+          p.style.cssText = "margin:0;font-family:'Montserrat',system-ui,sans-serif;font-size:14px;line-height:1.5;color:#666666;";
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.textContent = 'Schedule a Tour';
+          btn.style.cssText = "font-family:'Montserrat',system-ui,sans-serif;font-weight:600;letter-spacing:0.01em;font-size:14px;padding:12px 20px;border-radius:6px;border:none;cursor:pointer;background:#1a1a1a;color:#ffffff;transition:background 0.2s ease;";
+          btn.addEventListener('mouseenter', () => btn.style.setProperty('background', '#000000'));
+          btn.addEventListener('mouseleave', () => btn.style.setProperty('background', '#1a1a1a'));
+          btn.addEventListener('click', () => { if (window.openKeseckerContactModal) window.openKeseckerContactModal(); });
+          card.appendChild(h);
+          card.appendChild(p);
+          card.appendChild(btn);
+          sidebarKid.insertBefore(card, sidebarKid.firstChild);
+        }
       }
     }
     if (!this._ihfTitleObserverBound) {
