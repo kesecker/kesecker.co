@@ -498,8 +498,13 @@ class Component extends DCLogic {
         if (el.parentElement) el.parentElement.style.setProperty('margin-top', '0', 'important');
       }
       if (/idx data provided by/i.test(t) && t.length < 100) {
-        el.style.setProperty('text-align', 'center', 'important');
-        if (el.parentElement) el.parentElement.style.setProperty('text-align', 'center', 'important');
+        let n = el;
+        for (let i = 0; i < 4 && n; i++) {
+          n.style.setProperty('text-align', 'center', 'important');
+          n.style.setProperty('justify-content', 'center', 'important');
+          n.style.setProperty('width', '100%', 'important');
+          n = n.parentElement;
+        }
       }
     });
     const CAROUSEL_PX = 860;
@@ -567,6 +572,8 @@ class Component extends DCLogic {
       origCells.forEach((origCell) => {
         const text = (origCell.textContent || '').trim()
           .replace(/square feet/i, 'Sq. Ft.')
+          .replace(/(\d+)\s*full\s*bathrooms?/i, (m, n) => n + ' Full Bathroom' + (n === '1' ? '' : 's'))
+          .replace(/(\d+)\s*half\s*bathrooms?/i, (m, n) => n + ' Half Bathroom' + (n === '1' ? '' : 's'))
           .replace(/(\d)\s*(Bedrooms?|Bathrooms?|Sq\.\s*Ft\.)/i, '$1 $2');
         const cellDiv = document.createElement('div');
         cellDiv.style.cssText = 'font-size:14px;color:var(--rh-text-primary);display:flex;align-items:center;gap:8px;';
@@ -580,6 +587,7 @@ class Component extends DCLogic {
           cellDiv.innerHTML = '<button type="button" style="font-family:inherit;font-size:14px;font-weight:600;padding:8px 16px;border-radius:6px;border:none;cursor:pointer;background:#1a1a1a;color:#ffffff;">' + text + '</button>';
         } else {
           cellDiv.innerHTML = icon + '<span>' + text + '</span>';
+          if (/sq\. ft\./i.test(text) && !/lot/i.test(text)) cloneRow._sqftCellEl = cellDiv;
         }
         const clickable = origCell.querySelector('a, button, [role="button"]') || (origCell.onclick || /^a$/i.test(origCell.tagName) ? origCell : null);
         if (clickable) {
@@ -590,6 +598,21 @@ class Component extends DCLogic {
       });
       statsRow.style.setProperty('display', 'none', 'important');
       statsRow.parentElement.insertBefore(cloneRow, statsRow.nextSibling);
+    }
+    const cloneRowEl = root.querySelector('.ihf-stats-clone');
+    if (cloneRowEl && !cloneRowEl.dataset.ihfLotAdded) {
+      const lotWrapper = this._ihfFindPairWrappers(root).find((w) => /lot\s*(size|sq)/i.test((w.children[0].textContent || '').trim()));
+      if (lotWrapper) {
+        const lotValue = (lotWrapper.children[1].textContent || '').trim();
+        if (lotValue && cloneRowEl._sqftCellEl) {
+          cloneRowEl.dataset.ihfLotAdded = '1';
+          const sqftIcon2 = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h4M3 15h4M15 3v4M9 3v4M21 9h-4M21 15h-4M15 21v-4M9 21v-4"/></svg>';
+          const lotCell = document.createElement('div');
+          lotCell.style.cssText = 'font-size:14px;color:var(--rh-text-primary);display:flex;align-items:center;gap:8px;';
+          lotCell.innerHTML = sqftIcon2 + '<span>' + lotValue + ' Sq. Ft. Lot</span>';
+          cloneRowEl._sqftCellEl.parentElement.insertBefore(lotCell, cloneRowEl._sqftCellEl.nextSibling);
+        }
+      }
     }
     if (header && statsRow && !header.dataset.ihfRowBuilt) {
       header.dataset.ihfRowBuilt = '1';
@@ -750,6 +773,10 @@ class Component extends DCLogic {
       mapEl.parentElement.insertBefore(clone, mapEl.nextSibling);
     }
   };
+  _ihfFindPairWrappers = (container) => Array.from(container.querySelectorAll('*')).filter((el) => {
+    const kids = Array.from(el.children);
+    return kids.length === 2 && kids.every((k) => k.children.length === 0 && (k.textContent || '').trim().length > 0);
+  });
   _ihfBoldFeatureLabels = (root) => {
     const heading = Array.from(root.querySelectorAll('*')).find((el) => el.children.length === 0 && /^property features$/i.test((el.textContent || '').trim()));
     if (!heading) return;
@@ -757,13 +784,12 @@ class Component extends DCLogic {
     while (container && container.parentElement && (container.textContent || '').trim().length < 400) container = container.parentElement;
     if (!container || container.dataset.ihfFeatureLabelsBold) return;
     container.dataset.ihfFeatureLabelsBold = '1';
-    const leaves = Array.from(container.querySelectorAll('*')).filter((el) => el.children.length === 0 && (el.textContent || '').trim().length > 0);
-    leaves.forEach((el) => {
-      const m = getComputedStyle(el).color.match(/\d+/g);
-      if (!m) return;
-      const [r, g, b] = m.map(Number);
-      const maxDiff = Math.max(r, g, b) - Math.min(r, g, b);
-      if (maxDiff < 12 && r < 90) el.style.setProperty('font-weight', '700', 'important');
+    this._ihfFindPairWrappers(container).forEach((wrapper) => {
+      const [labelEl, valueEl] = Array.from(wrapper.children);
+      labelEl.style.setProperty('font-weight', '700', 'important');
+      labelEl.style.setProperty('font-style', 'normal', 'important');
+      valueEl.style.setProperty('font-weight', '400', 'important');
+      valueEl.style.setProperty('font-style', 'italic', 'important');
     });
   };
   _ihfReplaceMap = (root) => {
