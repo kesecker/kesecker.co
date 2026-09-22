@@ -284,7 +284,12 @@ class Component extends DCLogic {
       const m = img.src.match(/\/property\/[A-Za-z]+\/(\d+)\//);
       if (!m) return;
       card._ihfLinkFixed = true;
-      link.setAttribute('href', 'https://keseckerproperties.com/listing?id=' + m[1]);
+      const orig = link.getAttribute('href') || '';
+      const om = orig.match(/[?&]id=([A-Za-z]{1,4}\d+_\d+)/) || orig.match(/\/([A-Za-z]{1,4}\d+_\d+)(?:[\/?#]|$)/);
+      const mlsText = (card.textContent || '').match(/#?\b([A-Za-z]{1,4})(\d{6,})\b/);
+      const prefix = mlsText && mlsText[2] === m[1] ? mlsText[1].toUpperCase() : 'ML';
+      const fullId = om ? om[1] : prefix + m[1] + '_190';
+      link.setAttribute('href', 'https://keseckerproperties.com/listing?id=' + fullId);
     });
   };
   _ihfFixCloseButtons = (root) => {
