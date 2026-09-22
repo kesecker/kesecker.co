@@ -270,6 +270,7 @@ class Component extends DCLogic {
     }
     try { this._ihfMoveResultsCount(root); } catch (e) { console.error('_ihfMoveResultsCount', e); }
     try { this._ihfTraceHearts(root); } catch (e) { console.error('_ihfTraceHearts', e); }
+    try { this._ihfReplaceMap(root); } catch (e) { console.error('_ihfReplaceMap', e); }
     try { this._ihfFixDetailLayout(root); } catch (e) { console.error('_ihfFixDetailLayout', e); }
     try { this._ihfBuildScrollNav(root); } catch (e) { console.error('_ihfBuildScrollNav', e); }
     try { this._ihfFixGalleryModal(root); } catch (e) { console.error('_ihfFixGalleryModal', e); }
@@ -694,6 +695,26 @@ class Component extends DCLogic {
     if (clone.parentElement !== mapEl.parentElement || clone.previousElementSibling !== mapEl) {
       mapEl.parentElement.insertBefore(clone, mapEl.nextSibling);
     }
+  };
+  _ihfReplaceMap = (root) => {
+    const mapSection = root.querySelector('.listing-map');
+    if (!mapSection || mapSection.dataset.ihfMapReplaced) return;
+    const mapboxEl = mapSection.querySelector('[class*="mapboxgl" i], canvas');
+    if (!mapboxEl) return;
+    let container = mapboxEl;
+    while (container.parentElement && container.parentElement !== mapSection && container.parentElement.children.length === 1) {
+      container = container.parentElement;
+    }
+    const addr1 = root.querySelector('.listing-address-1');
+    const addr2 = root.querySelector('.listing-address-2');
+    const address = [addr1, addr2].filter(Boolean).map((el) => (el.textContent || '').trim()).filter(Boolean).join(', ');
+    if (!address) return;
+    mapSection.dataset.ihfMapReplaced = '1';
+    const iframe = document.createElement('iframe');
+    iframe.src = 'Listing Map.html?address=' + encodeURIComponent(address);
+    iframe.style.cssText = 'width:100%;height:' + (container.getBoundingClientRect().height || 450) + 'px;border:none;display:block;';
+    container.style.setProperty('display', 'none', 'important');
+    container.parentElement.insertBefore(iframe, container);
   };
   _ihfTraceHearts = (root) => {
     root.querySelectorAll('.ihf-listing-result-badge-fav').forEach((btn) => {

@@ -257,12 +257,19 @@ class Component extends DCLogic {
     root.querySelectorAll('[title]').forEach((el) => {
       const raw = el.getAttribute('title');
       if (!raw || el.dataset.ihfTitleFixed === raw) return;
-      const cz = raw.match(/^(.*?\d[^,]*?)\s+([A-Za-z][A-Za-z .'-]*?),?\s*([A-Z]{2})[, ]+(\d{5})/);
-      if (!cz) return;
-      let street = cz[1].trim();
-      const city = cz[2].trim().toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
-      const state = cz[3].toUpperCase();
-      const zip = cz[4];
+      const cityMatch = raw.match(/\b([A-Z]{2,}(?:[ .'-][A-Z]{2,})*),\s*([A-Z]{2})\b/);
+      if (!cityMatch) return;
+      let street = raw.slice(0, cityMatch.index).trim().replace(/,$/, '');
+      const zipMatch = raw.slice(cityMatch.index).match(/(\d{5})/);
+      if (!zipMatch) return;
+      let cityWords = cityMatch[1].trim().split(/\s+/);
+      if (cityWords.length > 1 && this._ihfStreetSuffixes[cityWords[0].toUpperCase()]) {
+        street = (street + ' ' + cityWords[0]).trim();
+        cityWords = cityWords.slice(1);
+      }
+      const city = cityWords.join(' ').toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
+      const state = cityMatch[2].toUpperCase();
+      const zip = zipMatch[1];
       const streetWords = street.split(/\s+/);
       const last = streetWords[streetWords.length - 1].replace(/\.$/, '');
       const suf = this._ihfStreetSuffixes[last.toUpperCase()];
