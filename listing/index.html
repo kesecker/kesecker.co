@@ -107,6 +107,37 @@
 class Component extends DCLogic {
   state = { isPhoneOpen: false };
   _ihfStreetSuffixes = { RD:'Road', ST:'Street', AVE:'Avenue', DR:'Drive', LN:'Lane', CT:'Court', WAY:'Way', BLVD:'Boulevard', PL:'Place', CIR:'Circle', TER:'Terrace', PKWY:'Parkway', HWY:'Highway', LOOP:'Loop', TRL:'Trail', SQ:'Square' };
+  _ihfRunGuarded = (key, fn) => {
+    if (this._ihfRunning) { this._ihfDirty = true; return; }
+    if (!this._ihfPending) this._ihfPending = new Map();
+    this._ihfPending.set(key, fn);
+    if (this._ihfTimer) return;
+    this._ihfTimer = setTimeout(() => {
+      this._ihfTimer = null;
+      const now = Date.now();
+      this._ihfRunLog = (this._ihfRunLog || []).filter((t) => now - t < 5000);
+      if (this._ihfTripped || this._ihfRunLog.length > 40) {
+        if (!this._ihfTripped) {
+          this._ihfTripped = true;
+          console.warn('[ihf] fix loop detected - pausing auto-fixes for 5s');
+          setTimeout(() => { this._ihfTripped = false; this._ihfRunLog = []; this._ihfRunGuarded('all', () => this._ihfFixAllShadowRoots()); }, 5000);
+        }
+        this._ihfPending.clear();
+        return;
+      }
+      this._ihfRunLog.push(now);
+      const fns = Array.from(this._ihfPending.values());
+      this._ihfPending.clear();
+      this._ihfRunning = true;
+      try { fns.forEach((f) => { try { f(); } catch (e) { console.error('[ihf]', e); } }); }
+      finally {
+        Promise.resolve().then(() => {
+          this._ihfRunning = false;
+          if (this._ihfDirty) { this._ihfDirty = false; setTimeout(() => this._ihfRunGuarded('all', () => this._ihfFixAllShadowRoots()), 300); }
+        });
+      }
+    }, 80);
+  };
   _ihfAddCarouselHeart = (root) => {
     const carousel = root.querySelector('.listing-photo-carousel');
     if (!carousel) return;
@@ -302,7 +333,7 @@ class Component extends DCLogic {
         this._ihfFixTextInRoot(el.shadowRoot);
         if (!el.shadowRoot.__ihfObserved) {
           el.shadowRoot.__ihfObserved = true;
-          new MutationObserver(() => { try { this._ihfFixTextInRoot(el.shadowRoot); } catch (e) {} }).observe(el.shadowRoot, { childList: true, subtree: true, characterData: true });
+          new MutationObserver(() => this._ihfRunGuarded('all', () => this._ihfFixAllShadowRoots())).observe(el.shadowRoot, { childList: true, subtree: true, characterData: true });
         }
       }
     });
@@ -903,7 +934,7 @@ class Component extends DCLogic {
         try { this._ihfFixCloseButtons(el.shadowRoot); } catch (e) {}
         if (!this._ihfShadowRootsObserved.has(el.shadowRoot)) {
           this._ihfShadowRootsObserved.add(el.shadowRoot);
-          new MutationObserver(() => this._ihfFixAllShadowRoots()).observe(el.shadowRoot, { childList: true, subtree: true });
+          new MutationObserver(() => this._ihfRunGuarded('all', () => this._ihfFixAllShadowRoots())).observe(el.shadowRoot, { childList: true, subtree: true });
         }
       }
     });
@@ -930,7 +961,7 @@ class Component extends DCLogic {
       document.head.appendChild(s);
     }
     if (!this._ihfMo) {
-      this._ihfMo = new MutationObserver(() => this._ihfFixAllShadowRoots());
+      this._ihfMo = new MutationObserver(() => this._ihfRunGuarded('all', () => this._ihfFixAllShadowRoots()));
       this._ihfMo.observe(document.body, { childList: true, subtree: true });
     }
     this._ihfFixAllShadowRoots();
