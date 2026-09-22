@@ -754,8 +754,16 @@ class Component extends DCLogic {
   _ihfFixAllShadowRoots = () => {
     try { this._ihfFixTextInRoot(document); } catch (e) {}
     try { this._ihfFixCloseButtons(document); } catch (e) {}
+    if (!this._ihfShadowRootsObserved) this._ihfShadowRootsObserved = new WeakSet();
     document.querySelectorAll('*').forEach((el) => {
-      if (el.shadowRoot) { try { this._ihfFixTextInRoot(el.shadowRoot); } catch (e) {} try { this._ihfFixCloseButtons(el.shadowRoot); } catch (e) {} }
+      if (el.shadowRoot) {
+        try { this._ihfFixTextInRoot(el.shadowRoot); } catch (e) {}
+        try { this._ihfFixCloseButtons(el.shadowRoot); } catch (e) {}
+        if (!this._ihfShadowRootsObserved.has(el.shadowRoot)) {
+          this._ihfShadowRootsObserved.add(el.shadowRoot);
+          new MutationObserver(() => this._ihfFixAllShadowRoots()).observe(el.shadowRoot, { childList: true, subtree: true });
+        }
+      }
     });
   };
   _ihfStartCaseFix = () => {
