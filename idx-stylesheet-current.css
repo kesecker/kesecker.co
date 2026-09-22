@@ -1,3 +1,9 @@
+/* Property Features section (County, Neighborhood, MLS Area, Year Built, etc.) —
+   bold each field's label so it reads as a category heading over its value. */
+.feature-label {
+  font-weight: 700 !important;
+}
+
 /* Fix: dropdown panels (Price, Beds/Baths, Property Type, More) render via a portal
    (div.ihf-overlay-container appended at the end of <body>) that is position:relative
    by default. Our page's `html, body { height:100%; overflow:hidden }` clips body to
