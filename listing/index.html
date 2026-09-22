@@ -107,87 +107,106 @@
 class Component extends DCLogic {
   state = { isPhoneOpen: false };
   _ihfStreetSuffixes = { RD:'Road', ST:'Street', AVE:'Avenue', DR:'Drive', LN:'Lane', CT:'Court', WAY:'Way', BLVD:'Boulevard', PL:'Place', CIR:'Circle', TER:'Terrace', PKWY:'Parkway', HWY:'Highway', LOOP:'Loop', TRL:'Trail', SQ:'Square' };
-  _ihfFixGalleryModal = (root) => {
-    const paper = root.querySelector('[role="dialog"]');
-    if (paper && !paper.dataset.ihfGalleryFixed && paper.className && /MuiDialog-paper/.test(paper.className)) {
-      paper.dataset.ihfGalleryFixed = '1';
-      paper.style.setProperty('overflow-y', 'auto', 'important');
-      paper.style.setProperty('max-height', 'calc(100vh - 64px)', 'important');
-    }
-    if (paper) {
-      Array.from(paper.querySelectorAll('*')).forEach((el) => {
-        if (el.style && /^\d+%$/.test(el.style.width) && parseInt(el.style.width, 10) < 100) {
-          el.style.setProperty('width', '100%', 'important');
-        }
+  _ihfAddCarouselHeart = (root) => {
+    const carousel = root.querySelector('.listing-photo-carousel');
+    if (!carousel) return;
+    const all = Array.from(root.querySelectorAll('*'));
+    const pick = (re) => {
+      const m = all.filter((el) => re.test((el.textContent || '').trim()) && !el.closest('[role="dialog"]'));
+      return m.length ? m.reduce((a, b) => (a.querySelectorAll('*').length <= b.querySelectorAll('*').length ? a : b)) : null;
+    };
+    const saveBtn = pick(/^(save|saved)$/i);
+    if (!saveBtn) return;
+    const isSaved = /^saved$/i.test((saveBtn.textContent || '').trim());
+    let heart = carousel.querySelector('[data-ihf-heart]');
+    if (!heart) {
+      carousel.style.setProperty('position', 'relative', 'important');
+      heart = document.createElement('button');
+      heart.type = 'button';
+      heart.dataset.ihfHeart = '1';
+      heart.setAttribute('aria-label', 'Save listing');
+      heart.style.cssText = 'position:absolute;top:16px;right:16px;z-index:999;width:44px;height:44px;border-radius:50%;border:none;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s ease;padding:0;';
+      heart.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"><path d="M12 21s-7.5-4.6-10-9C.3 8.5 2 4 6 4c2.2 0 3.8 1.3 6 4 2.2-2.7 3.8-4 6-4 4 0 5.7 4.5 4 8-2.5 4.4-10 9-10 9z"/></svg>';
+      heart.addEventListener('mouseenter', () => heart.style.setProperty('background', 'rgba(0,0,0,0.65)'));
+      heart.addEventListener('mouseleave', () => heart.style.setProperty('background', 'rgba(0,0,0,0.45)'));
+      heart.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const btn = pick(/^(save|saved)$/i);
+        const clickable = btn && (btn.closest('button, a, [role="button"]') || btn);
+        if (clickable) clickable.click();
+        heart.dataset.ihfLocalSaved = heart.dataset.ihfLocalSaved === '1' ? '0' : '1';
+        const path = heart.querySelector('path');
+        if (path) path.setAttribute('fill', heart.dataset.ihfLocalSaved === '1' ? '#e53935' : 'none');
+        if (path) path.setAttribute('stroke', heart.dataset.ihfLocalSaved === '1' ? '#e53935' : '#ffffff');
       });
-      const findSmallestMatch = (text) => {
-        const matches = Array.from(paper.querySelectorAll('*')).filter((el) => (el.textContent || '').trim() === text);
-        if (!matches.length) return null;
-        return matches.reduce((a, b) => (a.querySelectorAll('*').length <= b.querySelectorAll('*').length ? a : b));
-      };
-      const backLink = findSmallestMatch('Back to listing') || Array.from(paper.querySelectorAll('*')).find((el) => /back to listing/i.test((el.textContent || '').trim()));
-      const shareLeaf = findSmallestMatch('Share');
-      const scheduleBtn = findSmallestMatch('Schedule Tour') || Array.from(paper.querySelectorAll('*')).find((el) => /schedule tour/i.test((el.textContent || '').trim()));
-      if (backLink && shareLeaf && scheduleBtn) {
-        let topBar = backLink;
-        for (let i = 0; i < 8 && topBar.parentElement && !topBar.contains(shareLeaf); i++) topBar = topBar.parentElement;
-        let sidebar = scheduleBtn;
-        for (let i = 0; i < 8 && sidebar.parentElement; i++) {
-          sidebar = sidebar.parentElement;
-          const pos = getComputedStyle(sidebar).position;
-          if (pos === 'fixed' || pos === 'sticky') break;
-        }
-        const sidebarAnchor = sidebar && sidebar.parentElement;
-        const commonParent = sidebarAnchor && sidebarAnchor.parentElement;
-        const photoCol = commonParent ? Array.from(commonParent.children).find((c) => c !== sidebarAnchor) : null;
-        if (topBar && topBar.contains(shareLeaf) && sidebar && sidebarAnchor && commonParent && photoCol) {
-          topBar.style.setProperty('display', 'none', 'important');
-          sidebarAnchor.style.setProperty('display', 'none', 'important');
-          commonParent.style.setProperty('display', 'block', 'important');
-          commonParent.style.setProperty('width', '100%', 'important');
-          commonParent.style.setProperty('padding', '0', 'important');
-          photoCol.style.setProperty('width', '100%', 'important');
-          photoCol.style.setProperty('max-width', 'none', 'important');
-          photoCol.style.setProperty('box-sizing', 'border-box', 'important');
-          photoCol.style.setProperty('padding', '0 24px', 'important');
-          photoCol.style.setProperty('margin', '0 auto', 'important');
-          paper.style.setProperty('padding', '0', 'important');
-          paper.style.setProperty('width', 'calc(100vw - 48px)', 'important');
-          paper.style.setProperty('max-width', 'calc(100vw - 48px)', 'important');
-          paper.style.setProperty('margin', '24px', 'important');
-          if (!photoCol.dataset.ihfPadMatched) {
-            const firstChild = photoCol.firstElementChild;
-            if (firstChild) {
-              const topGap = firstChild.getBoundingClientRect().top - photoCol.getBoundingClientRect().top;
-              if (topGap > 0) {
-                photoCol.dataset.ihfPadMatched = '1';
-                photoCol.style.setProperty('padding-bottom', topGap + 'px', 'important');
-              }
-            }
-          }
-          if (!paper.dataset.ihfGalleryHeaderAdded) {
-            paper.dataset.ihfGalleryHeaderAdded = '1';
-            const header = document.createElement('div');
-            header.style.cssText = 'position: sticky; top: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; height: 92px; background: #000000; flex-shrink: 0;';
-            const logo = document.createElement('img');
-            logo.src = 'uploads/JKR-key-white.png';
-            logo.alt = 'Jackson Kesecker Realtor';
-            logo.style.cssText = 'height: 34px; width: auto;';
-            header.appendChild(logo);
-            const closeBtn = document.createElement('button');
-            closeBtn.setAttribute('aria-label', 'Close');
-            closeBtn.innerHTML = '&times;';
-            closeBtn.style.cssText = 'position: absolute; top: 50%; right: clamp(20px, 4vw, 40px); transform: translateY(-50%); background: none; border: none; font-size: 32px; line-height: 1; cursor: pointer; color: #ffffff; padding: 0; transition: opacity 0.2s ease;';
-            closeBtn.addEventListener('mouseenter', () => { closeBtn.style.opacity = '0.6'; });
-            closeBtn.addEventListener('mouseleave', () => { closeBtn.style.opacity = '1'; });
-            closeBtn.addEventListener('click', () => { backLink.click(); });
-            header.appendChild(closeBtn);
-            paper.insertBefore(header, paper.firstChild);
-          }
-        }
-      }
+      carousel.appendChild(heart);
+    }
+    if (isSaved) {
+      const path = heart.querySelector('path');
+      heart.dataset.ihfLocalSaved = '1';
+      if (path) { path.setAttribute('fill', '#e53935'); path.setAttribute('stroke', '#e53935'); }
     }
   };
+  _ihfFixGalleryModal = (root) => {
+    const paper = root.querySelector('[role="dialog"]');
+    if (!paper) return;
+    const all = Array.from(paper.querySelectorAll('*'));
+    const findSmallestMatch = (text) => {
+      const matches = all.filter((el) => (el.textContent || '').trim() === text);
+      if (!matches.length) return null;
+      return matches.reduce((a, b) => (a.querySelectorAll('*').length <= b.querySelectorAll('*').length ? a : b));
+    };
+    const backLink = findSmallestMatch('Back to listing');
+    if (!backLink) return;
+    paper.style.setProperty('overflow-y', 'auto', 'important');
+    paper.style.setProperty('padding', '0', 'important');
+    const shareLeaf = findSmallestMatch('Share');
+    let topBar = backLink;
+    if (shareLeaf) {
+      for (let i = 0; i < 8 && topBar.parentElement && topBar.parentElement !== paper && !topBar.contains(shareLeaf); i++) topBar = topBar.parentElement;
+    }
+    topBar.style.setProperty('display', 'none', 'important');
+    const firstImg = paper.querySelector('img');
+    const priceLeaf = all.find((el) => el.children.length === 0 && /^\$[\d,]+$/.test((el.textContent || '').trim()));
+    if (firstImg && priceLeaf) {
+      let n = firstImg;
+      while (n.parentElement && n.parentElement !== paper && !n.parentElement.contains(priceLeaf)) n = n.parentElement;
+      const commonParent = n.parentElement;
+      if (commonParent && commonParent.contains(priceLeaf)) {
+        Array.from(commonParent.children).forEach((c) => { if (c !== n && !c.dataset.ihfGalleryHeader) c.style.setProperty('display', 'none', 'important'); });
+        if (commonParent !== paper) commonParent.style.setProperty('display', 'block', 'important');
+        n.style.setProperty('width', '100%', 'important');
+        n.style.setProperty('max-width', 'none', 'important');
+        n.style.setProperty('box-sizing', 'border-box', 'important');
+        n.style.setProperty('padding', '24px', 'important');
+      }
+    }
+    all.forEach((el) => {
+      if (el.style && /^\d+%$/.test(el.style.width) && parseInt(el.style.width, 10) < 100) el.style.setProperty('width', '100%', 'important');
+    });
+    if (!paper.dataset.ihfGalleryHeaderAdded) {
+      paper.dataset.ihfGalleryHeaderAdded = '1';
+      const header = document.createElement('div');
+      header.dataset.ihfGalleryHeader = '1';
+      header.style.cssText = 'position: sticky; top: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; height: 92px; background: #000000; flex-shrink: 0;';
+      const logo = document.createElement('img');
+      logo.src = 'uploads/JKR-key-white.png';
+      logo.alt = 'Jackson Kesecker Realtor';
+      logo.style.cssText = 'height: 34px; width: auto;';
+      header.appendChild(logo);
+      const closeBtn = document.createElement('button');
+      closeBtn.setAttribute('aria-label', 'Close');
+      closeBtn.innerHTML = '&times;';
+      closeBtn.style.cssText = 'position: absolute; top: 50%; right: clamp(20px, 4vw, 40px); transform: translateY(-50%); background: none; border: none; font-size: 32px; line-height: 1; cursor: pointer; color: #ffffff; padding: 0; transition: opacity 0.2s ease;';
+      closeBtn.addEventListener('mouseenter', () => { closeBtn.style.opacity = '0.6'; });
+      closeBtn.addEventListener('mouseleave', () => { closeBtn.style.opacity = '1'; });
+      closeBtn.addEventListener('click', () => { backLink.click(); });
+      header.appendChild(closeBtn);
+      paper.insertBefore(header, paper.firstChild);
+    }
+  };
+
   _ihfFixTextInRoot = (root) => {
     const cityStateZipRe = /^([A-Za-z .'-]+),\s*([A-Z]{2})\s*(\d{5})$/;
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
@@ -273,6 +292,7 @@ class Component extends DCLogic {
     try { this._ihfTraceHearts(root); } catch (e) { console.error('_ihfTraceHearts', e); }
     try { this._ihfReplaceMap(root); } catch (e) { console.error('_ihfReplaceMap', e); }
     try { this._ihfBoldFeatureLabels(root); } catch (e) { console.error('_ihfBoldFeatureLabels', e); }
+    try { this._ihfAddCarouselHeart(root); } catch (e) { console.error('_ihfAddCarouselHeart', e); }
     try { this._ihfFixDetailLayout(root); } catch (e) { console.error('_ihfFixDetailLayout', e); }
     try { this._ihfBuildScrollNav(root); } catch (e) { console.error('_ihfBuildScrollNav', e); }
     try { this._ihfFixGalleryModal(root); } catch (e) { console.error('_ihfFixGalleryModal', e); }
@@ -614,8 +634,10 @@ class Component extends DCLogic {
     const cloneRowEl = root.querySelector('.ihf-stats-clone');
     if (cloneRowEl && !cloneRowEl.dataset.ihfLotAdded) {
       const leaves = Array.from(root.querySelectorAll('*')).filter((el) => el.children.length === 0 && (el.textContent || '').trim());
-      const li = leaves.findIndex((el) => /^lot\s*(size|sq|square|area)/i.test((el.textContent || '').trim()));
-      const lotValue = li >= 0 && leaves[li + 1] ? (leaves[li + 1].textContent || '').trim() : '';
+      const lotIdxs = leaves.map((el, i) => (/^lot\s*(size|sq|square|area)/i.test((el.textContent || '').trim()) ? i : -1)).filter((i) => i >= 0 && leaves[i + 1] && /\d/.test(leaves[i + 1].textContent || ''));
+      const isSqftCand = (i) => /sq|square|ft/i.test((leaves[i].textContent || '') + ' ' + (leaves[i + 1].textContent || '')) && !/acre/i.test((leaves[i].textContent || '') + ' ' + (leaves[i + 1].textContent || ''));
+      const li = lotIdxs.find(isSqftCand) ?? (lotIdxs.length ? lotIdxs[0] : -1);
+      const lotValue = li >= 0 ? (leaves[li + 1].textContent || '').trim() : '';
       if (lotValue && /\d/.test(lotValue) && cloneRowEl._sqftCellEl) {
         cloneRowEl.dataset.ihfLotAdded = '1';
         const lotIcon2 = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 20h18"/><path d="M4 20V9l5-3 5 3 6-2v13"/><path d="M9 20v-5h4v5"/></svg>';
@@ -623,7 +645,10 @@ class Component extends DCLogic {
         const lotNum = parseFloat(lotValue.replace(/,/g, ''));
         const isAcres = /acre/i.test(lotLabel + ' ' + lotValue) || (!/sq|ft/i.test(lotValue) && lotNum < 100 && /\./.test(lotValue));
         const lotSqft = isAcres ? Math.round(lotNum * 43560) : Math.round(lotNum);
-        const lotText = lotSqft.toLocaleString('en-US') + ' Sq. Ft. Lot';
+        const lotAcres = lotSqft / 43560;
+        const lotText = lotAcres >= 1
+          ? (Math.round(lotAcres * 100) / 100).toLocaleString('en-US') + ' Acre' + (lotAcres === 1 ? '' : 's') + ' Lot'
+          : lotSqft.toLocaleString('en-US') + ' Sq. Ft. Lot';
         const lotCell = document.createElement('div');
         lotCell.style.cssText = 'font-size:14px;color:var(--rh-text-primary);display:flex;align-items:center;gap:8px;white-space:nowrap;';
         lotCell.innerHTML = lotIcon2 + '<span>' + lotText + '</span>';
@@ -682,19 +707,6 @@ class Component extends DCLogic {
           if (row) shareRows.add(row);
         });
         shareRows.forEach((row) => row.style.setProperty('display', 'none', 'important'));
-        if (saveBtn && carousel && !carousel.dataset.ihfHeartAdded) {
-          carousel.dataset.ihfHeartAdded = '1';
-          carousel.style.setProperty('position', 'relative', 'important');
-          const heartBtn = document.createElement('button');
-          heartBtn.type = 'button';
-          heartBtn.setAttribute('aria-label', 'Save listing');
-          heartBtn.style.cssText = 'position:absolute;top:16px;right:16px;z-index:999;width:40px;height:40px;border-radius:50%;border:none;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s ease;';
-          heartBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"><path d="M12 21s-7.5-4.6-10-9C.3 8.5 2 4 6 4c2.2 0 3.8 1.3 6 4 2.2-2.7 3.8-4 6-4 4 0 5.7 4.5 4 8-2.5 4.4-10 9-10 9z"/></svg>';
-          heartBtn.addEventListener('mouseenter', () => heartBtn.style.setProperty('background', 'rgba(0,0,0,0.6)', 'important'));
-          heartBtn.addEventListener('mouseleave', () => heartBtn.style.setProperty('background', 'rgba(0,0,0,0.4)', 'important'));
-          heartBtn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); saveBtn.click(); });
-          carousel.appendChild(heartBtn);
-        }
         const wrap = document.createElement('div');
         wrap.style.cssText = 'display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:10px;';
         const leftP = document.createElement('p');
