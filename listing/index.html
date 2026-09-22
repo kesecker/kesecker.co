@@ -348,6 +348,7 @@ class Component extends DCLogic {
     const header = root.querySelector('.listing-header');
     if (header) {
       header.style.setProperty('min-height', 'auto', 'important');
+      header.style.setProperty('padding-left', '0', 'important');
       const priceEl = header.querySelector('.list-price');
       const addr1 = header.querySelector('.listing-address-1');
       const addr2 = header.querySelector('.listing-address-2');
@@ -364,12 +365,14 @@ class Component extends DCLogic {
         addr1.style.setProperty('font-weight', '400', 'important');
         addr1.style.setProperty('text-align', 'left', 'important');
         addr1.style.setProperty('margin', '3px 0 0', 'important');
+        addr1.style.setProperty('padding-left', '0', 'important');
         addr1.style.setProperty('line-height', '1.3', 'important');
       }
       if (addr2) {
         addr2.style.setProperty('font-size', '16px', 'important');
         addr2.style.setProperty('font-weight', '400', 'important');
         addr2.style.setProperty('margin', '1px 0 6px', 'important');
+        addr2.style.setProperty('padding-left', '0', 'important');
         addr2.style.setProperty('line-height', '1.3', 'important');
       }
       if (statusWrap) {
@@ -588,17 +591,7 @@ class Component extends DCLogic {
             if (saveBtn && n.contains(saveBtn)) { shareSaveRow = n; break; }
           }
         }
-        let shareSaveClone = null;
-        if (shareSaveRow) {
-          shareSaveClone = shareSaveRow.cloneNode(true);
-          const origBtns = Array.from(shareSaveRow.querySelectorAll('button, [role="button"], a'));
-          const cloneBtns = Array.from(shareSaveClone.querySelectorAll('button, [role="button"], a'));
-          cloneBtns.forEach((btn, i) => {
-            const orig = origBtns[i];
-            if (orig) btn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); orig.click(); });
-          });
-          shareSaveRow.style.setProperty('display', 'none', 'important');
-        }
+        if (shareSaveRow) shareSaveRow.style.setProperty('display', 'none', 'important');
         const wrap = document.createElement('div');
         wrap.style.cssText = 'display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:10px;';
         const leftP = document.createElement('p');
@@ -611,7 +604,6 @@ class Component extends DCLogic {
         rightP.textContent = mlsText;
         rightP.style.cssText = 'text-align:right;font-size:13px;color:var(--rh-text-secondary);margin:0;';
         rightCol.appendChild(rightP);
-        if (shareSaveClone) rightCol.appendChild(shareSaveClone);
         wrap.appendChild(rightCol);
         infoCol.insertBefore(wrap, infoCol.firstChild);
       }
