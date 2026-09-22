@@ -366,7 +366,7 @@ button[aria-label*="close" i]:hover svg,
    widget's own re-renders, since injected CSS survives every re-render. */
 .listing-photo-carousel {
   max-width: 1300px !important;
-  margin: -100px auto 0 !important;
+  margin: 0 auto !important;
   position: relative !important;
   z-index: 1 !important;
   overflow: hidden !important;
