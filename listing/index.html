@@ -983,7 +983,7 @@ class Component extends DCLogic {
       if (node.dataset.ihfMounted) return;
       node.dataset.ihfMounted = '1';
       node.appendChild(window.ihfKestrel.render());
-      this._ihfStartCaseFix();
+      setTimeout(() => { if (!window.__ihfListingFixesLoaded) { console.warn('[ihf] IDX Content fixes not detected - using page fallback'); this._ihfStartCaseFix(); } }, 6000);
     };
     if (window.ihfKestrel && window.ihfKestrel.render) { doMount(); return; }
     const ks = document.querySelector('script[src*="ihf-kestrel.js"]');
