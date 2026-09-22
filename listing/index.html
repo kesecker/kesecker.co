@@ -121,13 +121,13 @@ class Component extends DCLogic {
         }
       });
       const findSmallestMatch = (text) => {
-        const matches = Array.from(root.querySelectorAll('*')).filter((el) => (el.textContent || '').trim() === text);
+        const matches = Array.from(paper.querySelectorAll('*')).filter((el) => (el.textContent || '').trim() === text);
         if (!matches.length) return null;
         return matches.reduce((a, b) => (a.querySelectorAll('*').length <= b.querySelectorAll('*').length ? a : b));
       };
-      const backLink = findSmallestMatch('Back to listing') || Array.from(root.querySelectorAll('*')).find((el) => /back to listing/i.test((el.textContent || '').trim()));
+      const backLink = findSmallestMatch('Back to listing') || Array.from(paper.querySelectorAll('*')).find((el) => /back to listing/i.test((el.textContent || '').trim()));
       const shareLeaf = findSmallestMatch('Share');
-      const scheduleBtn = findSmallestMatch('Schedule Tour') || Array.from(root.querySelectorAll('*')).find((el) => /schedule tour/i.test((el.textContent || '').trim()));
+      const scheduleBtn = findSmallestMatch('Schedule Tour') || Array.from(paper.querySelectorAll('*')).find((el) => /schedule tour/i.test((el.textContent || '').trim()));
       if (backLink && shareLeaf && scheduleBtn) {
         let topBar = backLink;
         for (let i = 0; i < 8 && topBar.parentElement && !topBar.contains(shareLeaf); i++) topBar = topBar.parentElement;
@@ -195,6 +195,7 @@ class Component extends DCLogic {
     while ((node = walker.nextNode())) {
       const text = node.nodeValue;
       if (!text || !/[A-Za-z]/.test(text)) continue;
+      if (node.parentElement && node.parentElement.closest && node.parentElement.closest('.ihf-stats-clone')) continue;
       if (text.includes('Sold Price:')) { node.nodeValue = text.replace('Sold Price:', '').trim(); continue; }
       const filterCountMatch = text.match(/^(Price|Beds|Baths|More)\s*\(\d+\)$/);
       if (filterCountMatch) { node.nodeValue = filterCountMatch[1]; continue; }
@@ -593,6 +594,7 @@ class Component extends DCLogic {
         else if (fmt.type === 'home') icon = houseIcon;
         const isVirtualTour = /^virtual tour$/i.test(text);
         if (isVirtualTour) {
+          cellDiv.dataset.ihfVt = '1';
           cellDiv.style.cssText = 'display:inline-flex;align-items:center;';
           cellDiv.innerHTML = '<button type="button" style="font-family:inherit;font-size:14px;font-weight:600;padding:8px 16px;border-radius:6px;border:none;cursor:pointer;background:#1a1a1a;color:#ffffff;">' + text + '</button>';
         } else {
@@ -617,8 +619,11 @@ class Component extends DCLogic {
       if (lotValue && /\d/.test(lotValue) && cloneRowEl._sqftCellEl) {
         cloneRowEl.dataset.ihfLotAdded = '1';
         const lotIcon2 = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 20h18"/><path d="M4 20V9l5-3 5 3 6-2v13"/><path d="M9 20v-5h4v5"/></svg>';
-        const hasUnit = /sq|acre|ft/i.test(lotValue);
-        const lotText = hasUnit ? lotValue.replace(/square\s*(feet|ft\.?)/i, 'Sq. Ft.') + ' Lot' : lotValue + ' Sq. Ft. Lot';
+        const lotLabel = (leaves[li].textContent || '');
+        const lotNum = parseFloat(lotValue.replace(/,/g, ''));
+        const isAcres = /acre/i.test(lotLabel + ' ' + lotValue) || (!/sq|ft/i.test(lotValue) && lotNum < 100 && /\./.test(lotValue));
+        const lotSqft = isAcres ? Math.round(lotNum * 43560) : Math.round(lotNum);
+        const lotText = lotSqft.toLocaleString('en-US') + ' Sq. Ft. Lot';
         const lotCell = document.createElement('div');
         lotCell.style.cssText = 'font-size:14px;color:var(--rh-text-primary);display:flex;align-items:center;gap:8px;white-space:nowrap;';
         lotCell.innerHTML = lotIcon2 + '<span>' + lotText + '</span>';
@@ -637,6 +642,8 @@ class Component extends DCLogic {
       topRow.appendChild(headerClone);
       const statsClone = statsRow.parentElement.querySelector('.ihf-stats-clone');
       if (statsClone) topRow.appendChild(statsClone);
+      const vtCell = statsClone && statsClone.querySelector('[data-ihf-vt]');
+      if (vtCell) { vtCell.style.setProperty('margin-top', '12px'); headerClone.appendChild(vtCell); }
       col.appendChild(topRow);
       statsRow.style.setProperty('flex', 'none', 'important');
       statsRow.style.setProperty('max-width', '100%', 'important');
@@ -793,13 +800,20 @@ class Component extends DCLogic {
     if (!heading) return;
     let container = heading.parentElement;
     while (container && container.parentElement && (container.textContent || '').trim().length < 400) container = container.parentElement;
+    container = heading.closest('.features') || container;
     if (!container) return;
-    this._ihfFindPairWrappers(container).forEach((wrapper) => {
-      const [labelEl, valueEl] = Array.from(wrapper.children);
-      labelEl.style.setProperty('font-weight', '700', 'important');
-      labelEl.style.setProperty('font-style', 'normal', 'important');
-      valueEl.style.setProperty('font-weight', '400', 'important');
-      valueEl.style.setProperty('font-style', 'italic', 'important');
+    const leaves = Array.from(container.querySelectorAll('*')).filter((el) => el.children.length === 0 && (el.textContent || '').trim() && getComputedStyle(el).display !== 'none');
+    if (!leaves.length) return;
+    const sizes = leaves.map((el) => parseFloat(getComputedStyle(el).fontSize) || 0);
+    const minSize = Math.min(...sizes);
+    leaves.forEach((el, i) => {
+      if (sizes[i] > minSize + 0.5) {
+        el.style.setProperty('font-weight', '700', 'important');
+        el.style.setProperty('font-style', 'normal', 'important');
+      } else {
+        el.style.setProperty('font-weight', '400', 'important');
+        el.style.setProperty('font-style', 'italic', 'important');
+      }
     });
   };
   _ihfReplaceMap = (root) => {

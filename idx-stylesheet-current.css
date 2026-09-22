@@ -1,3 +1,22 @@
+/* All headings/titles bold (overrides the global font-weight:400 reset below) */
+h1, h2, h3, h4, h5, h6,
+[class*="typography-h" i] {
+  font-weight: 700 !important;
+}
+
+/* iHomefinder credit line at the very bottom — centered */
+.powered-by-ihomefinder,
+.powered-by-ihomefinder * {
+  text-align: center !important;
+  justify-content: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+.powered-by-ihomefinder {
+  display: flex !important;
+  width: 100% !important;
+}
+
 /* Property Features section (County, Neighborhood, MLS Area, Year Built, etc.) —
    bold each field's label so it reads as a category heading over its value. */
 .feature-label {
