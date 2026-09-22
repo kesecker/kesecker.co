@@ -373,9 +373,9 @@ button[aria-label*="close" i]:hover svg,
   clip-path: inset(0) !important;
   padding: 0 !important;
   box-sizing: border-box !important;
-  height: 860px !important;
-  max-height: 860px !important;
-  min-height: 860px !important;
+  height: clamp(360px, calc(100vh - 360px), 760px) !important;
+  max-height: clamp(360px, calc(100vh - 360px), 760px) !important;
+  min-height: clamp(360px, calc(100vh - 360px), 760px) !important;
   background: #ffffff !important;
 }
 .listing-photo-carousel > div,
@@ -390,7 +390,7 @@ button[aria-label*="close" i]:hover svg,
   background: #ffffff !important;
 }
 .listing-photo-carousel li.slide img {
-  height: 860px !important;
+  height: clamp(360px, calc(100vh - 360px), 760px) !important;
   object-fit: contain !important;
   background: #ffffff !important;
   width: 100% !important;
