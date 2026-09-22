@@ -555,7 +555,6 @@ class Component extends DCLogic {
       const cellsData = Array.from(statsRow.children).map((cell) => (cell.textContent || '').trim());
       const cloneRow = document.createElement('div');
       cloneRow.className = 'ihf-stats-clone';
-<<<<<<< HEAD
       cloneRow.style.cssText = 'display:flex;gap:32px;flex-wrap:wrap;justify-content:flex-start;';
       const bedIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6"/><path d="M3 18v2M21 18v2M3 12V8a2 2 0 0 1 2-2h3v6"/><path d="M8 12h13"/></svg>';
       const bathIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-3z"/><path d="M4 12V6a2 2 0 0 1 3-1.7"/><path d="M4 19v2M18 19v2"/></svg>';
@@ -568,13 +567,6 @@ class Component extends DCLogic {
         else if (/bathroom/i.test(text)) icon = bathIcon;
         else if (/square feet/i.test(text)) icon = sqftIcon;
         cellDiv.innerHTML = icon + '<span>' + text + '</span>';
-=======
-      cloneRow.style.cssText = 'display:flex;gap:24px;flex-wrap:wrap;';
-      cellsData.forEach((text) => {
-        const cellDiv = document.createElement('div');
-        cellDiv.style.cssText = 'font-size:14px;color:var(--rh-text-primary);';
-        cellDiv.textContent = text;
->>>>>>> 6941c26c0a83a887b1d0b6a647f94ed27534ca09
         cloneRow.appendChild(cellDiv);
       });
       statsRow.style.setProperty('display', 'none', 'important');
@@ -609,25 +601,15 @@ class Component extends DCLogic {
           if (!matches.length) return null;
           return matches.reduce((a, b) => (a.querySelectorAll('*').length <= b.querySelectorAll('*').length ? a : b));
         };
-<<<<<<< HEAD
         const findAllMatches = (text) => Array.from(root.querySelectorAll('*')).filter((el) => (el.textContent || '').trim() === text);
         const shareBtn = findSmallestMatch('Share');
         const saveBtn = findSmallestMatch('Save');
         const climbToSharedRow = (a, b) => {
           let n = a;
           for (let i = 0; i < 5 && n && n.parentElement; i++) {
-=======
-        const shareBtn = findSmallestMatch('Share');
-        const saveBtn = findSmallestMatch('Save');
-        let shareSaveRow = null;
-        if (shareBtn) {
-          let n = shareBtn;
-          for (let i = 0; i < 5 && n.parentElement; i++) {
->>>>>>> 6941c26c0a83a887b1d0b6a647f94ed27534ca09
             n = n.parentElement;
             if (b && n.contains(b)) return n;
           }
-<<<<<<< HEAD
           return null;
         };
         const shareRows = new Set();
@@ -637,10 +619,6 @@ class Component extends DCLogic {
           if (row) shareRows.add(row);
         });
         shareRows.forEach((row) => row.style.setProperty('display', 'none', 'important'));
-=======
-        }
-        if (shareSaveRow) shareSaveRow.style.setProperty('display', 'none', 'important');
->>>>>>> 6941c26c0a83a887b1d0b6a647f94ed27534ca09
         if (saveBtn && carousel && !carousel.dataset.ihfHeartAdded) {
           carousel.dataset.ihfHeartAdded = '1';
           carousel.style.setProperty('position', 'relative', 'important');
