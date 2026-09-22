@@ -36,7 +36,7 @@ div.ihf-overlay-container {
   left: 0 !important;
 }
 
-/* Force Montserrat font across the iHomefinder widget; prices stay bold.
+/* Force Inter font across the iHomefinder widget; prices stay bold.
    Also targets MUI's own generated classnames directly (higher specificity
    than a bare "*") so it wins even if MUI's stylesheet injects after ours. */
 :root, :host, * {
@@ -234,7 +234,10 @@ body, body *,
 }
 .ui-outlined-input-input {
   font-size: 14px !important;
-  padding: 8px 4px !important;
+  padding: 18px 4px 12px !important;
+}
+.ui-outlined-input {
+  margin-top: 6px !important;
 }
 .ui-outlined-input fieldset {
   border: none !important;
@@ -279,38 +282,114 @@ body, body *,
   background-size: 100% 2px !important;
 }
 
-/* Cities/list-item hover inside dropdown panels — underline instead of grey fill */
+/* Dropdown list items (Status, Sort, Price presets, etc.) — word-length underline on hover.
+   Note: hover must only clear background-COLOR; the old shorthand "background: none" also
+   wiped the underline gradient, which is why the animation looked broken. */
 [role="menu"] li:hover,
-[role="menu"] li[role="menuitem"]:hover,
 [role="listbox"] li:hover,
 [role="option"]:hover,
 .MuiMenuItem-root:hover,
 .MuiListItem-root:hover,
-.MuiAutocomplete-option:hover {
+.MuiAutocomplete-option:hover,
+.MuiMenuItem-root.Mui-focusVisible,
+.MuiListItem-root.Mui-focusVisible {
   background-color: transparent !important;
-  background: none !important;
 }
 [role="menu"] li,
-[role="menu"] li[role="menuitem"],
 [role="listbox"] li,
 [role="option"],
 .MuiMenuItem-root,
 .MuiListItem-root,
 .MuiAutocomplete-option {
+  width: fit-content !important;
+  min-width: 0 !important;
   background-image: linear-gradient(#000000, #000000) !important;
   background-repeat: no-repeat !important;
+  background-origin: content-box !important;
+  background-clip: content-box !important;
   background-position: left bottom !important;
   background-size: 0 2px !important;
   transition: background-size 0.3s ease !important;
+  white-space: nowrap !important;
 }
 [role="menu"] li:hover,
-[role="menu"] li[role="menuitem"]:hover,
 [role="listbox"] li:hover,
 [role="option"]:hover,
 .MuiMenuItem-root:hover,
 .MuiListItem-root:hover,
 .MuiAutocomplete-option:hover {
   background-size: 100% 2px !important;
+}
+/* Checkbox items (Status, Property Type): underline only the label text, not the box */
+[role="menu"] li:has(input[type="checkbox"]),
+.MuiMenuItem-root:has(input[type="checkbox"]),
+.MuiListItem-root:has(input[type="checkbox"]) {
+  background-image: none !important;
+}
+[role="menu"] li:has(input[type="checkbox"]) label > span:last-child,
+[role="menu"] li:has(input[type="checkbox"]) .ui-typography-body1,
+.MuiMenuItem-root:has(input[type="checkbox"]) .MuiTypography-root {
+  display: inline-block !important;
+  width: fit-content !important;
+  background-image: linear-gradient(#000000, #000000) !important;
+  background-repeat: no-repeat !important;
+  background-position: left bottom !important;
+  background-size: 0 2px !important;
+  transition: background-size 0.3s ease !important;
+  padding-bottom: 2px !important;
+}
+[role="menu"] li:has(input[type="checkbox"]):hover label > span:last-child,
+[role="menu"] li:has(input[type="checkbox"]):hover .ui-typography-body1,
+.MuiMenuItem-root:has(input[type="checkbox"]):hover .MuiTypography-root {
+  background-size: 100% 2px !important;
+}
+/* Dropdown panels size to their longest option so text is never cut off (Sort menu) */
+.MuiPopover-paper,
+.MuiMenu-paper,
+[role="menu"] {
+  min-width: max-content !important;
+  max-width: none !important;
+  overflow-x: visible !important;
+}
+
+/* Min/Max price inputs — hide MUI's own animated underline so only ours animates */
+.MuiInput-underline::after {
+  display: none !important;
+}
+.MuiInput-underline::before {
+  border-bottom-color: #cccccc !important;
+}
+
+/* Beds/Baths sliders — bigger grab handles, smooth motion between stops */
+.MuiSlider-root {
+  cursor: pointer !important;
+  touch-action: none !important;
+  padding: 14px 0 !important;
+}
+.MuiSlider-thumb {
+  width: 16px !important;
+  height: 16px !important;
+  margin-top: -7px !important;
+  margin-left: -8px !important;
+  cursor: grab !important;
+  transition: left 0.18s ease, box-shadow 0.15s ease, transform 0.15s ease !important;
+}
+.MuiSlider-thumb:hover,
+.MuiSlider-thumb.Mui-focusVisible {
+  box-shadow: 0 0 0 6px rgba(0, 0, 0, 0.12) !important;
+}
+.MuiSlider-thumb.MuiSlider-active,
+.MuiSlider-thumb.Mui-active {
+  cursor: grabbing !important;
+  transform: scale(1.15) !important;
+  transition: box-shadow 0.15s ease, transform 0.15s ease !important;
+}
+.MuiSlider-track {
+  transition: left 0.18s ease, width 0.18s ease !important;
+}
+.MuiSlider-root:has(.MuiSlider-active) .MuiSlider-track,
+.MuiSlider-root:has(.Mui-active) .MuiSlider-track {
+  transition: none !important;
 }
 
 /* All dialog/modal close (X) buttons — lighten on hover, matching the site's own
