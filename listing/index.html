@@ -271,6 +271,7 @@ class Component extends DCLogic {
     try { this._ihfMoveResultsCount(root); } catch (e) { console.error('_ihfMoveResultsCount', e); }
     try { this._ihfTraceHearts(root); } catch (e) { console.error('_ihfTraceHearts', e); }
     try { this._ihfReplaceMap(root); } catch (e) { console.error('_ihfReplaceMap', e); }
+    try { this._ihfBoldFeatureLabels(root); } catch (e) { console.error('_ihfBoldFeatureLabels', e); }
     try { this._ihfFixDetailLayout(root); } catch (e) { console.error('_ihfFixDetailLayout', e); }
     try { this._ihfBuildScrollNav(root); } catch (e) { console.error('_ihfBuildScrollNav', e); }
     try { this._ihfFixGalleryModal(root); } catch (e) { console.error('_ihfFixGalleryModal', e); }
@@ -496,6 +497,10 @@ class Component extends DCLogic {
         el.style.setProperty('margin-top', '0', 'important');
         if (el.parentElement) el.parentElement.style.setProperty('margin-top', '0', 'important');
       }
+      if (/idx data provided by/i.test(t) && t.length < 100) {
+        el.style.setProperty('text-align', 'center', 'important');
+        if (el.parentElement) el.parentElement.style.setProperty('text-align', 'center', 'important');
+      }
     });
     const CAROUSEL_PX = 860;
     if (carousel) {
@@ -556,18 +561,26 @@ class Component extends DCLogic {
       const cloneRow = document.createElement('div');
       cloneRow.className = 'ihf-stats-clone';
       cloneRow.style.cssText = 'display:flex;gap:28px;flex-wrap:wrap;justify-content:flex-start;flex-shrink:0;';
-      const bedIcon = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6"/><path d="M3 18v2M21 18v2M3 12V8a2 2 0 0 1 2-2h3v6"/><path d="M8 12h13"/></svg>';
-      const bathIcon = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-3z"/><path d="M4 12V6a2 2 0 0 1 3-1.7"/><path d="M4 19v2M18 19v2"/></svg>';
-      const sqftIcon = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h4M3 15h4M15 3v4M9 3v4M21 9h-4M21 15h-4M15 21v-4M9 21v-4"/></svg>';
+      const bedIcon = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6"/><path d="M3 18v2M21 18v2M3 12V8a2 2 0 0 1 2-2h3v6"/><path d="M8 12h13"/></svg>';
+      const bathIcon = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-3z"/><path d="M4 12V6a2 2 0 0 1 3-1.7"/><path d="M4 19v2M18 19v2"/></svg>';
+      const sqftIcon = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h4M3 15h4M15 3v4M9 3v4M21 9h-4M21 15h-4M15 21v-4M9 21v-4"/></svg>';
       origCells.forEach((origCell) => {
-        const text = (origCell.textContent || '').trim().replace(/square feet/i, 'Sq. Ft.');
+        const text = (origCell.textContent || '').trim()
+          .replace(/square feet/i, 'Sq. Ft.')
+          .replace(/(\d)\s*(Bedrooms?|Bathrooms?|Sq\.\s*Ft\.)/i, '$1 $2');
         const cellDiv = document.createElement('div');
-        cellDiv.style.cssText = 'font-size:14px;color:var(--rh-text-primary);display:flex;align-items:center;gap:7px;';
+        cellDiv.style.cssText = 'font-size:14px;color:var(--rh-text-primary);display:flex;align-items:center;gap:8px;';
         let icon = '';
         if (/bedroom/i.test(text)) icon = bedIcon;
         else if (/bathroom/i.test(text)) icon = bathIcon;
         else if (/sq\. ft\./i.test(text)) icon = sqftIcon;
-        cellDiv.innerHTML = icon + '<span>' + text + '</span>';
+        const isVirtualTour = /^virtual tour$/i.test(text);
+        if (isVirtualTour) {
+          cellDiv.style.cssText = 'display:inline-flex;align-items:center;';
+          cellDiv.innerHTML = '<button type="button" style="font-family:inherit;font-size:14px;font-weight:600;padding:8px 16px;border-radius:6px;border:none;cursor:pointer;background:#1a1a1a;color:#ffffff;">' + text + '</button>';
+        } else {
+          cellDiv.innerHTML = icon + '<span>' + text + '</span>';
+        }
         const clickable = origCell.querySelector('a, button, [role="button"]') || (origCell.onclick || /^a$/i.test(origCell.tagName) ? origCell : null);
         if (clickable) {
           cellDiv.style.cursor = 'pointer';
@@ -736,6 +749,22 @@ class Component extends DCLogic {
     if (clone.parentElement !== mapEl.parentElement || clone.previousElementSibling !== mapEl) {
       mapEl.parentElement.insertBefore(clone, mapEl.nextSibling);
     }
+  };
+  _ihfBoldFeatureLabels = (root) => {
+    const heading = Array.from(root.querySelectorAll('*')).find((el) => el.children.length === 0 && /^property features$/i.test((el.textContent || '').trim()));
+    if (!heading) return;
+    let container = heading.parentElement;
+    while (container && container.parentElement && (container.textContent || '').trim().length < 400) container = container.parentElement;
+    if (!container || container.dataset.ihfFeatureLabelsBold) return;
+    container.dataset.ihfFeatureLabelsBold = '1';
+    const leaves = Array.from(container.querySelectorAll('*')).filter((el) => el.children.length === 0 && (el.textContent || '').trim().length > 0);
+    leaves.forEach((el) => {
+      const m = getComputedStyle(el).color.match(/\d+/g);
+      if (!m) return;
+      const [r, g, b] = m.map(Number);
+      const maxDiff = Math.max(r, g, b) - Math.min(r, g, b);
+      if (maxDiff < 12 && r < 90) el.style.setProperty('font-weight', '700', 'important');
+    });
   };
   _ihfReplaceMap = (root) => {
     const mapSection = root.querySelector('.listing-map');
