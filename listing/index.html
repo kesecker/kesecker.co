@@ -348,6 +348,7 @@ class Component extends DCLogic {
     const header = root.querySelector('.listing-header');
     if (header) {
       header.style.setProperty('min-height', 'auto', 'important');
+      header.style.setProperty('padding-left', '0', 'important');
       const priceEl = header.querySelector('.list-price');
       const addr1 = header.querySelector('.listing-address-1');
       const addr2 = header.querySelector('.listing-address-2');
@@ -358,18 +359,28 @@ class Component extends DCLogic {
         priceEl.style.setProperty('font-weight', '700', 'important');
         priceEl.style.setProperty('margin', '2px 0 0', 'important');
         priceEl.style.setProperty('padding-left', '0', 'important');
+        priceEl.style.setProperty('padding', '0', 'important');
+        priceEl.style.setProperty('display', 'block', 'important');
+        priceEl.style.setProperty('text-align', 'left', 'important');
+        Array.from(priceEl.querySelectorAll('*')).forEach((s) => {
+          s.style.setProperty('padding', '0', 'important');
+          s.style.setProperty('margin', '0', 'important');
+          s.style.setProperty('text-align', 'left', 'important');
+        });
       }
       if (addr1) {
         addr1.style.setProperty('font-size', '16px', 'important');
         addr1.style.setProperty('font-weight', '400', 'important');
         addr1.style.setProperty('text-align', 'left', 'important');
         addr1.style.setProperty('margin', '3px 0 0', 'important');
+        addr1.style.setProperty('padding-left', '0', 'important');
         addr1.style.setProperty('line-height', '1.3', 'important');
       }
       if (addr2) {
         addr2.style.setProperty('font-size', '16px', 'important');
         addr2.style.setProperty('font-weight', '400', 'important');
         addr2.style.setProperty('margin', '1px 0 6px', 'important');
+        addr2.style.setProperty('padding-left', '0', 'important');
         addr2.style.setProperty('line-height', '1.3', 'important');
       }
       if (statusWrap) {
@@ -544,11 +555,18 @@ class Component extends DCLogic {
       const cellsData = Array.from(statsRow.children).map((cell) => (cell.textContent || '').trim());
       const cloneRow = document.createElement('div');
       cloneRow.className = 'ihf-stats-clone';
-      cloneRow.style.cssText = 'display:flex;gap:10px;flex-wrap:wrap;';
+      cloneRow.style.cssText = 'display:flex;gap:32px;flex-wrap:wrap;justify-content:flex-start;';
+      const bedIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6"/><path d="M3 18v2M21 18v2M3 12V8a2 2 0 0 1 2-2h3v6"/><path d="M8 12h13"/></svg>';
+      const bathIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-3z"/><path d="M4 12V6a2 2 0 0 1 3-1.7"/><path d="M4 19v2M18 19v2"/></svg>';
+      const sqftIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h4M3 15h4M15 3v4M9 3v4M21 9h-4M21 15h-4M15 21v-4M9 21v-4"/></svg>';
       cellsData.forEach((text) => {
         const cellDiv = document.createElement('div');
-        cellDiv.style.cssText = 'border:1px solid #e0e0e0;border-radius:8px;padding:10px 16px;flex:1 1 120px;box-sizing:border-box;font-size:14px;color:var(--rh-text-primary);text-align:center;';
-        cellDiv.textContent = text;
+        cellDiv.style.cssText = 'font-size:14px;color:var(--rh-text-primary);display:flex;align-items:center;gap:6px;';
+        let icon = '';
+        if (/bedroom/i.test(text)) icon = bedIcon;
+        else if (/bathroom/i.test(text)) icon = bathIcon;
+        else if (/square feet/i.test(text)) icon = sqftIcon;
+        cellDiv.innerHTML = icon + '<span>' + text + '</span>';
         cloneRow.appendChild(cellDiv);
       });
       statsRow.style.setProperty('display', 'none', 'important');
@@ -578,26 +596,41 @@ class Component extends DCLogic {
         const parts = fullText.split(/(?=Listing\s*#)/i);
         const agentText = (parts[0] || '').trim();
         const mlsText = (parts[1] || '').trim();
-        const shareBtn = Array.from(root.querySelectorAll('*')).find((el) => el.children.length === 0 && /^share$/i.test((el.textContent || '').trim()));
-        const saveBtn = Array.from(root.querySelectorAll('*')).find((el) => el.children.length === 0 && /^save$/i.test((el.textContent || '').trim()));
-        let shareSaveRow = null;
-        if (shareBtn) {
-          let n = shareBtn;
-          for (let i = 0; i < 5 && n.parentElement; i++) {
+        const findSmallestMatch = (text) => {
+          const matches = Array.from(root.querySelectorAll('*')).filter((el) => (el.textContent || '').trim() === text);
+          if (!matches.length) return null;
+          return matches.reduce((a, b) => (a.querySelectorAll('*').length <= b.querySelectorAll('*').length ? a : b));
+        };
+        const findAllMatches = (text) => Array.from(root.querySelectorAll('*')).filter((el) => (el.textContent || '').trim() === text);
+        const shareBtn = findSmallestMatch('Share');
+        const saveBtn = findSmallestMatch('Save');
+        const climbToSharedRow = (a, b) => {
+          let n = a;
+          for (let i = 0; i < 5 && n && n.parentElement; i++) {
             n = n.parentElement;
-            if (saveBtn && n.contains(saveBtn)) { shareSaveRow = n; break; }
+            if (b && n.contains(b)) return n;
           }
-        }
-        let shareSaveClone = null;
-        if (shareSaveRow) {
-          shareSaveClone = shareSaveRow.cloneNode(true);
-          const origBtns = Array.from(shareSaveRow.querySelectorAll('button, [role="button"], a'));
-          const cloneBtns = Array.from(shareSaveClone.querySelectorAll('button, [role="button"], a'));
-          cloneBtns.forEach((btn, i) => {
-            const orig = origBtns[i];
-            if (orig) btn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); orig.click(); });
-          });
-          shareSaveRow.style.setProperty('display', 'none', 'important');
+          return null;
+        };
+        const shareRows = new Set();
+        findAllMatches('Share').forEach((s) => {
+          const b = findAllMatches('Save').find((sv) => s.closest('.listing-header, .ihf-info-col') === sv.closest('.listing-header, .ihf-info-col'));
+          const row = climbToSharedRow(s, b || saveBtn);
+          if (row) shareRows.add(row);
+        });
+        shareRows.forEach((row) => row.style.setProperty('display', 'none', 'important'));
+        if (saveBtn && carousel && !carousel.dataset.ihfHeartAdded) {
+          carousel.dataset.ihfHeartAdded = '1';
+          carousel.style.setProperty('position', 'relative', 'important');
+          const heartBtn = document.createElement('button');
+          heartBtn.type = 'button';
+          heartBtn.setAttribute('aria-label', 'Save listing');
+          heartBtn.style.cssText = 'position:absolute;top:16px;right:16px;z-index:999;width:40px;height:40px;border-radius:50%;border:none;background:rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s ease;';
+          heartBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"><path d="M12 21s-7.5-4.6-10-9C.3 8.5 2 4 6 4c2.2 0 3.8 1.3 6 4 2.2-2.7 3.8-4 6-4 4 0 5.7 4.5 4 8-2.5 4.4-10 9-10 9z"/></svg>';
+          heartBtn.addEventListener('mouseenter', () => heartBtn.style.setProperty('background', 'rgba(0,0,0,0.6)', 'important'));
+          heartBtn.addEventListener('mouseleave', () => heartBtn.style.setProperty('background', 'rgba(0,0,0,0.4)', 'important'));
+          heartBtn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); saveBtn.click(); });
+          carousel.appendChild(heartBtn);
         }
         const wrap = document.createElement('div');
         wrap.style.cssText = 'display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:10px;';
@@ -611,7 +644,6 @@ class Component extends DCLogic {
         rightP.textContent = mlsText;
         rightP.style.cssText = 'text-align:right;font-size:13px;color:var(--rh-text-secondary);margin:0;';
         rightCol.appendChild(rightP);
-        if (shareSaveClone) rightCol.appendChild(shareSaveClone);
         wrap.appendChild(rightCol);
         infoCol.insertBefore(wrap, infoCol.firstChild);
       }
@@ -701,7 +733,16 @@ class Component extends DCLogic {
     if (!mapSection || mapSection.dataset.ihfMapReplaced) return;
     const addr1 = root.querySelector('.listing-address-1');
     const addr2 = root.querySelector('.listing-address-2');
-    const address = [addr1, addr2].filter(Boolean).map((el) => (el.textContent || '').trim()).filter(Boolean).join(', ');
+    let address = [addr1, addr2].filter(Boolean).map((el) => (el.textContent || '').trim()).filter(Boolean).join(', ');
+    if (!address) {
+      const bcCandidates = Array.from(root.querySelectorAll('*')).filter((el) => /home search/i.test((el.textContent || '').trim()) && (el.textContent || '').trim().length < 200);
+      const bc = bcCandidates.reduce((best, el) => (!best || el.querySelectorAll('*').length < best.querySelectorAll('*').length ? el : best), null);
+      if (bc) {
+        const parts = (bc.textContent || '').split(/[›>]/).map((s) => s.trim()).filter(Boolean);
+        address = parts[parts.length - 1] || '';
+        if (/home search/i.test(address)) address = '';
+      }
+    }
     if (!address) return;
     const heading = Array.from(mapSection.children).find((c) => /^h[1-6]$/i.test(c.tagName));
     mapSection.dataset.ihfMapReplaced = '1';

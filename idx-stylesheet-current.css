@@ -192,11 +192,11 @@ body, body *,
 }
 
 /* Save-to-Favorites sign-in modal — centered title/subtitle, underline inputs instead of boxes, smaller/narrower */
-.ui-typography-h3 {
+.ihf-overlay-container .ui-typography-h3 {
   text-align: center !important;
   font-size: 22px !important;
 }
-.ui-typography-body1 {
+.ihf-overlay-container .ui-typography-body1 {
   text-align: center !important;
   font-size: 14px !important;
 }
