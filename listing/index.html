@@ -706,9 +706,15 @@ class Component extends DCLogic {
     const heading = Array.from(mapSection.children).find((c) => /^h[1-6]$/i.test(c.tagName));
     mapSection.dataset.ihfMapReplaced = '1';
     Array.from(mapSection.children).forEach((c) => { if (c !== heading) c.style.setProperty('display', 'none', 'important'); });
+    mapSection.style.setProperty('height', 'auto', 'important');
+    mapSection.style.setProperty('min-height', '0', 'important');
+    mapSection.style.setProperty('max-height', 'none', 'important');
+    mapSection.style.setProperty('overflow', 'visible', 'important');
+    mapSection.style.setProperty('position', 'relative', 'important');
+    mapSection.style.setProperty('z-index', '1', 'important');
     const iframe = document.createElement('iframe');
     iframe.src = 'Listing Map.html?address=' + encodeURIComponent(address);
-    iframe.style.cssText = 'width:100%;height:450px;border:none;display:block;margin-top:16px;';
+    iframe.style.cssText = 'width:100%;height:450px;border:none;display:block;margin-top:16px;position:relative;z-index:2;';
     mapSection.appendChild(iframe);
   };
   _ihfTraceHearts = (root) => {
