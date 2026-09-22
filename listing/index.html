@@ -701,7 +701,16 @@ class Component extends DCLogic {
     if (!mapSection || mapSection.dataset.ihfMapReplaced) return;
     const addr1 = root.querySelector('.listing-address-1');
     const addr2 = root.querySelector('.listing-address-2');
-    const address = [addr1, addr2].filter(Boolean).map((el) => (el.textContent || '').trim()).filter(Boolean).join(', ');
+    let address = [addr1, addr2].filter(Boolean).map((el) => (el.textContent || '').trim()).filter(Boolean).join(', ');
+    if (!address) {
+      const bcCandidates = Array.from(root.querySelectorAll('*')).filter((el) => /home search/i.test((el.textContent || '').trim()) && (el.textContent || '').trim().length < 200);
+      const bc = bcCandidates.reduce((best, el) => (!best || el.querySelectorAll('*').length < best.querySelectorAll('*').length ? el : best), null);
+      if (bc) {
+        const parts = (bc.textContent || '').split(/[›>]/).map((s) => s.trim()).filter(Boolean);
+        address = parts[parts.length - 1] || '';
+        if (/home search/i.test(address)) address = '';
+      }
+    }
     if (!address) return;
     const heading = Array.from(mapSection.children).find((c) => /^h[1-6]$/i.test(c.tagName));
     mapSection.dataset.ihfMapReplaced = '1';
