@@ -722,11 +722,12 @@ img.style.setProperty('object-fit', 'cover', 'important');
       }
     }
     const statsRow = root.querySelector('.listing-attributes');
-const existingStats = Array.from(root.querySelectorAll('.ihf-stats-clone'));
-if (existingStats.length) {
-const keepStats = existingStats.find((c) => c.closest('.ihf-info-col')) || existingStats[0];
-existingStats.forEach((c) => { if (c !== keepStats) c.remove(); });
+if (this._ihfStatsEl) {
+root.querySelectorAll('.ihf-stats-clone').forEach((c) => { if (c !== this._ihfStatsEl) c.remove(); });
 if (statsRow) { statsRow.dataset.ihfCloned = '1'; statsRow.style.setProperty('display', 'none', 'important'); }
+} else if (statsRow) {
+root.querySelectorAll('.ihf-stats-clone').forEach((c) => c.remove());
+delete statsRow.dataset.ihfCloned;
 }
 if (statsRow && !statsRow.dataset.ihfCloned) {
       statsRow.dataset.ihfCloned = '1';
@@ -793,7 +794,8 @@ if (statsRow && !statsRow.dataset.ihfCloned) {
         cloneRow.appendChild(cellDiv);
       });
       statsRow.style.setProperty('display', 'none', 'important');
-      statsRow.parentElement.insertBefore(cloneRow, statsRow.nextSibling);
+statsRow.parentElement.insertBefore(cloneRow, statsRow.nextSibling);
+this._ihfStatsEl = cloneRow;
     }
     const cloneRowEl = root.querySelector('.ihf-stats-clone');
     if (cloneRowEl && !cloneRowEl.dataset.ihfLotAdded) {
@@ -855,9 +857,10 @@ delete headerClone.dataset.ihfRowBuilt;
       headerClone.style.setProperty('flex', '1 1 auto', 'important');
       headerClone.style.setProperty('min-width', '0', 'important');
       topRow.appendChild(headerClone);
-const statsClone = root.querySelector('.ihf-stats-clone');
+const statsClone = this._ihfStatsEl || root.querySelector('.ihf-stats-clone');
       if (statsClone) headerClone.appendChild(statsClone);
-      const vtCell = statsClone && statsClone.querySelector('[data-ihf-vt]');
+if (!this._ihfVtEl && statsClone) this._ihfVtEl = statsClone.querySelector('[data-ihf-vt]');
+const vtCell = this._ihfVtEl;
 const actionRow = document.createElement('div');
 actionRow.dataset.ihfActions = '1';
 actionRow.style.cssText = 'display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:12px;';
