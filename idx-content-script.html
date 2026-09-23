@@ -759,7 +759,6 @@ const primaryNum = parseFloat(((cloneRowEl._sqftCellEl.textContent || '').match(
 if (primaryNum && lotSqft && Math.abs(primaryNum - lotSqft) / lotSqft < 0.02) cloneRowEl._sqftCellEl.style.setProperty('display', 'none', 'important');
 }
 }
-if (header && header.dataset.ihfRowBuilt && !root.querySelector('.ihf-info-col')) { delete header.dataset.ihfRowBuilt; header.style.removeProperty('display'); }
 if (header && statsRow && !header.dataset.ihfRowBuilt) {
 header.dataset.ihfRowBuilt = '1';
 const col = document.createElement('div');
