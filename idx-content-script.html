@@ -648,6 +648,8 @@ img.style.setProperty('height', CAROUSEL_PX + 'px', 'important');
 img.style.setProperty('object-fit', 'cover', 'important');
 img.style.setProperty('background', '#ffffff', 'important');
 img.style.setProperty('width', '100%', 'important');
+img.style.setProperty('max-width', 'none', 'important');
+img.style.setProperty('display', 'block', 'important');
 let n = img.parentElement;
 for (let i = 0; i < 6 && n && n !== carousel; i++) {
 n.style.setProperty('height', CAROUSEL_PX + 'px', 'important');
@@ -656,6 +658,10 @@ n.style.setProperty('min-height', CAROUSEL_PX + 'px', 'important');
 n.style.setProperty('padding', '0', 'important');
 n.style.setProperty('margin', '0', 'important');
 n.style.setProperty('box-sizing', 'border-box', 'important');
+n.style.setProperty('width', '100%', 'important');
+n.style.setProperty('max-width', 'none', 'important');
+n.style.setProperty('background', 'transparent', 'important');
+if (n.tagName === 'LI') break;
 n = n.parentElement;
 }
 });
@@ -666,7 +672,13 @@ requestAnimationFrame(() => window.dispatchEvent(new Event('resize')));
 }
 }
 const statsRow = root.querySelector('.listing-attributes');
-if (statsRow && statsRow.dataset.ihfCloned && !root.querySelector('.ihf-stats-clone')) { delete statsRow.dataset.ihfCloned; }
+if (this._ihfStatsEl) {
+root.querySelectorAll('.ihf-stats-clone').forEach((c) => { if (c !== this._ihfStatsEl) c.remove(); });
+if (statsRow) { statsRow.dataset.ihfCloned = '1'; statsRow.style.setProperty('display', 'none', 'important'); }
+} else if (statsRow) {
+root.querySelectorAll('.ihf-stats-clone').forEach((c) => c.remove());
+delete statsRow.dataset.ihfCloned;
+}
 if (statsRow && !statsRow.dataset.ihfCloned) {
 statsRow.dataset.ihfCloned = '1';
 const origCells = Array.from(statsRow.children);
@@ -704,7 +716,7 @@ return { type: 'sqft', text: n ? n[1] + ' S\u200Dq. Ft.' : r };
 if (/type$/i.test(r)) return { type: 'home', text: r.replace(/\s*type$/i, '').trim() };
 return { type: 'other', text: r };
 };
-cloneRow.style.cssText = 'display:flex;column-gap:22px;row-gap:10px;flex-wrap:wrap;justify-content:flex-start;align-items:center;margin:10px 0 4px;';
+cloneRow.style.cssText = 'display:flex;column-gap:22px;row-gap:10px;flex-wrap:wrap;justify-content:flex-start;align-items:center;margin:0 0 8px;';
 origCells.forEach((origCell) => {
 const fmt = formatStat(origCell.textContent || '');
 const text = fmt.text;
@@ -733,6 +745,7 @@ cloneRow.appendChild(cellDiv);
 });
 statsRow.style.setProperty('display', 'none', 'important');
 statsRow.parentElement.insertBefore(cloneRow, statsRow.nextSibling);
+this._ihfStatsEl = cloneRow;
 }
 const cloneRowEl = root.querySelector('.ihf-stats-clone');
 if (cloneRowEl && !cloneRowEl.dataset.ihfLotAdded) {
@@ -786,7 +799,7 @@ if (ca1 && ca2) {
 const one = document.createElement('p');
 one.className = 'ihf-address-oneline';
 one.textContent = (ca1.textContent || '').trim() + ', ' + (ca2.textContent || '').trim();
-one.style.cssText = 'font-size:20px;font-weight:400;margin:3px 0 6px;padding:0;line-height:1.3;text-align:left;';
+one.style.cssText = 'font-size:20px;font-weight:400;margin:12px 0 16px;padding:0;line-height:1.3;text-align:left;';
 ca1.parentElement.insertBefore(one, ca1);
 ca1.style.setProperty('display', 'none', 'important');
 ca2.style.setProperty('display', 'none', 'important');
@@ -794,12 +807,13 @@ ca2.style.setProperty('display', 'none', 'important');
 headerClone.style.setProperty('flex', '1 1 auto', 'important');
 headerClone.style.setProperty('min-width', '0', 'important');
 topRow.appendChild(headerClone);
-const statsClone = statsRow.parentElement.querySelector('.ihf-stats-clone');
+const statsClone = this._ihfStatsEl || root.querySelector('.ihf-stats-clone');
 if (statsClone) headerClone.appendChild(statsClone);
-const vtCell = statsClone && statsClone.querySelector('[data-ihf-vt]');
+if (!this._ihfVtEl && statsClone) this._ihfVtEl = statsClone.querySelector('[data-ihf-vt]');
+const vtCell = this._ihfVtEl;
 const actionRow = document.createElement('div');
 actionRow.dataset.ihfActions = '1';
-actionRow.style.cssText = 'display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:12px;';
+actionRow.style.cssText = 'display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:22px;';
 if (vtCell) { vtCell.style.setProperty('margin-top', '0'); actionRow.appendChild(vtCell); }
 try { this._ihfBuildActionButtons(root, actionRow); } catch (e) { console.error('[ihf] action buttons', e); }
 headerClone.appendChild(actionRow);
