@@ -678,7 +678,7 @@ const badgeTextEl = allLeaves.find((el) => /^(Active|Pending|Sold|Contingent|Com
       carousel.style.setProperty('clip-path', 'inset(0)', 'important');
       carousel.style.setProperty('background', '#ffffff', 'important');
       carousel.style.setProperty('max-width', '1300px', 'important');
-      carousel.style.setProperty('margin', '0 auto', 'important');
+      carousel.style.setProperty('margin', '40px auto 0', 'important');
       carousel.style.setProperty('position', 'relative', 'important');
       if (carousel.parentElement) {
         carousel.parentElement.style.setProperty('max-width', '1300px', 'important');
@@ -815,7 +815,8 @@ const badgeTextEl = allLeaves.find((el) => /^(Active|Pending|Sold|Contingent|Com
         if (primaryNum && lotSqft && Math.abs(primaryNum - lotSqft) / lotSqft < 0.02) cloneRowEl._sqftCellEl.style.setProperty('display', 'none', 'important');
       }
     }
-    if (header && statsRow && !header.dataset.ihfRowBuilt) {
+    if (header && header.dataset.ihfRowBuilt && !root.querySelector('.ihf-info-col')) { delete header.dataset.ihfRowBuilt; header.style.removeProperty('display'); }
+if (header && statsRow && !header.dataset.ihfRowBuilt) {
       header.dataset.ihfRowBuilt = '1';
       const col = document.createElement('div');
       col.className = 'ihf-info-col';
@@ -845,7 +846,7 @@ const actionRow = document.createElement('div');
 actionRow.dataset.ihfActions = '1';
 actionRow.style.cssText = 'display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:12px;';
 if (vtCell) { vtCell.style.setProperty('margin-top', '0'); actionRow.appendChild(vtCell); }
-this._ihfBuildActionButtons(root, actionRow);
+try { this._ihfBuildActionButtons(root, actionRow); } catch (e) { console.error('[ihf] action buttons', e); }
 headerClone.appendChild(actionRow);
       col.appendChild(topRow);
       statsRow.style.setProperty('flex', 'none', 'important');
