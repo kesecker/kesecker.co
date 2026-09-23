@@ -311,6 +311,8 @@ body, body *,
   background-size: 0 2px !important;
   transition: background-size 0.3s ease !important;
   white-space: nowrap !important;
+  padding-right: 32px !important;
+  box-sizing: content-box !important;
 }
 [role="menu"] li:hover,
 [role="listbox"] li:hover,

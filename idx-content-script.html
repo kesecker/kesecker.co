@@ -112,6 +112,34 @@ setTimeout(() => { ul.style.removeProperty('transition'); ul.style.removePropert
 left.addEventListener('click', handle(-1), true);
 right.addEventListener('click', handle(1), true);
 };
+_ihfAddDaysOnMarket = (root) => {
+const heading = Array.from(root.querySelectorAll('*')).find((el) => el.children.length === 0 && /^additional information$/i.test((el.textContent || '').trim()));
+if (!heading) return;
+let section = heading.parentElement;
+for (let i = 0; i < 6 && section && !this._ihfFindPairWrappers(section).length; i++) section = section.parentElement;
+if (!section || section.dataset.ihfDomAdded) return;
+const pairs = this._ihfFindPairWrappers(section);
+if (!pairs.length) return;
+const all = this._ihfFindPairWrappers(root);
+if (all.some((w) => /days on (market|site)|^dom$/i.test((w.children[0].textContent || '').trim()))) { section.dataset.ihfDomAdded = '1'; return; }
+let days = null;
+const dateW = all.find((w) => /(list(ing)?|on market)\s*date|date listed/i.test((w.children[0].textContent || '').trim()));
+if (dateW) {
+const d = new Date((dateW.children[1].textContent || '').trim());
+if (!isNaN(d)) days = Math.max(0, Math.floor((Date.now() - d.getTime()) / 86400000));
+}
+if (days === null) {
+const leaf = Array.from(root.querySelectorAll('*')).find((el) => el.children.length === 0 && /\b(\d+)\s+days?\s+(on (market|site)|ago)\b/i.test(el.textContent || ''));
+if (leaf) days = parseInt((leaf.textContent.match(/(\d+)\s+days?/i) || [])[1], 10);
+}
+if (days === null || isNaN(days)) return;
+section.dataset.ihfDomAdded = '1';
+const tpl = pairs[0];
+const pair = tpl.cloneNode(true);
+pair.children[0].textContent = 'Days on Market';
+pair.children[1].textContent = days + (days === 1 ? ' day' : ' days');
+tpl.parentElement.insertBefore(pair, tpl);
+};
 _ihfAddCarouselHeart = (root) => {
 const carousel = root.querySelector('.listing-photo-carousel');
 if (!carousel) return;
@@ -296,6 +324,7 @@ try { this._ihfTraceHearts(root); } catch (e) { console.error('_ihfTraceHearts',
 try { this._ihfReplaceMap(root); } catch (e) { console.error('_ihfReplaceMap', e); }
 try { this._ihfBoldFeatureLabels(root); } catch (e) { console.error('_ihfBoldFeatureLabels', e); }
 try { this._ihfAddCarouselHeart(root); } catch (e) { console.error('_ihfAddCarouselHeart', e); }
+try { this._ihfAddDaysOnMarket(root); } catch (e) { console.error('_ihfAddDaysOnMarket', e); }
 try { this._ihfFixCarouselWrap(root); } catch (e) { console.error('_ihfFixCarouselWrap', e); }
 try { this._ihfFixDetailLayout(root); } catch (e) { console.error('_ihfFixDetailLayout', e); }
 try { this._ihfBuildScrollNav(root); } catch (e) { console.error('_ihfBuildScrollNav', e); }
@@ -574,11 +603,11 @@ const origCells = Array.from(statsRow.children);
 const cloneRow = document.createElement('div');
 cloneRow.className = 'ihf-stats-clone';
 cloneRow.style.cssText = 'display:flex;gap:28px;flex-wrap:wrap;justify-content:flex-start;flex-shrink:0;';
-const bedIcon = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20v-8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8"/><path d="M4 10V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4"/><path d="M12 4v6"/><path d="M2 18h20"/></svg>';
-const bathIcon = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6 6.5 3.5a1.5 1.5 0 0 0-1-.5C4.68 3 4 3.68 4 4.5V17a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/><path d="M10 5 8 7"/><path d="M2 12h20"/><path d="M7 19v2"/><path d="M17 19v2"/></svg>';
-const sqftIcon = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/></svg>';
-const houseIcon = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>';
-const lotIcon = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 20h18"/><path d="M4 20V9l5-3 5 3 6-2v13"/><path d="M9 20v-5h4v5"/></svg>';
+const bedIcon = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20v-8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8"/><path d="M4 10V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4"/><path d="M12 4v6"/><path d="M2 18h20"/></svg>';
+const bathIcon = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6 6.5 3.5a1.5 1.5 0 0 0-1-.5C4.68 3 4 3.68 4 4.5V17a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5"/><path d="M10 5 8 7"/><path d="M2 12h20"/><path d="M7 19v2"/><path d="M17 19v2"/></svg>';
+const sqftIcon = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M9 21H3v-6"/><path d="M21 3l-7 7"/><path d="M3 21l7-7"/></svg>';
+const houseIcon = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>';
+const lotIcon = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 20h18"/><path d="M4 20V9l5-3 5 3 6-2v13"/><path d="M9 20v-5h4v5"/></svg>';
 const formatStat = (raw) => {
 const r = raw.replace(/\s+/g, ' ').trim();
 if (/bath/i.test(r)) {
@@ -605,12 +634,12 @@ return { type: 'sqft', text: n ? n[1] + ' S\u200Dq. Ft.' : r };
 if (/type$/i.test(r)) return { type: 'home', text: r.replace(/\s*type$/i, '').trim() };
 return { type: 'other', text: r };
 };
-cloneRow.style.cssText = 'display:flex;column-gap:28px;row-gap:14px;flex-wrap:wrap;justify-content:flex-end;align-items:center;flex:0 1 auto;max-width:62%;margin-left:auto;padding-top:6px;';
+cloneRow.style.cssText = 'display:flex;column-gap:22px;row-gap:10px;flex-wrap:wrap;justify-content:flex-start;align-items:center;margin:10px 0 4px;';
 origCells.forEach((origCell) => {
 const fmt = formatStat(origCell.textContent || '');
 const text = fmt.text;
 const cellDiv = document.createElement('div');
-cellDiv.style.cssText = 'font-size:17px;color:var(--rh-text-primary);display:flex;align-items:center;gap:10px;white-space:nowrap;';
+cellDiv.style.cssText = 'font-size:14px;color:var(--rh-text-primary);display:flex;align-items:center;gap:7px;white-space:nowrap;';
 let icon = '';
 if (fmt.type === 'bed') icon = bedIcon;
 else if (fmt.type === 'bath') icon = bathIcon;
@@ -644,7 +673,7 @@ const li = lotIdxs.find(isSqftCand) ?? (lotIdxs.length ? lotIdxs[0] : -1);
 const lotValue = li >= 0 ? (leaves[li + 1].textContent || '').trim() : '';
 if (lotValue && /\d/.test(lotValue) && cloneRowEl._sqftCellEl) {
 cloneRowEl.dataset.ihfLotAdded = '1';
-const lotIcon2 = '<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 20h18"/><path d="M4 20V9l5-3 5 3 6-2v13"/><path d="M9 20v-5h4v5"/></svg>';
+const lotIcon2 = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 20h18"/><path d="M4 20V9l5-3 5 3 6-2v13"/><path d="M9 20v-5h4v5"/></svg>';
 const lotLabel = (leaves[li].textContent || '');
 const lotNum = parseFloat(lotValue.replace(/,/g, ''));
 const isAcres = /acre/i.test(lotLabel + ' ' + lotValue) || (!/sq|ft/i.test(lotValue) && lotNum < 100 && /\./.test(lotValue));
@@ -654,7 +683,7 @@ const lotText = lotAcres >= 1
 ? (Math.round(lotAcres * 100) / 100).toLocaleString('en-US') + ' Acre' + (lotAcres === 1 ? '' : 's') + ' Lot'
 : lotSqft.toLocaleString('en-US') + ' S\u200Dq. Ft. Lot';
 const lotCell = document.createElement('div');
-lotCell.style.cssText = 'font-size:17px;color:var(--rh-text-primary);display:flex;align-items:center;gap:10px;white-space:nowrap;';
+lotCell.style.cssText = 'font-size:14px;color:var(--rh-text-primary);display:flex;align-items:center;gap:7px;white-space:nowrap;';
 lotCell.innerHTML = lotIcon2 + '<span>' + lotText + '</span>';
 cloneRowEl._sqftCellEl.parentElement.insertBefore(lotCell, cloneRowEl._sqftCellEl.nextSibling);
 const primaryNum = parseFloat(((cloneRowEl._sqftCellEl.textContent || '').match(/[\d,]+/) || ['0'])[0].replace(/,/g, ''));
@@ -685,7 +714,7 @@ headerClone.style.setProperty('flex', '1 1 auto', 'important');
 headerClone.style.setProperty('min-width', '0', 'important');
 topRow.appendChild(headerClone);
 const statsClone = statsRow.parentElement.querySelector('.ihf-stats-clone');
-if (statsClone) topRow.appendChild(statsClone);
+if (statsClone) headerClone.appendChild(statsClone);
 const vtCell = statsClone && statsClone.querySelector('[data-ihf-vt]');
 if (vtCell) { vtCell.style.setProperty('margin-top', '12px'); headerClone.appendChild(vtCell); }
 col.appendChild(topRow);
