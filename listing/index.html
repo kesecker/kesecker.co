@@ -1171,9 +1171,10 @@ findAllMatches('Share').filter((s) => !s.closest('[data-ihf-own], [data-ihf-acti
     const check = () => {
       const host = node.querySelector('div.ihf-container');
       const sr = host && host.shadowRoot;
-      const ready = sr && (sr.querySelector('.ihf-info-col') || (sr.querySelector('.listing-photo-carousel') && Date.now() - start > 1500));
-      if (ready) { reveal(); return; }
-      if (Date.now() - start > 3000) { reveal(); return; }
+      const spinning = sr && sr.querySelector('[role="progressbar"], [class*="CircularProgress" i], [class*="spinner" i], [class*="loading" i]');
+      const ready = sr && !spinning && (sr.querySelector('.ihf-info-col') || (sr.querySelector('.listing-photo-carousel') && Date.now() - start > 1500));
+      if (ready) { setTimeout(reveal, 120); return; }
+      if (Date.now() - start > 3500) { reveal(); return; }
       setTimeout(check, 50);
     };
     check();
