@@ -645,7 +645,7 @@ el.style.setProperty('min-height', CAROUSEL_PX + 'px', 'important');
 });
 carousel.querySelectorAll('li.slide img').forEach((img) => {
 img.style.setProperty('height', CAROUSEL_PX + 'px', 'important');
-img.style.setProperty('object-fit', 'contain', 'important');
+img.style.setProperty('object-fit', 'cover', 'important');
 img.style.setProperty('background', '#ffffff', 'important');
 img.style.setProperty('width', '100%', 'important');
 let n = img.parentElement;
@@ -666,6 +666,12 @@ requestAnimationFrame(() => window.dispatchEvent(new Event('resize')));
 }
 }
 const statsRow = root.querySelector('.listing-attributes');
+const existingStats = Array.from(root.querySelectorAll('.ihf-stats-clone'));
+if (existingStats.length) {
+const keepStats = existingStats.find((c) => c.closest('.ihf-info-col')) || existingStats[0];
+existingStats.forEach((c) => { if (c !== keepStats) c.remove(); });
+if (statsRow) { statsRow.dataset.ihfCloned = '1'; statsRow.style.setProperty('display', 'none', 'important'); }
+}
 if (statsRow && !statsRow.dataset.ihfCloned) {
 statsRow.dataset.ihfCloned = '1';
 const origCells = Array.from(statsRow.children);
@@ -793,7 +799,7 @@ ca2.style.setProperty('display', 'none', 'important');
 headerClone.style.setProperty('flex', '1 1 auto', 'important');
 headerClone.style.setProperty('min-width', '0', 'important');
 topRow.appendChild(headerClone);
-const statsClone = statsRow.parentElement.querySelector('.ihf-stats-clone');
+const statsClone = root.querySelector('.ihf-stats-clone');
 if (statsClone) headerClone.appendChild(statsClone);
 const vtCell = statsClone && statsClone.querySelector('[data-ihf-vt]');
 const actionRow = document.createElement('div');
