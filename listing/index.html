@@ -76,7 +76,7 @@
   </div>
 
   <div style="height: calc(100vh - 92px); overflow-y: auto; scroll-behavior: smooth; position: relative;">
-    <div id="ihf-listing-detail" ref="{{ ihfListingDetailRef }}" style="width: 100%; min-height: 100%; padding: 0 36px 24px; box-sizing: border-box; opacity: 0; transition: opacity 0.35s ease;"></div>
+    <div id="ihf-listing-detail" ref="{{ ihfListingDetailRef }}" style="width: 100%; min-height: 100%; padding: 0 36px 24px; box-sizing: border-box; opacity: 0; transition: opacity 0.25s ease;"></div>
   </div>
 
   <div style="position: fixed; right: 96px; bottom: 24px; z-index: 300;">
@@ -1168,10 +1168,10 @@ findAllMatches('Share').filter((s) => !s.closest('[data-ihf-own], [data-ihf-acti
     const check = () => {
       const host = node.querySelector('div.ihf-container');
       const sr = host && host.shadowRoot;
-      const ready = sr && sr.querySelector('.listing-photo-carousel img') && (sr.querySelector('.ihf-info-col') || Date.now() - start > 4000);
-      if (ready) { setTimeout(reveal, 150); return; }
-      if (Date.now() - start > 9000) { reveal(); return; }
-      setTimeout(check, 100);
+      const ready = sr && (sr.querySelector('.ihf-info-col') || (sr.querySelector('.listing-photo-carousel') && Date.now() - start > 1500));
+      if (ready) { reveal(); return; }
+      if (Date.now() - start > 3000) { reveal(); return; }
+      setTimeout(check, 50);
     };
     check();
   };
