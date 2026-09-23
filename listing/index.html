@@ -80,7 +80,7 @@
   </div>
 
   <div style="position: fixed; right: 96px; bottom: 24px; z-index: 300;">
-    <button onClick="{{ openContactModal }}" style="height: 56px; padding: 0 22px; border-radius: 28px; background: #1a1a1a; color: #ffffff; border: none; cursor: pointer; font-family: 'Montserrat', system-ui, sans-serif; font-weight: 600; font-size: 14px; white-space: nowrap; box-shadow: 0 4px 16px rgba(0,0,0,0.25); transition: background 0.2s ease;" style-hover="background: #000000;">Schedule a Tour</button>
+    <button onClick="{{ openContactModal }}" style="height: 56px; padding: 0 22px; border-radius: 28px; background: #1a1a1a; color: #ffffff; border: none; cursor: pointer; font-family: 'Montserrat', system-ui, sans-serif; font-weight: 600; font-size: 14px; white-space: nowrap; box-shadow: 0 4px 16px rgba(0,0,0,0.25); transition: background 0.2s ease, color 0.2s ease;" style-hover="background: #ffffff; color: #1a1a1a;">Schedule a Tour</button>
   </div>
 
   <sc-if value="{{ isPhoneOpen }}" hint-placeholder-val="{{ false }}">
@@ -94,7 +94,7 @@
       <p style="margin: 0 0 16px; text-align: center;"><a href="tel:+18318210398" style="font-size: 22px; font-weight: 700; color: #ffffff; text-decoration: none;">(831) 821-0398</a></p>
       <p style="font-size: 11px; line-height: 1.6; color: rgba(255,255,255,0.55); text-align: center; margin: 0;">I agree to be contacted by Jackson Kesecker via text, call &amp; email.</p>
     </div>
-    <button onClick="{{ togglePhonePopup }}" aria-label="Call or text" style="width: 56px; height: 56px; border-radius: 50%; background: #1a1a1a; color: #ffffff; border: none; padding: 0; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 6px 20px rgba(0,0,0,0.3);">
+    <button onClick="{{ togglePhonePopup }}" aria-label="Call or text" style="width: 56px; height: 56px; border-radius: 50%; background: #1a1a1a; color: #ffffff; border: none; padding: 0; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 6px 20px rgba(0,0,0,0.3); transition: background 0.2s ease, color 0.2s ease;" style-hover="background: #ffffff; color: #1a1a1a;">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
     </button>
   </div>
@@ -195,12 +195,83 @@ class Component extends DCLogic {
   pair.children[1].textContent = days + (days === 1 ? ' day' : ' days');
   tpl.parentElement.insertBefore(pair, tpl);
   };
+  _ihfSetSavedUI = (root, on) => {
+  const heart = root.querySelector('[data-ihf-heart]');
+  if (heart) {
+  heart.dataset.ihfLocalSaved = on ? '1' : '0';
+  const p = heart.querySelector('path');
+  if (p) { p.setAttribute('fill', on ? '#e53935' : 'none'); p.setAttribute('stroke', on ? '#e53935' : '#ffffff'); }
+  }
+  const sb = root.querySelector('.ihf-save-btn');
+  if (sb) { sb.dataset.saved = on ? '1' : '0'; const s = sb.querySelector('span'); if (s) s.textContent = on ? 'Saved' : 'Save'; }
+  };
+  _ihfEnsureBtnStyle = (root) => {
+  const host = root === document ? document.head : root;
+  if (host.querySelector('style[data-ihf-btn-style]')) return;
+  const st = document.createElement('style');
+  st.dataset.ihfBtnStyle = '1';
+  st.textContent = '.ihf-invert-btn{font-family:inherit;font-size:14px;padding:8px 16px;border-radius:6px;border:1px solid #1a1a1a;cursor:pointer;background:#1a1a1a;color:#ffffff;display:inline-flex;align-items:center;gap:8px;line-height:1.2;transition:background .2s ease,color .2s ease;}'
+  + '.ihf-invert-btn:hover{background:#ffffff;color:#1a1a1a;}'
+  + '.ihf-save-btn path{stroke-dasharray:100;stroke-dashoffset:0;transition:fill .2s ease,stroke .2s ease;}'
+  + '.ihf-save-btn:hover path{animation:ihfHeartTrace .7s ease forwards;stroke:#e53935;}'
+  + '.ihf-save-btn[data-saved="1"] path{fill:#e53935;stroke:#e53935;}'
+  + '@keyframes ihfHeartTrace{from{stroke-dashoffset:100}to{stroke-dashoffset:0}}'
+  + '.ihf-share-btn svg{transition:transform .25s ease;}'
+  + '.ihf-share-btn:hover svg{transform:translateY(-2px);}';
+  host.appendChild(st);
+  };
+  _ihfBuildActionButtons = (root, row) => {
+  this._ihfEnsureBtnStyle(root);
+  const all = Array.from(root.querySelectorAll('*'));
+  const pick = (re) => {
+  const m = all.filter((el) => re.test((el.textContent || '').trim()) && !el.closest('[role="dialog"], [data-ihf-own]'));
+  return m.length ? m.reduce((a, b) => (a.querySelectorAll('*').length <= b.querySelectorAll('*').length ? a : b)) : null;
+  };
+  const clickNative = (re) => { const b = pick(re); const c = b && (b.closest('button, a, [role="button"]') || b); if (c) c.click(); };
+  const save = document.createElement('button');
+  save.type = 'button';
+  save.className = 'ihf-invert-btn ihf-save-btn';
+  save.dataset.ihfOwn = '1';
+  save.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path pathLength="100" d="M12 21s-7.5-4.6-10-9C.3 8.5 2 4 6 4c2.2 0 3.8 1.3 6 4 2.2-2.7 3.8-4 6-4 4 0 5.7 4.5 4 8-2.5 4.4-10 9-10 9z"/></svg><span>Save</span>';
+  save.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); clickNative(/^(save|saved)$/i); this._ihfSetSavedUI(root, save.dataset.saved !== '1'); });
+  const share = document.createElement('button');
+  share.type = 'button';
+  share.className = 'ihf-invert-btn ihf-share-btn';
+  share.dataset.ihfOwn = '1';
+  share.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/><path d="M16 6l-4-4-4 4"/><path d="M12 2v13"/></svg><span>Share</span>';
+  share.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); clickNative(/^share$/i); });
+  row.appendChild(save);
+  row.appendChild(share);
+  const nativeSave = pick(/^(save|saved)$/i);
+  if (nativeSave && /^saved$/i.test((nativeSave.textContent || '').trim())) this._ihfSetSavedUI(root, true);
+  };
+  _ihfBuildOpenHouses = (root) => {
+  const dayRe = /^(Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day,?\s+[A-Za-z]{3,9}\.?\s+\d{1,2}$/i;
+  const dates = Array.from(root.querySelectorAll('*')).filter((el) => el.children.length === 0 && dayRe.test((el.textContent || '').trim()) && !el.closest('.similar-listings, [class*="listing-result" i], [role="dialog"]'));
+  if (!dates.length) return;
+  let c = dates[0].parentElement;
+  while (c && !dates.every((d) => c.contains(d))) c = c.parentElement;
+  if (!c) return;
+  while (c.parentElement && c.parentElement.children.length === 1 && !c.parentElement.classList.contains('listing-section')) c = c.parentElement;
+  if (c.dataset.ihfOh) return;
+  c.dataset.ihfOh = '1';
+  c.style.setProperty('display', 'flex', 'important');
+  c.style.setProperty('flex-wrap', 'wrap', 'important');
+  c.style.setProperty('justify-content', 'center', 'important');
+  c.style.setProperty('gap', '16px 56px', 'important');
+  c.style.setProperty('width', '100%', 'important');
+  const head = document.createElement('div');
+  head.dataset.ihfOwn = '1';
+  head.style.cssText = 'width:100%;margin:48px 0 20px;';
+  head.innerHTML = '<h2 style="margin:0 0 14px;text-align:center;font-size:26px;line-height:1.25;color:#1a1a1a;">Open Houses</h2><div style="height:1px;background:#1a1a1a;width:100%;"></div>';
+  c.parentElement.insertBefore(head, c);
+  };
   _ihfAddCarouselHeart = (root) => {
     const carousel = root.querySelector('.listing-photo-carousel');
     if (!carousel) return;
     const all = Array.from(root.querySelectorAll('*'));
     const pick = (re) => {
-      const m = all.filter((el) => re.test((el.textContent || '').trim()) && !el.closest('[role="dialog"]'));
+      const m = all.filter((el) => re.test((el.textContent || '').trim()) && !el.closest('[role="dialog"], [data-ihf-own]'));
       return m.length ? m.reduce((a, b) => (a.querySelectorAll('*').length <= b.querySelectorAll('*').length ? a : b)) : null;
     };
     const saveBtn = pick(/^(save|saved)$/i);
@@ -222,10 +293,7 @@ class Component extends DCLogic {
         const btn = pick(/^(save|saved)$/i);
         const clickable = btn && (btn.closest('button, a, [role="button"]') || btn);
         if (clickable) clickable.click();
-        heart.dataset.ihfLocalSaved = heart.dataset.ihfLocalSaved === '1' ? '0' : '1';
-        const path = heart.querySelector('path');
-        if (path) path.setAttribute('fill', heart.dataset.ihfLocalSaved === '1' ? '#e53935' : 'none');
-        if (path) path.setAttribute('stroke', heart.dataset.ihfLocalSaved === '1' ? '#e53935' : '#ffffff');
+this._ihfSetSavedUI(root, heart.dataset.ihfLocalSaved !== '1');
       });
       carousel.appendChild(heart);
     }
@@ -381,6 +449,7 @@ class Component extends DCLogic {
     try { this._ihfBoldFeatureLabels(root); } catch (e) { console.error('_ihfBoldFeatureLabels', e); }
     try { this._ihfAddCarouselHeart(root); } catch (e) { console.error('_ihfAddCarouselHeart', e); }
 try { this._ihfAddDaysOnMarket(root); } catch (e) { console.error('_ihfAddDaysOnMarket', e); }
+try { this._ihfBuildOpenHouses(root); } catch (e) { console.error('_ihfBuildOpenHouses', e); }
 try { this._ihfFixCarouselWrap(root); } catch (e) { console.error('_ihfFixCarouselWrap', e); }
     try { this._ihfFixDetailLayout(root); } catch (e) { console.error('_ihfFixDetailLayout', e); }
     try { this._ihfBuildScrollNav(root); } catch (e) { console.error('_ihfBuildScrollNav', e); }
@@ -521,7 +590,7 @@ try { this._ihfFixCarouselWrap(root); } catch (e) { console.error('_ihfFixCarous
       if (addr2) addr2.style.setProperty('font-size', '18px', 'important');
     }
     const allLeaves = Array.from(root.querySelectorAll('*')).filter((el) => !el.children.length);
-    const badgeTextEl = allLeaves.find((el) => /^(Active|Pending|Sold|Contingent|Coming Soon)$/i.test((el.textContent || '').trim()));
+const badgeTextEl = allLeaves.find((el) => /^(Active|Pending|Sold|Contingent|Coming Soon)$/i.test((el.textContent || '').trim()) && !el.closest('.similar-listings, [class*="listing-result" i], [class*="gallery" i]'));
     if (badgeTextEl) {
       badgeTextEl.style.setProperty('background-color', '#ffffff', 'important');
       badgeTextEl.style.setProperty('color', '#1a1a1a', 'important');
@@ -705,7 +774,7 @@ try { this._ihfFixCarouselWrap(root); } catch (e) { console.error('_ihfFixCarous
         if (isVirtualTour) {
           cellDiv.dataset.ihfVt = '1';
           cellDiv.style.cssText = 'display:inline-flex;align-items:center;';
-          cellDiv.innerHTML = '<button type="button" style="font-family:inherit;font-size:14px;font-weight:600;padding:8px 16px;border-radius:6px;border:none;cursor:pointer;background:#1a1a1a;color:#ffffff;">' + text + '</button>';
+          cellDiv.innerHTML = '<button type="button" class="ihf-invert-btn">' + text + '</button>';
         } else {
           cellDiv.innerHTML = icon + '<span>' + text + '</span>';
           if (fmt.type === 'sqft') cloneRow._sqftCellEl = cellDiv;
@@ -772,7 +841,12 @@ try { this._ihfFixCarouselWrap(root); } catch (e) { console.error('_ihfFixCarous
       const statsClone = statsRow.parentElement.querySelector('.ihf-stats-clone');
       if (statsClone) headerClone.appendChild(statsClone);
       const vtCell = statsClone && statsClone.querySelector('[data-ihf-vt]');
-      if (vtCell) { vtCell.style.setProperty('margin-top', '12px'); headerClone.appendChild(vtCell); }
+const actionRow = document.createElement('div');
+actionRow.dataset.ihfActions = '1';
+actionRow.style.cssText = 'display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:12px;';
+if (vtCell) { vtCell.style.setProperty('margin-top', '0'); actionRow.appendChild(vtCell); }
+this._ihfBuildActionButtons(root, actionRow);
+headerClone.appendChild(actionRow);
       col.appendChild(topRow);
       statsRow.style.setProperty('flex', 'none', 'important');
       statsRow.style.setProperty('max-width', '100%', 'important');
