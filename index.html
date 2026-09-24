@@ -773,6 +773,7 @@ class Component extends DCLogic {
       const setRate = () => { el.playbackRate = 1.239; };
       el.addEventListener('loadedmetadata', setRate);
       el.addEventListener('playing', setRate);
+      el.addEventListener('timeupdate', this.handleIntroTimeUpdate);
       try { el.load(); } catch (e) {}
       setRate();
       const p = el.play();
@@ -811,7 +812,15 @@ class Component extends DCLogic {
       this.setState({ isIntroVisible: false, isIntroFading: false });
     }, 350);
   };
-  handleIntroTimeUpdate = () => {};
+  handleIntroTimeUpdate = (e) => {
+    const v = (e && e.currentTarget && e.currentTarget.duration !== undefined) ? e.currentTarget : (this.introVideoRef && this.introVideoRef.current);
+    if (!v || !isFinite(v.duration) || this._introEarlyDone) return;
+    const rate = v.playbackRate || 1;
+    if ((v.duration - v.currentTime) / rate <= 1) {
+      this._introEarlyDone = true;
+      if (this.state.isIntroVisible && !this.state.isIntroFading) this.dismissIntro();
+    }
+  };
   introSkipHoverEnter = () => this.setState({ introSkipHover: true });
   introSkipHoverLeave = () => this.setState({ introSkipHover: false });
   getInTouchHoverEnter = () => this.setState({ getInTouchHover: true });
