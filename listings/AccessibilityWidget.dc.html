@@ -16,7 +16,7 @@
   </style>
 </helmet>
 
-<div style="{{ a11yButtonWrapStyle }} z-index: 100;">
+<div style="{{ a11yButtonWrapStyle }} z-index: 2147483010;">
   <button aria-label="Accessibility options" onClick="{{ toggleA11yPanel }}" style="width: 56px; height: 56px; border-radius: 50%; background: #1a1a1a; color: #ffffff; border: none; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(0,0,0,0.4); cursor: pointer; padding: 0; transition: background 0.2s ease, color 0.2s ease;" style-hover="background: #ffffff; color: #1a1a1a;">
     <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
       <circle cx="12" cy="5.2" r="1.8" fill="currentColor"></circle>
@@ -27,8 +27,8 @@
   </button>
 </div>
 
-<div onClick="{{ closeA11yPanel }}" style="{{ a11yOverlayStyle }} position: fixed; inset: 0; z-index: 399; background: transparent;"></div>
-<div id="a11y-panel" onClick="{{ stopPropagation }}" style="position: fixed; z-index: 400; width: 380px; max-width: calc(100vw - 32px); overflow-y: auto; {{ a11yPanelStyle }} {{ a11yPanelFadeStyle }} background: #ffffff; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.35); font-family: var(--rh-font);">
+<div onClick="{{ closeA11yPanel }}" style="{{ a11yOverlayStyle }} position: fixed; inset: 0; z-index: 2147483011; background: transparent;"></div>
+<div id="a11y-panel" onClick="{{ stopPropagation }}" style="position: fixed; z-index: 2147483012; width: 380px; max-width: calc(100vw - 32px); overflow-y: auto; {{ a11yPanelStyle }} {{ a11yPanelFadeStyle }} background: #ffffff; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.35); font-family: var(--rh-font);">
   <div style="position: sticky; top: 0; background: #ffffff; display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; border-bottom: 1px solid var(--rh-border); z-index: 1;">
     <div style="display: flex; align-items: center; gap: 8px;">
       <div style="width: 26px; height: 26px; border-radius: 50%; background: #ffffff; border: 1px solid var(--rh-border); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
@@ -209,7 +209,7 @@
 </div>
 
 <sc-if value="{{ a11yStatementOpen }}" hint-placeholder-val="{{ false }}">
-  <div onClick="{{ closeA11yStatement }}" style="position: fixed; inset: 0; z-index: 499; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;">
+  <div onClick="{{ closeA11yStatement }}" style="position: fixed; inset: 0; z-index: 2147483014; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;">
     <div onClick="{{ stopPropagation }}" style="background: #ffffff; border-radius: 12px; padding: 28px; max-width: 420px; width: calc(100% - 48px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); font-family: var(--rh-font);">
       <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px;">
         <h3 style="font-size: 19px; font-weight: 700; color: var(--rh-text-primary); margin: 0;">Accessibility statement</h3>

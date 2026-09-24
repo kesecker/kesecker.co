@@ -117,13 +117,13 @@
 
 <div style="font-family: var(--rh-font); color: var(--rh-text-primary); background: var(--rh-bg); width: 100%; overflow-x: hidden; position: relative;">
   <sc-if value="{{ isIntroVisible }}" hint-placeholder-val="{{ true }}">
-    <div style="position: fixed; inset: 0; z-index: 1000; background: #000000; display: flex; align-items: center; justify-content: center; overflow: hidden; transform: translateY({{ introTranslateY }}); transition: transform 0.35s cubic-bezier(0.65,0,0.35,1);">
+    <div style="position: fixed; inset: 0; z-index: 2147483600; background: #000000; display: flex; align-items: center; justify-content: center; overflow: hidden; transform: translateY({{ introTranslateY }}); transition: transform 0.35s cubic-bezier(0.65,0,0.35,1);">
       <video ref="{{ introVideoRef }}" autoPlay="{{ true }}" muted="{{ true }}" defaultMuted="{{ true }}" playsInline="{{ true }}" preload="auto" onEnded="{{ dismissIntro }}" onError="{{ dismissIntro }}" onTimeUpdate="{{ handleIntroTimeUpdate }}" style="width: 100%; height: 100%; object-fit: contain;">
         <source src="uploads/Intro-fc69fc54.mp4" type="video/mp4">
       </video>
     </div>
   </sc-if>
-  <div style="position: fixed; inset: 0; z-index: 600; background: #000000; pointer-events: none; opacity: {{ langOverlayOpacity }}; transition: opacity 0.35s ease-in-out;"></div>
+  <div style="position: fixed; inset: 0; z-index: 2147483500; background: #000000; pointer-events: none; opacity: {{ langOverlayOpacity }}; transition: opacity 0.35s ease-in-out;"></div>
 
   <!-- NAV + HERO (video plays behind both) -->
   <div style="position: relative;">
@@ -165,7 +165,7 @@
         </div><p id="hero-paragraph" style="font-size: clamp(14px, 1.2vw, 18px); line-height: 1.6; color: rgba(255,255,255,0.88); max-width: 620px; margin: 0">{{ t.heroParagraph }}</p><a href="https://keseckerproperties.com/listings" onMouseEnter="{{ heroListingsHoverEnter }}" onMouseLeave="{{ heroListingsHoverLeave }}" style="margin-top: 34px; display: inline-block; width: fit-content;"><span style="position: relative; display: inline-block; font-size: 16px; font-weight: 400; letter-spacing: normal; text-transform: none; color: #ffffff;">Search for Properties<span style="position: absolute; left: 0; bottom: -4px; height: 2px; background: #ffffff; width: {{ heroListingsUnderlineWidth }}; transition: width 0.35s ease;"></span></span></a></div>
         </div>
       </div>
-      <div id="nav-burger-wrapper" style="position: fixed; top: 20px; right: clamp(16px, 3vw, 32px); z-index: 120; opacity: {{ burgerOpacity }}; pointer-events: {{ burgerPointerEvents }}; transition: opacity 0.35s ease;">
+      <div id="nav-burger-wrapper" style="position: fixed; top: 20px; right: clamp(16px, 3vw, 32px); z-index: 2147483001; opacity: {{ burgerOpacity }}; pointer-events: {{ burgerPointerEvents }}; transition: opacity 0.35s ease;">
         <button id="nav-burger-fixed" onClick="{{ toggleMobileMenu }}" style="background: {{ burgerBg }}; border: none; border-radius: 50%; cursor: pointer; width: 64px; height: 64px; padding: 0 0 0 16px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 8px; box-sizing: border-box; position: relative; z-index: 60; transition: background 0.3s ease;">
           <span style="display: block; width: 32px; height: 2px; border-radius: 1px; background: #ffffff; flex-shrink: 0; transform: perspective(200px) {{ burgerTransform }}; transform-origin: left center; transition: transform 0.4s ease;"></span>
           <span style="display: block; width: 24px; height: 2px; border-radius: 1px; background: #ffffff; flex-shrink: 0; transform: perspective(200px) {{ burgerTransform }}; transform-origin: left center; transition: transform 0.4s ease;"></span>
@@ -173,7 +173,7 @@
         </button>
       </div>
       <sc-if value="{{ isMobileMenuVisible }}" hint-placeholder-val="{{ false }}">
-        <div onClick="{{ closeMobileMenu }}" style="position: fixed; inset: 0; z-index: 110; background: rgba(0,0,0,0.88); animation: {{ mobileMenuOverlayAnimation }};">
+        <div onClick="{{ closeMobileMenu }}" style="position: fixed; inset: 0; z-index: 2147483000; background: rgba(0,0,0,0.88); animation: {{ mobileMenuOverlayAnimation }};">
           <div onClick="{{ stopPropagation }}" style="position: absolute; top: 128px; right: clamp(20px, 5vw, 64px); background: transparent; min-width: 280px; padding: 0; display: flex; flex-direction: column; align-items: flex-end; gap: clamp(26px, 4.2vh, 46px); animation: {{ mobileMenuCardAnimation }};">
             <a href="https://keseckerproperties.com/listings" target="_self" onClick="{{ closeMobileMenu }}" style="font-size: clamp(16px, 2vw, 24px); font-weight: 500; letter-spacing: -0.02em; line-height: 1; color: #ffffff; text-decoration: none; padding-bottom: 4px; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 2px; transition: background-size 0.3s ease;" style-hover="background-size: 100% 2px;">{{ t.navListings }}</a>
             <a href="https://keseckerproperties.com/communities" target="_self" onClick="{{ closeMobileMenu }}" style="font-size: clamp(16px, 2vw, 24px); font-weight: 500; letter-spacing: -0.02em; line-height: 1; color: #ffffff; text-decoration: none; padding-bottom: 4px; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 2px; transition: background-size 0.3s ease;" style-hover="background-size: 100% 2px;">{{ t.navNeighborhoods }}</a>
@@ -483,9 +483,9 @@
 
   <!-- FLOATING PHONE BUTTON -->
   <sc-if value="{{ isPhoneOpen }}" hint-placeholder-val="{{ false }}">
-    <div onClick="{{ onPhoneClose }}" style="position: fixed; inset: 0; z-index: 299; background: transparent;"></div>
+    <div onClick="{{ onPhoneClose }}" style="position: fixed; inset: 0; z-index: 2147483009; background: transparent;"></div>
   </sc-if>
-  <div style="position: fixed; right: 24px; bottom: 74px; z-index: 300; width: 56px; height: 56px;">
+  <div style="position: fixed; right: 24px; bottom: 74px; z-index: 2147483010; width: 56px; height: 56px;">
     <div style="{{ phonePopoverStyle }} position: absolute; right: 0; bottom: 70px; width: 260px; background: #141414; border: 1px solid rgba(255,255,255,0.12); border-radius: 4px; padding: 20px; box-shadow: 0 12px 32px rgba(0,0,0,0.4);">
       <div style="display: flex; justify-content: flex-end;"><span onClick="{{ onPhoneClose }}" style="color: rgba(255,255,255,0.6); font-size: 14px; line-height: 1; cursor: pointer; transition: color 0.2s ease, transform 0.2s ease; display: inline-block;" style-hover="color: #ffffff; transform: scale(1.2);">✕</span></div>
       <p style="font-size: 20px; font-weight: 600; color: #ffffff; text-align: center; margin: -8px 0 4px;">Questions?</p>
@@ -499,7 +499,7 @@
   </div>
 
   <!-- ACCESSIBILITY WIDGET -->
-  <div style="{{ a11yButtonWrapStyle }} {{ a11yButtonVisibilityStyle }} z-index: 100;">
+  <div style="{{ a11yButtonWrapStyle }} {{ a11yButtonVisibilityStyle }} z-index: 2147483010;">
     <button aria-label="Accessibility options" onClick="{{ toggleA11yPanel }}" style="width: 56px; height: 56px; border-radius: 50%; background: #1a1a1a; color: #ffffff; border: none; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 20px rgba(0,0,0,0.4); cursor: pointer; padding: 0; transition: background 0.2s ease, color 0.2s ease;" style-hover="background: #ffffff; color: #1a1a1a;">
       <svg width="30" height="30" viewBox="0 0 24 24" fill="none">
         <circle cx="12" cy="5.2" r="1.8" fill="currentColor"></circle>
@@ -510,8 +510,8 @@
     </button>
   </div>
 
-  <div onClick="{{ closeA11yPanel }}" style="{{ a11yOverlayStyle }} position: fixed; inset: 0; z-index: 399; background: transparent;"></div>
-  <div id="a11y-panel" onClick="{{ stopPropagation }}" style="position: fixed; z-index: 400; width: 380px; max-width: calc(100vw - 32px); overflow-y: auto; {{ a11yPanelStyle }} {{ a11yPanelFadeStyle }} background: #ffffff; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.35); font-family: var(--rh-font);">
+  <div onClick="{{ closeA11yPanel }}" style="{{ a11yOverlayStyle }} position: fixed; inset: 0; z-index: 2147483011; background: transparent;"></div>
+  <div id="a11y-panel" onClick="{{ stopPropagation }}" style="position: fixed; z-index: 2147483012; width: 380px; max-width: calc(100vw - 32px); overflow-y: auto; {{ a11yPanelStyle }} {{ a11yPanelFadeStyle }} background: #ffffff; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.35); font-family: var(--rh-font);">
       <div style="position: sticky; top: 0; background: #ffffff; display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; border-bottom: 1px solid var(--rh-border); z-index: 1;">
         <div style="display: flex; align-items: center; gap: 8px;">
           <div style="width: 26px; height: 26px; border-radius: 50%; background: #ffffff; border: 1px solid var(--rh-border); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
@@ -529,7 +529,7 @@
 
       <div style="padding: 12px 18px 0; position: relative;">
         <sc-if value="{{ a11yLangOpen }}" hint-placeholder-val="{{ false }}">
-          <div onClick="{{ closeA11yLangOpen }}" style="position: fixed; inset: 0; z-index: 450; background: transparent;"></div>
+          <div onClick="{{ closeA11yLangOpen }}" style="position: fixed; inset: 0; z-index: 2147483013; background: transparent;"></div>
         </sc-if>
         <div onClick="{{ toggleA11yLangOpen }}" style="width: 100%; box-sizing: border-box; padding: 8px 10px; font-size: 12px; font-family: var(--rh-font); color: var(--rh-text-primary); background: var(--rh-surface); border: 1px solid var(--rh-border); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 451; {{ a11yLangTriggerStyle }}">
           <span>{{ a11yLangSelectedLabel }}</span>
@@ -735,7 +735,7 @@
     </div>
 
   <sc-if value="{{ a11yStatementOpen }}" hint-placeholder-val="{{ false }}">
-    <div onClick="{{ closeA11yStatement }}" style="position: fixed; inset: 0; z-index: 499; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;">
+    <div onClick="{{ closeA11yStatement }}" style="position: fixed; inset: 0; z-index: 2147483014; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;">
       <div onClick="{{ stopPropagation }}" style="background: #ffffff; border-radius: 12px; padding: 28px; max-width: 420px; width: calc(100% - 48px); box-shadow: 0 20px 60px rgba(0,0,0,0.4); font-family: var(--rh-font);">
         <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px;">
           <h3 style="font-size: 19px; font-weight: 700; color: var(--rh-text-primary); margin: 0;">{{ a11yT.accessibilityStatement }}</h3>

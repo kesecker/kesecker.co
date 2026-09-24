@@ -69,13 +69,13 @@
       <span style="font-size: 15px; line-height: 1; display: flex; align-items: center; color: #ffffff;">•</span>
       <a href="#" onClick="{{ openContactModal }}" style="font-family: 'Montserrat', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75); text-decoration: none; transition: color 0.3s ease, background-size 0.3s ease; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 1px; padding-bottom: 2px;" style-hover="color: #ffffff; background-size: 100% 1px;">Contact</a>
     </div>
-    <button onClick="{{ toggleNavMenu }}" aria-label="Menu" style="flex-shrink: 0; width: 44px; height: 44px; margin-right: -6px; background: transparent; border: none; border-radius: 50%; cursor: pointer; padding: 0 0 0 8px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 6px; box-sizing: border-box; position: relative; z-index: 130;">
+    <button onClick="{{ toggleNavMenu }}" aria-label="Menu" style="flex-shrink: 0; width: 44px; height: 44px; margin-right: -6px; background: transparent; border: none; border-radius: 50%; cursor: pointer; padding: 0 0 0 8px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 6px; box-sizing: border-box; position: relative; isolation: isolate; z-index: 2147483001;">
       <span style="display: block; width: 26px; height: 2px; border-radius: 1px; background: #ffffff; transform: perspective(200px) {{ navBurgerTransform }}; transform-origin: left center; transition: transform 0.4s ease;"></span>
       <span style="display: block; width: 20px; height: 2px; border-radius: 1px; background: #ffffff; transform: perspective(200px) {{ navBurgerTransform }}; transform-origin: left center; transition: transform 0.4s ease;"></span>
       <span style="display: block; width: 14px; height: 2px; border-radius: 1px; background: #ffffff; transform: perspective(200px) {{ navBurgerTransform }}; transform-origin: left center; transition: transform 0.4s ease;"></span>
     </button>
     <sc-if value="{{ navMenuOpen }}" hint-placeholder-val="{{ false }}">
-      <div onClick="{{ closeNavMenu }}" style="position: fixed; inset: 0; z-index: 125; background: rgba(0,0,0,0.88); animation: {{ navOverlayAnim }};">
+      <div onClick="{{ closeNavMenu }}" style="position: fixed; inset: 0; z-index: 2147483000; background: rgba(0,0,0,0.88); animation: {{ navOverlayAnim }};">
         <div onClick="{{ stopNavProp }}" style="position: absolute; top: 128px; right: clamp(20px, 5vw, 64px); min-width: 280px; display: flex; flex-direction: column; align-items: flex-end; gap: clamp(26px, 4.2vh, 46px); animation: {{ navCardAnim }};">
           <a href="https://keseckerproperties.com/listings" target="_self" onClick="{{ closeNavMenu }}" style="font-family: 'Montserrat', system-ui, sans-serif !important; font-size: clamp(16px, 2vw, 24px); font-weight: 500; letter-spacing: -0.02em; line-height: 1; color: #ffffff; text-decoration: none; padding-bottom: 4px; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 2px; transition: background-size 0.3s ease;" style-hover="background-size: 100% 2px;">Search</a>
           <a href="https://keseckerproperties.com/communities" target="_self" onClick="{{ closeNavMenu }}" style="font-family: 'Montserrat', system-ui, sans-serif !important; font-size: clamp(16px, 2vw, 24px); font-weight: 500; letter-spacing: -0.02em; line-height: 1; color: #ffffff; text-decoration: none; padding-bottom: 4px; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 2px; transition: background-size 0.3s ease;" style-hover="background-size: 100% 2px;">Communities</a>
@@ -128,9 +128,9 @@
   </div>
 
   <sc-if value="{{ isPhoneOpen }}" hint-placeholder-val="{{ false }}">
-    <div onClick="{{ onPhoneClose }}" style="position: fixed; inset: 0; z-index: 299; background: transparent;"></div>
+    <div onClick="{{ onPhoneClose }}" style="position: fixed; inset: 0; z-index: 2147483009; background: transparent;"></div>
   </sc-if>
-  <div style="position: fixed; right: 24px; bottom: 24px; z-index: 300; width: 56px; height: 56px;">
+  <div style="position: fixed; right: 24px; bottom: 24px; z-index: 2147483010; width: 56px; height: 56px;">
     <div style="{{ phonePopoverStyle }} position: absolute; right: 0; bottom: 70px; width: 260px; background: #141414; border: 1px solid rgba(255,255,255,0.12); border-radius: 4px; padding: 20px; box-shadow: 0 12px 32px rgba(0,0,0,0.4);">
       <div style="display: flex; justify-content: flex-end;"><span onClick="{{ onPhoneClose }}" style="color: rgba(255,255,255,0.6); font-size: 14px; line-height: 1; cursor: pointer;">✕</span></div>
       <p style="font-size: 20px; font-weight: 600; color: #ffffff; text-align: center; margin: -8px 0 4px;">Questions?</p>
