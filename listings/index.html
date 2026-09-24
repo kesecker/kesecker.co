@@ -113,7 +113,7 @@
     </button>
   </div>
 
-  <dc-import name="AccessibilityWidget" hint-size="56px,56px"></dc-import>
+  <dc-import name="AccessibilityWidget" hint-size="56px,56px" style="position: fixed; left: 0; bottom: 0; width: 0; height: 0; overflow: visible; z-index: 2147483010;"></dc-import>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script>
@@ -347,6 +347,59 @@ class Component extends DCLogic {
     }
     this._ihfFixAllShadowRoots();
   };
+  _ihfPrefillSearch = () => {
+    const q = (new URLSearchParams(window.location.search).get('q') || '').trim();
+    if (!q || this._ihfPrefillStarted) return;
+    this._ihfPrefillStarted = true;
+    const start = Date.now();
+    const setVal = (inp, v) => {
+      const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
+      setter.call(inp, v);
+      inp.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+    };
+    const roots = () => {
+      const out = [document];
+      document.querySelectorAll('div.ihf-container, div.ihf-overlay-container').forEach((h) => { if (h.shadowRoot) out.push(h.shadowRoot); });
+      return out;
+    };
+    const findInput = () => {
+      for (const r of roots()) {
+        const inp = Array.from(r.querySelectorAll('input')).find((i) => /start|search|area|find/i.test(i.getAttribute('placeholder') || ''));
+        if (inp) return inp;
+      }
+      return null;
+    };
+    const pickOption = (inp) => {
+      const t0 = Date.now();
+      const tryPick = () => {
+        let opts = [];
+        roots().forEach((r) => { opts = opts.concat(Array.from(r.querySelectorAll('[role="option"], li.MuiAutocomplete-option'))); });
+        opts = opts.filter((o) => o.offsetParent !== null && (o.textContent || '').trim());
+        if (opts.length) {
+          const ql = q.toLowerCase();
+          const best = opts.find((o) => (o.textContent || '').trim().toLowerCase().startsWith(ql)) || opts[0];
+          best.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, composed: true }));
+          best.click();
+          return;
+        }
+        if (Date.now() - t0 < 6000) setTimeout(tryPick, 150);
+        else inp.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter', keyCode: 13, bubbles: true, composed: true }));
+      };
+      tryPick();
+    };
+    const tick = () => {
+      const inp = findInput();
+      if (inp) {
+        inp.focus();
+        inp.click();
+        setVal(inp, q);
+        setTimeout(() => pickOption(inp), 250);
+        return;
+      }
+      if (Date.now() - start < 15000) setTimeout(tick, 200);
+    };
+    setTimeout(tick, 400);
+  };
   ihfListingSearchRef = (node) => {
     if (!node || node.dataset.ihfMounted) return;
     const doMount = () => {
@@ -355,6 +408,7 @@ class Component extends DCLogic {
       node.appendChild(window.ihfKestrel.render({ component: 'listingSearchWidget' }));
       this._ihfStartCaseFix();
     };
+    setTimeout(() => this._ihfPrefillSearch(), 0);
     if (window.ihfKestrel && window.ihfKestrel.render) { doMount(); return; }
     const ks = document.querySelector('script[src*="ihf-kestrel.js"]');
     if (ks) ks.addEventListener('load', doMount, { once: true });
@@ -390,7 +444,7 @@ class Component extends DCLogic {
     const q = params.get('q') || '';
     return {
       ...this._navVals(),
-      ihfListingSearchRef: this.ihfListingSearchRef, hasQuery: !!q, queryValue: q,
+      ihfListingSearchRef: this.ihfListingSearchRef, hasQuery: false, queryValue: q,
       openContactModal: this.openContactModal,
       isPhoneOpen: this.state.isPhoneOpen, togglePhonePopup: this.togglePhonePopup, onPhoneClose: this.onPhoneClose,
       phonePopoverStyle: this.state.isPhoneOpen ? 'opacity:1;visibility:visible;transform:translateY(0);transition:opacity 0.3s ease,transform 0.3s ease;' : 'opacity:0;visibility:hidden;transform:translateY(8px);transition:opacity 0.3s ease,transform 0.3s ease;',
