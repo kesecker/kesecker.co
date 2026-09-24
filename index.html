@@ -1383,13 +1383,17 @@ class Component extends DCLogic {
       }
     };
     window.addEventListener('message', this.onMapMessage);
-    this.heroInterval = setInterval(() => {
-      this.setState({ heroFadeVisible: false });
-      setTimeout(() => {
-        const phrases = this.translations[this.state.lang].heroPhrases;
-        this.setState(s => ({ heroPhraseIndex: (s.heroPhraseIndex + 1) % phrases.length, heroFadeVisible: true }));
-      }, 675);
-    }, 4725);
+    const heroStep = () => {
+      const delay = 4725 + (this.state.heroPhraseIndex === 0 ? 2000 : 0);
+      this.heroInterval = setTimeout(() => {
+        this.setState({ heroFadeVisible: false });
+        setTimeout(() => {
+          const phrases = this.translations[this.state.lang].heroPhrases;
+          this.setState(s => ({ heroPhraseIndex: (s.heroPhraseIndex + 1) % phrases.length, heroFadeVisible: true }), heroStep);
+        }, 675);
+      }, delay);
+    };
+    heroStep();
     const v = this.heroVideoRef.current;
     if (v) {
       v.muted = true;
@@ -1459,7 +1463,7 @@ class Component extends DCLogic {
     clearTimeout(this.marqueeTransitionTimer);
     window.removeEventListener('scroll', this.onScroll);
     window.removeEventListener('resize', this.onResize);
-    clearInterval(this.heroInterval);
+    clearTimeout(this.heroInterval);
     window.removeEventListener('mousemove', this.onA11yMouseMove);
     clearTimeout(this.langFadeTimer);
     clearTimeout(this.langFadeInTimer);
