@@ -3,6 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com" data-early-fonts>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&amp;family=Montserrat:ital,wght@0,100..900;1,100..900&amp;family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;display=block">
 <script src="./support.js"></script>
 </head>
 <body>
@@ -23,7 +26,7 @@
     };
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&amp;family=Montserrat:ital,wght@0,100..900;1,100..900&amp;family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&amp;family=Montserrat:ital,wght@0,100..900;1,100..900&amp;family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;display=block" rel="stylesheet">
   <style>
     :root {
       --rh-font: 'Montserrat', system-ui, sans-serif;
@@ -767,7 +770,7 @@ class Component extends DCLogic {
     if (el) {
       el.muted = true;
       el.defaultMuted = true;
-      const setRate = () => { el.playbackRate = 1; };
+      const setRate = () => { el.playbackRate = 1.18; };
       el.addEventListener('loadedmetadata', setRate);
       el.addEventListener('playing', setRate);
       try { el.load(); } catch (e) {}
@@ -999,7 +1002,7 @@ class Component extends DCLogic {
     en: {
       navListings: 'Listings', navSearch: 'Notable Sales', navNeighborhoods: 'Communities', navAbout: 'About', navContact: 'Contact',
       heroPhrases: ['Monterey County REALTOR®', 'Trusted Real Estate Advisor', 'Local Expertise', 'International Reach', 'Results You Can Count On'],
-      heroParagraph: 'Lifelong, 11th generation Monterey County Native with deep local roots and a proven track record.',
+      heroParagraph: 'Lifelong, 11th generation Monterey County Native with deep local roots, extensive regional knowledge and a proven track record.',
       searchPlaceholder: 'Search Address, City, or Area',
       aboutEyebrow: 'Meet Your Agent',
       aboutParagraph: 'Jackson was born in Monterey, California and raised in Soledad, a rapidly growing city in the heart of the Salinas Valley. Jackson is an 11th generation Monterey County resident. From the stunning beaches and breathtaking views of the Monterey Peninsula to the vast, endless rows of agricultural fields that feed the world, surrounded by tall and proud mountain ranges, Monterey County is the most beautiful place on earth. With its diverse range of ecosystems, its temperate year-round weather, and its iconic historical and cultural significance, this wondrous place is the envy of the world. As someone lucky enough to call this place home, Jackson has made it his mission to make his Central Coast community\'s dreams of homeownership a reality. A Monterey County native, he is committed to serving the very community that saw him grow into the man he is today.',

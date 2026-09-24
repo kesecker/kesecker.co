@@ -264,22 +264,26 @@ body, body *,
 [class^="ihf" i]:hover {
   background-color: transparent !important;
 }
+/* Underline lives only on the input itself (FormControl/Autocomplete wrappers can be
+   wider than the field, which made the line overshoot). 1px to match the grey line. */
 .MuiFormControl-root,
-.MuiAutocomplete-root,
+.MuiAutocomplete-root {
+  background-image: none !important;
+}
 .MuiInputBase-root {
   background-image: linear-gradient(#000000, #000000) !important;
   background-repeat: no-repeat !important;
   background-position: left bottom !important;
-  background-size: 0 2px !important;
+  background-size: 0 1px !important;
   transition: background-size 0.3s ease !important;
 }
-.MuiFormControl-root:hover,
-.MuiAutocomplete-root:hover,
 .MuiInputBase-root:hover,
-.MuiFormControl-root:focus-within,
-.MuiAutocomplete-root:focus-within,
 .MuiInputBase-root:focus-within {
-  background-size: 100% 2px !important;
+  background-size: 100% 1px !important;
+}
+.MuiInput-underline:hover:not(.Mui-disabled)::before,
+.MuiInput-underline::before {
+  border-bottom-width: 1px !important;
 }
 
 /* Dropdown list items (Status, Sort, Price presets, etc.) — word-length underline on hover.
@@ -345,13 +349,42 @@ body, body *,
 .MuiMenuItem-root:has(input[type="checkbox"]):hover .MuiTypography-root {
   background-size: 100% 2px !important;
 }
-/* Dropdown panels size to their longest option so text is never cut off (Sort menu) */
+/* Dropdown panels size to their longest option so text is never cut off (Sort menu).
+   content-box so the panel's own padding is added on top of the text width instead of
+   eating into it; :not(#ihf-x) raises specificity above the page's panel-padding rule. */
 .MuiPopover-paper,
 .MuiMenu-paper,
 [role="menu"] {
   min-width: max-content !important;
   max-width: none !important;
   overflow-x: visible !important;
+}
+.MuiPaper-root.MuiPopover-paper:not(#ihf-x),
+.MuiPaper-root.MuiMenu-paper:not(#ihf-x) {
+  box-sizing: content-box !important;
+  min-width: max-content !important;
+  max-width: calc(100vw - 48px) !important;
+  overflow-x: visible !important;
+}
+
+/* Sort/filter dropdown panel — find it by what it contains (the menu list), not by
+   class name, since the widget's internal class names vary. Panel grows to fit the
+   longest option plus padding. */
+ul[role="menu"]:not(#ihf-x) {
+  width: max-content !important;
+  min-width: max-content !important;
+  box-sizing: content-box !important;
+  padding-right: 16px !important;
+  overflow: visible !important;
+}
+*:has(> ul[role="menu"]):not(#ihf-x),
+[class*="popover" i][class*="paper" i]:not(#ihf-x),
+[class*="menu" i][class*="paper" i]:not(#ihf-x) {
+  width: max-content !important;
+  min-width: max-content !important;
+  max-width: calc(100vw - 48px) !important;
+  box-sizing: content-box !important;
+  overflow: visible !important;
 }
 
 /* Min/Max price inputs — hide MUI's own animated underline so only ours animates */
@@ -441,13 +474,23 @@ button[aria-label*="close" i]:hover svg,
   opacity: 0.65 !important;
 }
 
+/* Listing DETAIL page — every section (About, Property Features, Map, Schools, etc.)
+   sits in the same centered column as the carousel */
+.listing-section > * {
+  width: 100% !important;
+  max-width: 1300px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  box-sizing: border-box !important;
+}
+
 /* Listing DETAIL page photo carousel — enlarged, pulled up toward the tabs row,
    hard-clipped so no photo (even a badly-cropped/portrait one) can spill past the
    box. Moved here from a JS MutationObserver hack: that approach kept losing to the
    widget's own re-renders, since injected CSS survives every re-render. */
 .listing-photo-carousel {
   max-width: 1300px !important;
-  margin: 0 auto !important;
+  margin: 20px auto 0 !important;
   position: relative !important;
   z-index: 1 !important;
   overflow: hidden !important;
@@ -472,7 +515,30 @@ button[aria-label*="close" i]:hover svg,
 }
 .listing-photo-carousel li.slide img {
   height: clamp(360px, calc(100vh - 360px), 760px) !important;
-  object-fit: contain !important;
+  object-fit: cover !important;
   background: #ffffff !important;
   width: 100% !important;
+}
+/* No white gaps between slides (matches default Centered Preview) */
+.listing-photo-carousel li.slide,
+.listing-photo-carousel li.slide > div {
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+}
+
+/* Open Houses block on listing detail — undo the listing-card badge pill/dot rules that
+   were catching it (the stray green dot), keep it a clean centered row */
+[data-ihf-oh],
+[data-ihf-oh] [class*="open" i][class*="house" i] {
+  background: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  margin-left: 0 !important;
+  box-shadow: none !important;
+}
+[data-ihf-oh]::before,
+[data-ihf-oh] *::before {
+  display: none !important;
+  content: none !important;
 }
