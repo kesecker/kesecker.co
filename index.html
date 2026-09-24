@@ -770,7 +770,7 @@ class Component extends DCLogic {
     if (el) {
       el.muted = true;
       el.defaultMuted = true;
-      const setRate = () => { el.playbackRate = 1.15; };
+      const setRate = () => { el.playbackRate = 1.18; };
       el.addEventListener('loadedmetadata', setRate);
       el.addEventListener('playing', setRate);
       try { el.load(); } catch (e) {}
