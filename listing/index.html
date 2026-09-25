@@ -63,6 +63,7 @@
   <style>
     @keyframes navm-fade-in { from { opacity: 0; } to { opacity: 1; } }
     @keyframes navm-fade-out { from { opacity: 1; } to { opacity: 0; } }
+    @keyframes ks-fade-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
     @keyframes navm-scale-in { from { opacity: 0; transform: scale(0.96) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
     @keyframes navm-scale-out { from { opacity: 1; transform: scale(1) translateY(0); } to { opacity: 0; transform: scale(0.96) translateY(8px); } }
   </style>
@@ -116,24 +117,22 @@
         </button>
         <h2 style="margin: 0 0 28px; font-size: 28px; font-weight: 700; letter-spacing: -0.01em;">Schedule a Tour</h2>
         <sc-if value="{{ tourSent }}" hint-placeholder-val="{{ false }}">
-          <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 14px; padding: 12px 0 8px;">
+          <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 14px; padding: 12px 0 8px; animation: ks-fade-in 0.35s ease;">
             <p style="margin: 0; font-size: 18px; font-weight: 600;">Thank you! Your tour request was sent.</p>
             <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #444444;">Jackson will reach out to find a time that works. For faster service, call or text (831) 821-0398.</p>
             <button type="button" onClick="{{ closeTour }}" style="margin-top: 8px; height: 44px; padding: 0 24px; border-radius: 6px; border: none; background: #1a1a1a; color: #ffffff; font-size: 14px; font-weight: 600; font-family: 'Montserrat', system-ui, sans-serif; cursor: pointer; transition: background 0.2s ease, color 0.2s ease;" style-hover="background: #ffffff; color: #1a1a1a;">Done</button>
           </div>
         </sc-if>
         <sc-if value="{{ tourFormVisible }}" hint-placeholder-val="{{ true }}">
-          <form onSubmit="{{ submitTour }}" style="display: flex; flex-direction: column; gap: 28px;">
+          <form onSubmit="{{ submitTour }}" style="display: flex; flex-direction: column; gap: 28px; animation: ks-fade-in 0.35s ease;">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 22px 28px;">
               <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 13px; font-weight: 600; color: #666666;">Full Name *</span><input type="text" name="name" required="{{ true }}" autocomplete="name" style="width: 100%; box-sizing: border-box; padding: 8px 2px; font-size: 15px; font-family: 'Montserrat', system-ui, sans-serif; color: #1a1a1a; background: transparent; border: none; border-bottom: 1px solid #cccccc; border-radius: 0; outline: none; transition: border-color 0.2s ease;" style-focus="border-bottom-color: #1a1a1a;"></label>
-              <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 13px; font-weight: 600; color: #666666;">Phone *</span><input type="tel" name="phone" required="{{ true }}" autocomplete="tel" style="width: 100%; box-sizing: border-box; padding: 8px 2px; font-size: 15px; font-family: 'Montserrat', system-ui, sans-serif; color: #1a1a1a; background: transparent; border: none; border-bottom: 1px solid #cccccc; border-radius: 0; outline: none; transition: border-color 0.2s ease;" style-focus="border-bottom-color: #1a1a1a;"></label>
+              <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 13px; font-weight: 600; color: #666666;">Phone *</span><input type="tel" name="phone" required="{{ true }}" autocomplete="tel" inputmode="tel" onInput="{{ tourPhoneInput }}" style="width: 100%; box-sizing: border-box; padding: 8px 2px; font-size: 15px; font-family: 'Montserrat', system-ui, sans-serif; color: #1a1a1a; background: transparent; border: none; border-bottom: 1px solid #cccccc; border-radius: 0; outline: none; transition: border-color 0.2s ease;" style-focus="border-bottom-color: #1a1a1a;"><span style="display: block; font-size: 12px; line-height: 1.4; color: #c62828; overflow: hidden; max-height: {{ tourPhoneErrH }}; opacity: {{ tourPhoneErrOp }}; transition: opacity 0.25s ease, max-height 0.25s ease;">{{ tourPhoneErrText }}</span></label>
               <label style="display: flex; flex-direction: column; gap: 6px; grid-column: 1 / -1;"><span style="font-size: 13px; font-weight: 600; color: #666666;">Email *</span><input type="email" name="email" required="{{ true }}" autocomplete="email" style="width: 100%; box-sizing: border-box; padding: 8px 2px; font-size: 15px; font-family: 'Montserrat', system-ui, sans-serif; color: #1a1a1a; background: transparent; border: none; border-bottom: 1px solid #cccccc; border-radius: 0; outline: none; transition: border-color 0.2s ease;" style-focus="border-bottom-color: #1a1a1a;"></label>
               <label style="display: flex; flex-direction: column; gap: 6px; grid-column: 1 / -1;"><span style="font-size: 13px; font-weight: 600; color: #666666;">Which property would you like to see? *</span><textarea name="message" rows="3" required="{{ true }}" defaultValue="{{ tourListingLabel }}" style="width: 100%; box-sizing: border-box; padding: 12px 14px; font-size: 15px; font-family: 'Montserrat', system-ui, sans-serif; color: #1a1a1a; background: #fafafa; border: 1px solid #dddddd; border-radius: 6px; resize: vertical; outline: none;" style-focus="border-color: #1a1a1a;"></textarea></label>
             </div>
             <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0;">
-            <sc-if value="{{ tourError }}" hint-placeholder-val="{{ false }}">
-              <p style="margin: 0; font-size: 14px; color: #c62828;">{{ tourError }}</p>
-            </sc-if>
+            <p style="margin: 0; font-size: 14px; color: #c62828; overflow: hidden; max-height: {{ tourErrH }}; opacity: {{ tourErrOp }}; transition: opacity 0.25s ease, max-height 0.25s ease;">{{ tourErrText }}</p>
             <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px;">
               <button type="submit" disabled="{{ tourSending }}" style="height: 48px; padding: 0 32px; border-radius: 6px; border: none; background: #1a1a1a; color: #ffffff; font-size: 14px; font-weight: 600; font-family: 'Montserrat', system-ui, sans-serif; cursor: pointer; transition: background 0.2s ease, color 0.2s ease;" style-hover="background: #ffffff; color: #1a1a1a;">{{ tourSubmitLabel }}</button>
               <p style="margin: 0; flex: 1 1 260px; font-size: 11px; line-height: 1.5; color: #999999;">This site is protected by reCAPTCHA and the Google <a href="https://policies.google.com/privacy" target="_blank" style="color: #666666; text-decoration: underline;">Privacy Policy</a> and <a href="https://policies.google.com/terms" target="_blank" style="color: #666666; text-decoration: underline;">Terms of Service</a> apply.</p>
@@ -1312,6 +1311,26 @@ findAllMatches('Share').filter((s) => !s.closest('[data-ihf-own], [data-ihf-acti
     const fallback = /home search|jackson kesecker|realtor/i.test(title) ? '' : title;
     return [addr || fallback, id ? 'MLS# ' + id.replace(/_\d+$/, '') : ''].filter(Boolean).join(' — ');
   };
+  _ksPhone = (prefix) => (e) => {
+    const el = e.target;
+    const raw = el.value;
+    const bad = /[^\d\s()+.\-]/.test(raw);
+    let d = raw.replace(/\D/g, '');
+    if (d.length === 11 && d[0] === '1') d = d.slice(1);
+    d = d.slice(0, 10);
+    let f = '';
+    if (d.length) f = '(' + d.slice(0, 3);
+    if (d.length >= 4) f += ') ' + d.slice(3, 6);
+    if (d.length >= 7) f += '-' + d.slice(6);
+    if (el.value !== f) el.value = f;
+    if (bad) {
+      clearTimeout(this['_' + prefix + 'PhT']);
+      this.setState({ [prefix + 'PhoneErr']: 'Please enter numbers only.', [prefix + 'PhoneErrOn']: true });
+      this['_' + prefix + 'PhT'] = setTimeout(() => this.setState({ [prefix + 'PhoneErrOn']: false }), 2500);
+    } else if (this.state[prefix + 'PhoneErrOn'] && this.state[prefix + 'PhoneErr'] === 'Please enter a 10-digit phone number.' && d.length === 10) {
+      this.setState({ [prefix + 'PhoneErrOn']: false });
+    }
+  };
   _tourVals = () => {
     const s = this.state || {};
     const pad = (n) => String(n).padStart(2, '0');
@@ -1375,12 +1394,20 @@ findAllMatches('Share').filter((s) => !s.closest('[data-ihf-own], [data-ihf-acti
       tourSlots: slots,
       tourSlotsOpacity: s.tourDate ? 1 : 0.45,
       tourError: s.tourError || '',
+      tourErrText: (s.tourError && (this._lastTourErr = s.tourError)) || this._lastTourErr || '',
+      tourErrOp: s.tourError ? 1 : 0,
+      tourErrH: s.tourError ? '60px' : '0px',
+      tourPhoneInput: this._ksPhone('tour'),
+      tourPhoneErrText: s.tourPhoneErr || '',
+      tourPhoneErrOp: s.tourPhoneErrOn ? 1 : 0,
+      tourPhoneErrH: s.tourPhoneErrOn ? '20px' : '0px',
       tourSending: !!s.tourSending,
       tourSubmitLabel: s.tourSending ? 'Sending…' : 'Request Tour',
       submitTour: (e) => {
         e.preventDefault();
         if (s.tourSending) return;
                 const fd = new FormData(e.currentTarget);
+        if (String(fd.get('phone') || '').replace(/\D/g, '').length !== 10) { this.setState({ tourPhoneErr: 'Please enter a 10-digit phone number.', tourPhoneErrOn: true }); return; }
         this.setState({ tourSending: true, tourError: '' });
         this._ksSubmit({ form: 'tour', name: fd.get('name'), phone: fd.get('phone'), email: fd.get('email'), message: fd.get('message'), website: fd.get('website'), listing }).then((r) => {
           if (r && r.ok) this.setState({ tourSending: false, tourSent: true });

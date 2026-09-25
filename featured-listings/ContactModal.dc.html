@@ -62,7 +62,7 @@
           </div>
           <div style="display: flex; flex-direction: column; gap: 6px;">
             <label style="font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.55);">Phone *</label>
-            <input type="tel" name="phone" required="{{ true }}" style="width: 100%; box-sizing: border-box; padding: 8px 2px; font-size: 15px; font-family: var(--rh-font); color: #ffffff; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.3); outline: none; transition: border-color 0.2s ease;" style-focus="border-bottom-color: #ffffff;">
+            <input type="tel" name="phone" required="{{ true }}" inputmode="tel" autocomplete="tel" onInput="{{ contactPhoneInput }}" style="width: 100%; box-sizing: border-box; padding: 8px 2px; font-size: 15px; font-family: var(--rh-font); color: #ffffff; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.3); outline: none; transition: border-color 0.2s ease;" style-focus="border-bottom-color: #ffffff;"><span style="display: block; font-size: 12px; line-height: 1.4; color: #ff8a80; overflow: hidden; max-height: {{ contactPhoneErrH }}; opacity: {{ contactPhoneErrOp }}; transition: opacity 0.25s ease, max-height 0.25s ease;">{{ contactPhoneErrText }}</span>
           </div>
           <div style="display: flex; flex-direction: column; gap: 6px; position: relative;">
             <label style="font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.55);">What are you interested in?</label>
@@ -87,9 +87,7 @@
           </div>
           <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0;">
             <button type="submit" disabled="{{ contactSending }}" style="width: 100%; padding: 14px; font-size: 14px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; font-family: var(--rh-font); color: #1a1a1a; background: #ffffff; border: none; cursor: pointer; transition: opacity 0.2s ease;" style-hover="opacity: 0.85;">Send Message</button>
-            <sc-if value="{{ contactStatusMsg }}" hint-placeholder-val="{{ false }}">
-              <p style="margin: 0; font-size: 14px; line-height: 1.5; color: rgba(255,255,255,0.85);">{{ contactStatusMsg }}</p>
-            </sc-if>
+            <p style="margin: 0; font-size: 14px; line-height: 1.5; color: rgba(255,255,255,0.85); overflow: hidden; max-height: {{ contactStatusH }}; opacity: {{ contactStatusOp }}; transition: opacity 0.3s ease, max-height 0.3s ease;">{{ contactStatusMsg }}</p>
             <p style="margin: 0; font-size: 11px; line-height: 1.5; color: rgba(255,255,255,0.45);">This site is protected by reCAPTCHA and the Google <a href="https://policies.google.com/privacy" target="_blank" style="color: rgba(255,255,255,0.65); text-decoration: underline;">Privacy Policy</a> and <a href="https://policies.google.com/terms" target="_blank" style="color: rgba(255,255,255,0.65); text-decoration: underline;">Terms of Service</a> apply.</p>
         </form>
       </div>
@@ -136,6 +134,26 @@ class Component extends DCLogic {
   toggleModalInterestOpen = () => this.setState(s => ({ modalInterestOpen: !s.modalInterestOpen }));
   closeModalInterestOpen = () => this.setState({ modalInterestOpen: false });
   selectInterest = (i) => this.setState({ modalInterestIndex: i, modalInterestOpen: false });
+  _ksPhone = (prefix) => (e) => {
+    const el = e.target;
+    const raw = el.value;
+    const bad = /[^\d\s()+.\-]/.test(raw);
+    let d = raw.replace(/\D/g, '');
+    if (d.length === 11 && d[0] === '1') d = d.slice(1);
+    d = d.slice(0, 10);
+    let f = '';
+    if (d.length) f = '(' + d.slice(0, 3);
+    if (d.length >= 4) f += ') ' + d.slice(3, 6);
+    if (d.length >= 7) f += '-' + d.slice(6);
+    if (el.value !== f) el.value = f;
+    if (bad) {
+      clearTimeout(this['_' + prefix + 'PhT']);
+      this.setState({ [prefix + 'PhoneErr']: 'Please enter numbers only.', [prefix + 'PhoneErrOn']: true });
+      this['_' + prefix + 'PhT'] = setTimeout(() => this.setState({ [prefix + 'PhoneErrOn']: false }), 2500);
+    } else if (this.state[prefix + 'PhoneErrOn'] && this.state[prefix + 'PhoneErr'] === 'Please enter a 10-digit phone number.' && d.length === 10) {
+      this.setState({ [prefix + 'PhoneErrOn']: false });
+    }
+  };
   _ksSubmit = (data) => new Promise((resolve) => {
     const KEY = '6Ldt-s0tAAAAAHKHMZoNKfYDRnjbYp7jfkhix9MQ';
     const URL = 'https://script.google.com/macros/s/AKfycbz-txrCbgzj4U78dBOSrFZMrT9qN3D0XV2ZcEua_6g_LB3VLNKkSk-NoUJHxEOvapY9ww/exec';
@@ -166,6 +184,7 @@ class Component extends DCLogic {
         const f = e.currentTarget;
         if (this.state.contactSending) return;
         const fd = new FormData(f);
+        if (String(fd.get('phone') || '').replace(/\D/g, '').length !== 10) { this.setState({ contactPhoneErr: 'Please enter a 10-digit phone number.', contactPhoneErrOn: true }); return; }
         const il = f.querySelector('[data-ks-interest]');
         this.setState({ contactSending: true, contactStatusMsg: 'Sending…' });
         this._ksSubmit({ form: 'contact', name: fd.get('name'), email: fd.get('email'), phone: fd.get('phone'), message: fd.get('message'), website: fd.get('website'), interest: il ? il.textContent.trim() : '' }).then((r) => {
@@ -174,6 +193,12 @@ class Component extends DCLogic {
         });
       },
       contactStatusMsg: this.state.contactStatusMsg || '',
+      contactStatusOp: this.state.contactStatusMsg ? 1 : 0,
+      contactStatusH: this.state.contactStatusMsg ? '60px' : '0px',
+      contactPhoneInput: this._ksPhone('contact'),
+      contactPhoneErrText: this.state.contactPhoneErr || '',
+      contactPhoneErrOp: this.state.contactPhoneErrOn ? 1 : 0,
+      contactPhoneErrH: this.state.contactPhoneErrOn ? '20px' : '0px',
       contactSending: !!this.state.contactSending,
       hoverSalinasOffice: () => this.setOfficeHover('salinas'),
       hoverCarmelOffice: () => this.setOfficeHover('carmel'),
