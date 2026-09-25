@@ -316,75 +316,51 @@ if (c.parentElement) c.parentElement.dataset.ihfOh = '1';
 let up = c;
 for (let k = 0; k < 10 && up && !up.classList.contains('listing-section'); k++) { up.dataset.ihfOh = '1'; up = up.parentElement; }
 const items = dates.map((d) => { let it = d; while (it.parentElement && it.parentElement !== c && c.contains(it.parentElement) && !dates.some((o) => o !== d && it.parentElement.contains(o))) it = it.parentElement; return it; });
-const list = items[0].parentElement && c.contains(items[0].parentElement) ? items[0].parentElement : c;
-[c, list].forEach((el) => {
-el.style.setProperty('display', 'flex', 'important');
-el.style.setProperty('flex-direction', 'column', 'important');
-el.style.setProperty('flex-wrap', 'nowrap', 'important');
-el.style.setProperty('align-items', 'flex-start', 'important');
-el.style.setProperty('gap', '14px', 'important');
-el.style.setProperty('width', '100%', 'important');
-el.style.setProperty('margin-left', '0', 'important');
-el.style.setProperty('margin-right', '0', 'important');
-});
+c.style.setProperty('display', 'block', 'important');
+c.style.setProperty('width', '100%', 'important');
+c.style.setProperty('margin-left', '0', 'important');
+c.style.setProperty('margin-right', '0', 'important');
+c.style.setProperty('padding', '0', 'important');
+const sig = dates.map((d) => (d.textContent || '').trim()).join('|');
+let own = c.querySelector(':scope > [data-ihf-oh-list]');
+if (!own || own.dataset.sig !== sig) {
+if (own) own.remove();
+own = document.createElement('div');
+own.dataset.ihfOwn = '1';
+own.dataset.ihfOhList = '1';
+own.dataset.sig = sig;
+own.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start;gap:16px;width:100%;margin:0;padding:0;';
+const fs = getComputedStyle(dates[0]).fontSize || '16px';
 items.forEach((it, idx) => {
 const d = dates[idx];
-[it].concat(Array.from(it.querySelectorAll('*')).filter((x) => x.contains(d) && x !== d)).forEach((x) => {
-x.style.setProperty('display', 'flex', 'important');
-x.style.setProperty('flex-direction', 'row', 'important');
-x.style.setProperty('flex-wrap', 'nowrap', 'important');
-x.style.setProperty('align-items', 'center', 'important');
-x.style.setProperty('width', 'auto', 'important');
-x.style.setProperty('max-width', 'none', 'important');
-x.style.setProperty('flex-basis', 'auto', 'important');
-x.style.setProperty('margin-top', '0', 'important');
-x.style.setProperty('margin-bottom', '0', 'important');
-x.style.setProperty('gap', '12px', 'important');
+const tEl = Array.from(it.querySelectorAll('*')).find((el) => el.children.length === 0 && timeRe.test(el.textContent || ''));
+const row = document.createElement('div');
+row.style.cssText = 'display:flex;align-items:center;gap:14px;font-size:' + fs + ';line-height:1.4;color:#1a1a1a;';
+row.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="flex:0 0 auto;"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>';
+const ds = document.createElement('span');
+ds.textContent = (d.textContent || '').trim();
+row.appendChild(ds);
+if (tEl) {
+const sep = document.createElement('span');
+sep.textContent = '\u00a0\u00a0\u2013\u00a0\u00a0';
+sep.style.whiteSpace = 'pre';
+const ts = document.createElement('span');
+ts.textContent = (tEl.textContent || '').trim();
+ts.style.setProperty('font-weight', '700', 'important');
+row.appendChild(sep);
+row.appendChild(ts);
+}
+own.appendChild(row);
 });
-});
+c.insertBefore(own, c.firstChild);
+}
+items.forEach((it) => { if (it !== own) it.style.setProperty('display', 'none', 'important'); });
 Array.from(root.querySelectorAll('*')).forEach((el) => {
 if (el.closest('.similar-listings, [class*="listing-result" i], .listing-photo-carousel, [data-ihf-own]')) return;
 const r = el.getBoundingClientRect();
 if (!r.width || r.width > 14 || r.height > 14 || el.children.length) return;
 const bg = getComputedStyle(el).backgroundColor.match(/\d+/g);
 if (bg && +bg[1] > 150 && +bg[0] < 120 && +bg[2] < 140) el.style.setProperty('display', 'none', 'important');
-});
-dates.forEach((d) => {
-let row = d.parentElement;
-while (row && row !== c && !Array.from(row.querySelectorAll('*')).some((el) => el.children.length === 0 && timeRe.test(el.textContent || ''))) row = row.parentElement;
-if (!row || row === c) return;
-let top = row;
-while (top.parentElement && top.parentElement !== c) top = top.parentElement;
-top.style.setProperty('width', 'auto', 'important');
-top.style.setProperty('max-width', 'none', 'important');
-top.style.setProperty('flex', '0 0 auto', 'important');
-top.style.setProperty('margin', '0', 'important');
-top.style.setProperty('padding', '0', 'important');
-row.style.setProperty('display', 'flex', 'important');
-row.style.setProperty('align-items', 'center', 'important');
-row.style.setProperty('flex-wrap', 'nowrap', 'important');
-const timeEl = Array.from(row.querySelectorAll('*')).find((el) => el.children.length === 0 && timeRe.test(el.textContent || '') && !el.dataset.ihfOhSep);
-if (!timeEl) return;
-const dcs = getComputedStyle(d);
-[timeEl, timeEl.parentElement].forEach((el) => {
-if (!el || el === row) return;
-el.style.setProperty('font-size', dcs.fontSize, 'important');
-el.style.setProperty('line-height', dcs.lineHeight, 'important');
-el.style.setProperty('margin', '0', 'important');
-el.style.setProperty('padding', '0', 'important');
-el.style.setProperty('display', 'inline-flex', 'important');
-el.style.setProperty('align-items', 'center', 'important');
-});
-timeEl.style.setProperty('font-weight', '700', 'important');
-if (!row.querySelector('[data-ihf-oh-sep]')) {
-const sep = document.createElement('span');
-sep.dataset.ihfOhSep = '1';
-sep.dataset.ihfOwn = '1';
-sep.textContent = '\u00a0\u00a0\u2013\u00a0\u00a0';
-sep.style.cssText = 'font-size:' + dcs.fontSize + ';line-height:' + dcs.lineHeight + ';color:' + dcs.color + ';white-space:pre;';
-const tHolder = timeEl.parentElement && timeEl.parentElement !== row && timeEl.parentElement.children.length === 1 ? timeEl.parentElement : timeEl;
-tHolder.parentElement.insertBefore(sep, tHolder);
-}
 });
 let head = c.parentElement && c.parentElement.querySelector(':scope > [data-ihf-oh-head]');
 if (!head) {

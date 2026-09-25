@@ -1432,8 +1432,27 @@ class Component extends DCLogic {
     const img = el.firstElementChild;
     if (img) img.style.transform = `translate3d(0, ${Math.round(-rect.top)}px, 0)`;
   };
+  _burgerFade = (hide) => {
+    document.querySelectorAll('#nav-burger-fixed, button[aria-label="Menu"]').forEach((b) => {
+      clearTimeout(b.__ihfFadeT);
+      b.style.setProperty('transition', 'opacity 0.3s ease', 'important');
+      if (hide) {
+        b.style.setProperty('opacity', '0', 'important');
+        b.style.setProperty('pointer-events', 'none', 'important');
+      } else {
+        b.style.setProperty('opacity', '1', 'important');
+        b.style.removeProperty('pointer-events');
+        b.__ihfFadeT = setTimeout(() => { b.style.removeProperty('opacity'); b.style.removeProperty('transition'); }, 350);
+      }
+    });
+  };
   componentDidUpdate(prevProps, prevState) {
     if (!prevState) return;
+    {
+      const open = this.state.isContactModalVisible && !this.state.isContactModalClosing;
+      const was = prevState.isContactModalVisible && !prevState.isContactModalClosing;
+      if (open !== was) this._burgerFade(open);
+    }
     if (prevState.a11yBigText !== this.state.a11yBigText || prevState.a11yLineHeight !== this.state.a11yLineHeight ||
       prevState.a11yTextSpacing !== this.state.a11yTextSpacing || prevState.a11yTextAlign !== this.state.a11yTextAlign ||
       prevState.a11yContrast !== this.state.a11yContrast || prevState.a11ySaturation !== this.state.a11ySaturation ||
