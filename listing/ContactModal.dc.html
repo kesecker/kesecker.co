@@ -21,7 +21,7 @@
 </helmet>
 
 <sc-if value="{{ isContactModalVisible }}" hint-placeholder-val="{{ false }}">
-  <div style="position: fixed; inset: 0; z-index: 350; background: #000000; overflow-y: auto; animation: {{ contactModalOverlayAnimation }};">
+  <div style="position: fixed; inset: 0; z-index: 2147483005; background: #000000; overflow-y: auto; animation: {{ contactModalOverlayAnimation }};">
     <div style="position: absolute; inset: 0; background-image: url('uploads/Pinnacles.png'); background-size: cover; background-position: center;"></div>
     <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.82) 100%);"></div>
     <button onClick="{{ closeContactModal }}" aria-label="Close" style="position: fixed; top: 24px; right: clamp(20px, 4vw, 40px); background: none; border: none; font-size: 32px; line-height: 1; cursor: pointer; color: #ffffff; z-index: 2; transition: opacity 0.2s ease;" style-hover="opacity: 0.6;">×</button>

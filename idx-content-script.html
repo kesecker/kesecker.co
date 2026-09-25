@@ -83,6 +83,102 @@ if (this._ihfDirty) { this._ihfDirty = false; setTimeout(() => this._ihfRunGuard
 }
 }, 80);
 };
+_ihfBuildLoopCarousel = (root) => {
+const carousel = root.querySelector('.listing-photo-carousel');
+if (!carousel || carousel.querySelector('[data-ihf-loop]')) return;
+const nativeImgs = Array.from(carousel.querySelectorAll('li img')).filter((im) => !im.closest('[data-ihf-loop]'));
+if (nativeImgs.length < 2 || nativeImgs.some((im) => !(im.currentSrc || im.src))) return;
+const srcs = nativeImgs.map((im) => im.currentSrc || im.src);
+const left = carousel.querySelector('.listing-photo-carousel-left');
+const right = carousel.querySelector('.listing-photo-carousel-right');
+const n = srcs.length;
+const CL = 2;
+const all = srcs.slice(n - CL).concat(srcs, srcs.slice(0, CL));
+const view = document.createElement('div');
+view.dataset.ihfLoop = '1';
+view.dataset.ihfOwn = '1';
+view.style.cssText = 'overflow:hidden;background:#ffffff;touch-action:pan-y;cursor:grab;';
+[['position', 'absolute'], ['top', '0'], ['left', '0'], ['right', '0'], ['bottom', '0'], ['width', '100%'], ['height', '100%'], ['margin', '0'], ['padding', '0'], ['z-index', '5']].forEach(([k, v]) => view.style.setProperty(k, v, 'important'));
+const track = document.createElement('div');
+track.style.cssText = 'display:flex;height:100%;width:100%;will-change:transform;';
+all.forEach((s, k) => {
+const slide = document.createElement('div');
+slide.style.cssText = 'flex:0 0 60%;width:60%;min-width:60%;max-width:60%;height:100%;overflow:hidden;';
+const im = document.createElement('img');
+im.src = s;
+im.alt = '';
+im.draggable = false;
+im.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;user-select:none;';
+slide.appendChild(im);
+slide.addEventListener('click', () => {
+if (view.dataset.dragged === '1') return;
+const real = ((k - CL) % n + n) % n;
+const target = nativeImgs.find((x) => (x.currentSrc || x.src) === srcs[real]) || nativeImgs[real];
+if (target) (target.closest('button, a, [role="button"]') || target).click();
+});
+track.appendChild(slide);
+});
+view.appendChild(track);
+carousel.appendChild(view);
+carousel.querySelectorAll('[data-ihf-heart]').forEach((el) => { el.style.setProperty('position', 'absolute', 'important'); el.style.setProperty('z-index', '50', 'important'); });
+carousel.querySelectorAll('[data-ihf-badge-cloned]').forEach((el) => { el.style.setProperty('position', 'absolute', 'important'); el.style.setProperty('top', '16px', 'important'); el.style.setProperty('left', '16px', 'important'); el.style.setProperty('z-index', '50', 'important'); });
+[left, right].forEach((el) => { if (el) el.style.setProperty('visibility', 'hidden', 'important'); });
+const mkArrow = (side) => {
+const btn = document.createElement('button');
+btn.type = 'button';
+btn.setAttribute('aria-label', side === 'l' ? 'Previous photo' : 'Next photo');
+btn.style.cssText = 'position:absolute;top:50%;' + (side === 'l' ? 'left:16px;' : 'right:16px;') + 'transform:translateY(-50%);z-index:40;width:48px;height:48px;border-radius:50%;border:none;background:rgba(0,0,0,0.45);color:#ffffff;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.2s ease,color 0.2s ease;';
+btn.innerHTML = side === 'l'
+? '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>'
+: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
+btn.addEventListener('mouseenter', () => { btn.style.background = '#ffffff'; btn.style.color = '#1a1a1a'; });
+btn.addEventListener('mouseleave', () => { btn.style.background = 'rgba(0,0,0,0.45)'; btn.style.color = '#ffffff'; });
+btn.addEventListener('pointerdown', (e) => e.stopPropagation());
+btn.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); go(side === 'l' ? -1 : 1); });
+view.appendChild(btn);
+};
+carousel.querySelectorAll('[data-ihf-heart], [data-ihf-badge]').forEach((el) => el.style.setProperty('z-index', '30', 'important'));
+let i = CL;
+const w = () => view.getBoundingClientRect().width;
+const place = (anim, extra) => {
+track.style.setProperty('transition', anim ? 'transform 0.45s cubic-bezier(0.25, 0.8, 0.25, 1)' : 'none', 'important');
+track.style.setProperty('transform', 'translateX(calc(' + (20 - i * 60) + '% + ' + (extra || 0) + 'px))', 'important');
+};
+let busy = false;
+let settleTimer = null;
+const settle = () => {
+clearTimeout(settleTimer);
+if (i >= n + CL) { i -= n; place(false); }
+if (i < CL) { i += n; place(false); }
+busy = false;
+};
+const go = (d) => {
+if (busy) return;
+busy = true;
+i += d;
+place(true);
+clearTimeout(settleTimer);
+settleTimer = setTimeout(settle, 500);
+};
+track.addEventListener('transitionend', (e) => { if (e.target === track) settle(); });
+mkArrow('l');
+mkArrow('r');
+view.tabIndex = 0;
+view.addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft') go(-1); if (e.key === 'ArrowRight') go(1); });
+let sx = null, dx = 0;
+view.addEventListener('pointerdown', (e) => { if (busy || e.button !== 0 || e.target.closest('button')) return; sx = e.clientX; dx = 0; view.dataset.dragged = '0'; view.style.cursor = 'grabbing'; });
+window.addEventListener('pointermove', (e) => { if (sx === null) return; dx = e.clientX - sx; if (Math.abs(dx) > 5) view.dataset.dragged = '1'; place(false, dx); });
+window.addEventListener('pointerup', () => {
+if (sx === null) return;
+sx = null; view.style.cursor = 'grab';
+if (Math.abs(dx) < 6) { place(false); return; }
+if (dx < -w() * 0.12) go(1); else if (dx > w() * 0.12) go(-1); else place(true);
+setTimeout(() => { view.dataset.dragged = '0'; }, 50);
+});
+window.addEventListener('resize', () => place(false));
+place(false);
+requestAnimationFrame(() => place(false));
+};
 _ihfFixCarouselWrap = (root) => {
 const carousel = root.querySelector('.listing-photo-carousel');
 if (!carousel || carousel.dataset.ihfWrapFix) return;
@@ -155,7 +251,7 @@ const host = root === document ? document.head : root;
 if (host.querySelector('style[data-ihf-btn-style]')) return;
 const st = document.createElement('style');
 st.dataset.ihfBtnStyle = '1';
-st.textContent = '.ihf-invert-btn{font-family:inherit;font-size:14px;padding:8px 16px;border-radius:6px;border:1px solid #1a1a1a;cursor:pointer;background:#1a1a1a;color:#ffffff;display:inline-flex;align-items:center;gap:8px;line-height:1.2;transition:background .2s ease,color .2s ease;}'
+st.textContent = '.ihf-invert-btn{font-family:inherit;font-size:14px;padding:8px 16px;border-radius:6px;border:none;outline:none;box-shadow:none;cursor:pointer;background:#1a1a1a;color:#ffffff;display:inline-flex;align-items:center;gap:8px;line-height:1.2;transition:background .2s ease,color .2s ease;}'
 + '.ihf-invert-btn:hover{background:#ffffff;color:#1a1a1a;}'
 + '.ihf-save-btn path{stroke-dasharray:100;stroke-dashoffset:0;transition:fill .2s ease,stroke .2s ease;}'
 + '.ihf-save-btn:hover path{animation:ihfHeartTrace .7s ease forwards;stroke:#e53935;}'
@@ -177,7 +273,15 @@ const save = document.createElement('button');
 save.type = 'button';
 save.className = 'ihf-invert-btn ihf-save-btn';
 save.dataset.ihfOwn = '1';
-save.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path pathLength="100" d="M12 21s-7.5-4.6-10-9C.3 8.5 2 4 6 4c2.2 0 3.8 1.3 6 4 2.2-2.7 3.8-4 6-4 4 0 5.7 4.5 4 8-2.5 4.4-10 9-10 9z"/></svg><span>Save</span>';
+save.innerHTML = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path pathLength="100" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg><span>Save</span>';
+const cardHeart = root.querySelector('.ihf-listing-result-badge-fav svg, [class*="badge-fav" i] svg');
+if (cardHeart) {
+const vb = cardHeart.getAttribute('viewBox');
+const cp = Array.from(cardHeart.querySelectorAll('path')).map((x) => x.getAttribute('d')).filter(Boolean).sort((x, y) => y.length - x.length)[0];
+const sp = save.querySelector('svg');
+if (vb) sp.setAttribute('viewBox', vb);
+if (cp) sp.querySelector('path').setAttribute('d', cp);
+}
 save.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); clickNative(/^(save|saved)$/i); this._ihfSetSavedUI(root, save.dataset.saved !== '1'); });
 const share = document.createElement('button');
 share.type = 'button';
@@ -192,30 +296,469 @@ if (nativeSave && /^saved$/i.test((nativeSave.textContent || '').trim())) this._
 };
 _ihfBuildOpenHouses = (root) => {
 const dayRe = /^(Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day,?\s+[A-Za-z]{3,9}\.?\s+\d{1,2}$/i;
-const dates = Array.from(root.querySelectorAll('*')).filter((el) => el.children.length === 0 && dayRe.test((el.textContent || '').trim()) && !el.closest('.similar-listings, [class*="listing-result" i], [role="dialog"]'));
+const timeRe = /\d{1,2}:\d{2}\s*(AM|PM)/i;
+const dates = Array.from(root.querySelectorAll('*')).filter((el) => el.children.length === 0 && dayRe.test((el.textContent || '').trim()) && !el.closest('.similar-listings, [class*="listing-result" i], [role="dialog"], [data-ihf-own]'));
 if (!dates.length) return;
 let c = dates[0].parentElement;
 while (c && !dates.every((d) => c.contains(d))) c = c.parentElement;
 if (!c) return;
+if (dates.length === 1) {
+let blk = dates[0];
+const hasTime = (x) => Array.from(x.querySelectorAll('*')).some((el) => el.children.length === 0 && /\d{1,2}:\d{2}\s*(AM|PM)/i.test(el.textContent || ''));
+while (blk.parentElement && !(hasTime(blk) && blk.querySelector('svg, img'))) blk = blk.parentElement;
+while (blk.parentElement && blk.parentElement.children.length === 1 && !blk.parentElement.classList.contains('listing-section')) blk = blk.parentElement;
+c = blk.parentElement && !blk.parentElement.classList.contains('listing-section') && !blk.parentElement.querySelector('.listing-photo-carousel, .listing-description, .features') ? blk.parentElement : blk;
+}
+if (!c || c.classList.contains('listing-section') || c.querySelector('.listing-photo-carousel, .listing-description, .features')) return;
 while (c.parentElement && c.parentElement.children.length === 1 && !c.parentElement.classList.contains('listing-section')) c = c.parentElement;
-if (c.dataset.ihfOh) return;
 c.dataset.ihfOh = '1';
-c.style.setProperty('display', 'flex', 'important');
-c.style.setProperty('flex-wrap', 'wrap', 'important');
-c.style.setProperty('justify-content', 'center', 'important');
-c.style.setProperty('gap', '16px 56px', 'important');
-c.style.setProperty('width', '100%', 'important');
-c.style.setProperty('max-width', '1300px', 'important');
-c.style.setProperty('margin-left', 'auto', 'important');
-c.style.setProperty('margin-right', 'auto', 'important');
-c.style.setProperty('padding-left', '0', 'important');
-c.style.setProperty('padding-right', '0', 'important');
-c.style.setProperty('box-sizing', 'border-box', 'important');
-const head = document.createElement('div');
+if (c.parentElement) c.parentElement.dataset.ihfOh = '1';
+let up = c;
+for (let k = 0; k < 10 && up && !up.classList.contains('listing-section'); k++) { up.dataset.ihfOh = '1'; up = up.parentElement; }
+const items = dates.map((d) => { let it = d; while (it.parentElement && it.parentElement !== c && c.contains(it.parentElement) && !dates.some((o) => o !== d && it.parentElement.contains(o))) it = it.parentElement; return it; });
+const list = items[0].parentElement && c.contains(items[0].parentElement) ? items[0].parentElement : c;
+[c, list].forEach((el) => {
+el.style.setProperty('display', 'flex', 'important');
+el.style.setProperty('flex-direction', 'column', 'important');
+el.style.setProperty('flex-wrap', 'nowrap', 'important');
+el.style.setProperty('align-items', 'flex-start', 'important');
+el.style.setProperty('gap', '14px', 'important');
+el.style.setProperty('width', '100%', 'important');
+el.style.setProperty('margin-left', '0', 'important');
+el.style.setProperty('margin-right', '0', 'important');
+});
+items.forEach((it, idx) => {
+const d = dates[idx];
+[it].concat(Array.from(it.querySelectorAll('*')).filter((x) => x.contains(d) && x !== d)).forEach((x) => {
+x.style.setProperty('display', 'flex', 'important');
+x.style.setProperty('flex-direction', 'row', 'important');
+x.style.setProperty('flex-wrap', 'nowrap', 'important');
+x.style.setProperty('align-items', 'center', 'important');
+x.style.setProperty('width', 'auto', 'important');
+x.style.setProperty('max-width', 'none', 'important');
+x.style.setProperty('flex-basis', 'auto', 'important');
+x.style.setProperty('margin-top', '0', 'important');
+x.style.setProperty('margin-bottom', '0', 'important');
+x.style.setProperty('gap', '12px', 'important');
+});
+});
+Array.from(root.querySelectorAll('*')).forEach((el) => {
+if (el.closest('.similar-listings, [class*="listing-result" i], .listing-photo-carousel, [data-ihf-own]')) return;
+const r = el.getBoundingClientRect();
+if (!r.width || r.width > 14 || r.height > 14 || el.children.length) return;
+const bg = getComputedStyle(el).backgroundColor.match(/\d+/g);
+if (bg && +bg[1] > 150 && +bg[0] < 120 && +bg[2] < 140) el.style.setProperty('display', 'none', 'important');
+});
+dates.forEach((d) => {
+let row = d.parentElement;
+while (row && row !== c && !Array.from(row.querySelectorAll('*')).some((el) => el.children.length === 0 && timeRe.test(el.textContent || ''))) row = row.parentElement;
+if (!row || row === c) return;
+let top = row;
+while (top.parentElement && top.parentElement !== c) top = top.parentElement;
+top.style.setProperty('width', 'auto', 'important');
+top.style.setProperty('max-width', 'none', 'important');
+top.style.setProperty('flex', '0 0 auto', 'important');
+top.style.setProperty('margin', '0', 'important');
+top.style.setProperty('padding', '0', 'important');
+row.style.setProperty('display', 'flex', 'important');
+row.style.setProperty('align-items', 'center', 'important');
+row.style.setProperty('flex-wrap', 'nowrap', 'important');
+const timeEl = Array.from(row.querySelectorAll('*')).find((el) => el.children.length === 0 && timeRe.test(el.textContent || '') && !el.dataset.ihfOhSep);
+if (!timeEl) return;
+const dcs = getComputedStyle(d);
+[timeEl, timeEl.parentElement].forEach((el) => {
+if (!el || el === row) return;
+el.style.setProperty('font-size', dcs.fontSize, 'important');
+el.style.setProperty('line-height', dcs.lineHeight, 'important');
+el.style.setProperty('margin', '0', 'important');
+el.style.setProperty('padding', '0', 'important');
+el.style.setProperty('display', 'inline-flex', 'important');
+el.style.setProperty('align-items', 'center', 'important');
+});
+timeEl.style.setProperty('font-weight', '700', 'important');
+if (!row.querySelector('[data-ihf-oh-sep]')) {
+const sep = document.createElement('span');
+sep.dataset.ihfOhSep = '1';
+sep.dataset.ihfOwn = '1';
+sep.textContent = '\u00a0\u00a0\u2013\u00a0\u00a0';
+sep.style.cssText = 'font-size:' + dcs.fontSize + ';line-height:' + dcs.lineHeight + ';color:' + dcs.color + ';white-space:pre;';
+const tHolder = timeEl.parentElement && timeEl.parentElement !== row && timeEl.parentElement.children.length === 1 ? timeEl.parentElement : timeEl;
+tHolder.parentElement.insertBefore(sep, tHolder);
+}
+});
+let head = c.parentElement && c.parentElement.querySelector(':scope > [data-ihf-oh-head]');
+if (!head) {
+head = document.createElement('div');
 head.dataset.ihfOwn = '1';
-head.style.cssText = 'width:100%;max-width:1300px;margin:48px auto 20px;box-sizing:border-box;';
-head.innerHTML = '<h2 style="margin:0 0 14px;text-align:center;font-size:26px;line-height:1.25;color:#1a1a1a;">Open Houses</h2><div style="height:1px;background:#1a1a1a;width:100%;"></div>';
+head.dataset.ihfOhHead = '1';
+const refH = Array.from(root.querySelectorAll('h2, h3')).find((h) => /^(about this property|property features)$/i.test((h.textContent || '').trim()));
+const rcs = refH ? getComputedStyle(refH) : null;
+const h2 = document.createElement('h2');
+h2.textContent = 'Open Houses';
+h2.style.cssText = 'margin:0 0 14px;text-align:left;color:#1a1a1a;line-height:1.25;font-weight:700;font-size:' + (rcs ? rcs.fontSize : '26px') + ';';
+const line = document.createElement('div');
+let divBorder = '1px solid rgba(0,0,0,0.25)';
+const locH = Array.from(root.querySelectorAll('h2, h3, h4')).find((h) => /^location information$/i.test((h.textContent || '').trim()));
+if (locH) {
+const scope = locH.parentElement && locH.parentElement.parentElement ? locH.parentElement.parentElement : locH.parentElement;
+const cand = [locH, locH.parentElement].concat(Array.from(scope.querySelectorAll('*'))).find((x) => x && parseFloat(getComputedStyle(x).borderBottomWidth) > 0);
+if (cand) { const s = getComputedStyle(cand); divBorder = s.borderBottomWidth + ' ' + s.borderBottomStyle + ' ' + s.borderBottomColor; }
+else { const hr = scope.querySelector('hr'); if (hr) { const s = getComputedStyle(hr); divBorder = (parseFloat(s.borderTopWidth) ? s.borderTopWidth + ' solid ' + s.borderTopColor : '1px solid ' + s.backgroundColor); } }
+}
+line.style.cssText = 'height:0;border-top:' + divBorder + ';width:100%;';
+head.appendChild(h2);
+head.appendChild(line);
+head.style.cssText = 'width:100%;margin:48px 0 20px;';
 c.parentElement.insertBefore(head, c);
+}
+const aboutH = Array.from(root.querySelectorAll('h1, h2, h3')).find((h) => /^about this property$/i.test((h.textContent || '').trim()));
+if (aboutH) {
+const ar = aboutH.getBoundingClientRect();
+const pr = aboutH.parentElement.getBoundingClientRect();
+[head, c].forEach((el) => {
+const r = el.getBoundingClientRect();
+if (!r.width || !ar.width) return;
+const dx = ar.left - r.left;
+if (Math.abs(dx) > 1 && Math.abs(dx) < 400 && !el.dataset.ihfOhAligned) {
+el.dataset.ihfOhAligned = '1';
+const ml = parseFloat(getComputedStyle(el).marginLeft) || 0;
+el.style.setProperty('margin-left', (ml + dx) + 'px', 'important');
+}
+el.style.setProperty('width', '100%', 'important');
+el.style.setProperty('max-width', '100%', 'important');
+el.style.setProperty('min-width', '0', 'important');
+el.style.setProperty('box-sizing', 'border-box', 'important');
+});
+}
+};
+_ihfCleanPhotoViewer = (root) => {
+const vw = window.innerWidth, vh = window.innerHeight;
+const cands = Array.from(root.querySelectorAll('*')).filter((el) => {
+if (!el.querySelector || !el.querySelector('img')) return false;
+if (!/\d+\s*beds?,\s*\d+/i.test(el.textContent || '')) return false;
+const r = el.getBoundingClientRect();
+return r.width >= vw * 0.8 && r.height >= vh * 0.8;
+});
+const viewers = cands.filter((el) => !cands.some((o) => o !== el && el.contains(o)));
+viewers.forEach((dlg) => {
+if (!dlg.dataset.ihfViewerStyled) {
+dlg.dataset.ihfViewerStyled = '1';
+const st = document.createElement('style');
+st.textContent = '[data-ihf-viewer-styled] *{scrollbar-width:none !important;-ms-overflow-style:none !important;}[data-ihf-viewer-styled] *::-webkit-scrollbar{display:none !important;width:0 !important;height:0 !important;}';
+dlg.appendChild(st);
+}
+const leaves = Array.from(dlg.querySelectorAll('*')).filter((el) => !el.closest('[data-ihf-own]'));
+const smallest = (re) => leaves.filter((el) => re.test((el.textContent || '').trim()) && !el.querySelector('img')).reduce((a, b) => (!a || b.querySelectorAll('*').length < a.querySelectorAll('*').length ? b : a), null);
+const hideUp = (el, re) => {
+if (!el) return;
+let t = el;
+while (t.parentElement && t.parentElement !== dlg && !t.parentElement.querySelector('img') && re.test((t.parentElement.textContent || '').trim())) t = t.parentElement;
+t.style.setProperty('display', 'none', 'important');
+};
+hideUp(smallest(/^\$[\d,]+$/), /^\$[\d,]+\s*(\d+\s*beds?.*)?$/i);
+hideUp(smallest(/^\d+\s*beds?,.*(square feet|sq)/i), /^(\$[\d,]+)?\s*\d+\s*beds?,.*(square feet|sq\.?\s*ft\.?)$/i);
+hideUp(smallest(/^share$/i), /^share\s*(save|saved)?$/i);
+hideUp(smallest(/^(save|saved)$/i), /^(share)?\s*(save|saved)$/i);
+Array.from(dlg.querySelectorAll('*')).forEach((el) => {
+if (el.tagName === 'IMG' || el.tagName === 'svg' || el.closest('svg') || el.querySelector('img')) return;
+const r = el.getBoundingClientRect();
+if (r.height > 0 && r.height <= 12 && r.width > 200) el.style.setProperty('display', 'none', 'important');
+});
+});
+};
+_ihfAlignVirtualTour = (root) => {
+const leaves = Array.from(root.querySelectorAll('h1, h2, h3, h4, p, span, div')).filter((el) => el.children.length === 0);
+const aboutH = leaves.find((el) => /^about this property$/i.test((el.textContent || '').trim()));
+const vtH = leaves.find((el) => /^virtual tour$/i.test((el.textContent || '').trim()) && /^H[1-4]$/.test(el.tagName) && !el.closest('[data-ihf-own], .ihf-info-col, .ihf-stats-clone, button, .similar-listings, [class*="listing-result" i], [class*="gallery" i], [class*="chip" i]'));
+if (!aboutH || !vtH) return;
+let vtSec = vtH;
+while (vtSec.parentElement && !vtSec.parentElement.contains(aboutH)) vtSec = vtSec.parentElement;
+let aboutSec = aboutH;
+while (aboutSec.parentElement && aboutSec.parentElement !== vtSec.parentElement) aboutSec = aboutSec.parentElement;
+if (!vtSec.parentElement || aboutSec.parentElement !== vtSec.parentElement) return;
+const ar = aboutH.getBoundingClientRect();
+const pr = aboutH.parentElement.getBoundingClientRect();
+if (!ar.width) return;
+const cs = getComputedStyle(aboutSec);
+['padding-left', 'padding-right', 'box-sizing'].forEach((k) => vtSec.style.setProperty(k, cs.getPropertyValue(k), 'important'));
+vtSec.style.setProperty('margin-left', 'auto', 'important');
+vtSec.style.setProperty('margin-right', 'auto', 'important');
+vtSec.style.setProperty('width', '100%', 'important');
+vtSec.style.setProperty('max-width', 'min(1300px, 100%)', 'important');
+vtSec.style.setProperty('min-width', '0', 'important');
+vtSec.style.setProperty('overflow', 'visible', 'important');
+Array.from(vtSec.querySelectorAll('*')).forEach((el) => {
+const c = getComputedStyle(el);
+if (parseFloat(c.marginLeft) < 0) el.style.setProperty('margin-left', '0', 'important');
+if (parseFloat(c.marginRight) < 0) el.style.setProperty('margin-right', '0', 'important');
+if (el.tagName === 'IFRAME' || el.tagName === 'VIDEO') { el.style.setProperty('width', '100%', 'important'); el.style.setProperty('max-width', '100%', 'important'); el.style.setProperty('display', 'block', 'important'); }
+});
+if (vtSec.contains(root.querySelector('.listing-photo-carousel')) || vtSec.dataset.ihfVtAligned) return;
+vtSec.dataset.ihfVtAligned = '1';
+const dx = ar.left - vtH.getBoundingClientRect().left;
+if (Math.abs(dx) > 1 && Math.abs(dx) < 400) {
+const cur = parseFloat(getComputedStyle(vtSec).paddingLeft) || 0;
+vtSec.style.setProperty('padding-left', (cur + dx) + 'px', 'important');
+const rr = aboutH.parentElement.getBoundingClientRect().right;
+const vr = vtSec.getBoundingClientRect().right;
+const curR = parseFloat(getComputedStyle(vtSec).paddingRight) || 0;
+vtSec.style.setProperty('padding-right', Math.max(0, curR + (vr - rr)) + 'px', 'important');
+}
+};
+_ihfAlignPoweredBy = (root) => {
+const pb = root.querySelector('.powered-by-ihomefinder');
+if (!pb) return;
+const ref = Array.from(root.querySelectorAll('*')).find((el) => el.children.length === 0 && /^MLSListings data last updated/i.test((el.textContent || '').trim()));
+if (!ref) return;
+const rs = getComputedStyle(ref);
+[pb].concat(Array.from(pb.querySelectorAll('*'))).forEach((el) => {
+el.style.setProperty('font-size', rs.fontSize, 'important');
+el.style.setProperty('line-height', rs.lineHeight, 'important');
+el.style.setProperty('text-align', 'left', 'important');
+el.style.setProperty('justify-content', 'flex-start', 'important');
+el.style.setProperty('margin-left', '0', 'important');
+el.style.setProperty('margin-right', '0', 'important');
+});
+pb.style.setProperty('width', 'auto', 'important');
+pb.style.setProperty('padding-left', '0', 'important');
+const dx = ref.getBoundingClientRect().left - pb.getBoundingClientRect().left;
+if (Math.abs(dx) > 1) pb.style.setProperty('margin-left', dx + 'px', 'important');
+};
+_ihfAlignSection = (root, sec) => {
+const about = Array.from((root.querySelector('.listing-section') || root).children).find((c) => c.classList.contains('listing-description'));
+if (!about || !sec) return;
+const cs = getComputedStyle(about);
+['padding-left', 'padding-right', 'box-sizing'].forEach((k) => sec.style.setProperty(k, cs.getPropertyValue(k), 'important'));
+sec.style.setProperty('margin-left', 'auto', 'important');
+sec.style.setProperty('margin-right', 'auto', 'important');
+sec.style.setProperty('width', '100%', 'important');
+sec.style.setProperty('max-width', 'min(1300px, 100%)', 'important');
+sec.style.setProperty('min-width', '0', 'important');
+Array.from(sec.querySelectorAll('*')).forEach((el) => {
+if (el.closest('[data-ihf-mc]') && el !== sec) return;
+const c = getComputedStyle(el);
+if (parseFloat(c.marginLeft) < 0) el.style.setProperty('margin-left', '0', 'important');
+if (parseFloat(c.marginRight) < 0) el.style.setProperty('margin-right', '0', 'important');
+});
+const aH = about.querySelector('h1, h2, h3');
+const sH = sec.querySelector('h1, h2, h3');
+if (aH && sH) {
+const dx = aH.getBoundingClientRect().left - sH.getBoundingClientRect().left;
+if (Math.abs(dx) > 1 && Math.abs(dx) < 400 && !sec.dataset.ihfSecAligned) { sec.dataset.ihfSecAligned = '1'; const pl = parseFloat(getComputedStyle(sec).paddingLeft) || 0; sec.style.setProperty('padding-left', (pl + dx) + 'px', 'important'); }
+}
+};
+_ihfStyleSchools = (root) => {
+const section = root.querySelector('.listing-section');
+if (!section) return;
+const sec = Array.from(section.children).find((c) => c.classList.contains('schools'));
+if (!sec) return;
+const fr = sec.querySelector('iframe');
+if (!fr) return;
+[['border', 'none'], ['outline', 'none'], ['box-shadow', 'none'], ['width', '100%'], ['max-width', '100%'], ['height', '600px'], ['display', 'block'], ['clip-path', 'inset(2px 2px 38px 2px)'], ['margin-bottom', '-38px']].forEach(([k, v]) => fr.style.setProperty(k, v, 'important'));
+let n = fr.parentElement;
+while (n && n !== sec) {
+[['border', 'none'], ['outline', 'none'], ['box-shadow', 'none'], ['width', '100%'], ['max-width', 'none'], ['height', 'auto'], ['max-height', 'none']].forEach(([k, v]) => n.style.setProperty(k, v, 'important'));
+n.style.setProperty('overflow', 'visible', 'important');
+n = n.parentElement;
+}
+this._ihfAlignSection(root, sec);
+};
+_ihfBuildMortgageCalc = (root) => {
+const section = root.querySelector('.listing-section');
+if (!section) return;
+const kids = Array.from(section.children);
+const native = kids.find((c) => c.classList.contains('mortgage-calculator'));
+const priceEl = root.querySelector('.ihf-info-col .list-price') || root.querySelector('.listing-header .list-price');
+const pm = priceEl && (priceEl.textContent || '').match(/\$\s*([\d,]+)/);
+if (!pm) return;
+const price0 = +pm[1].replace(/,/g, '');
+if (!price0) return;
+let mc = kids.find((c) => c.dataset && c.dataset.ihfMc);
+if (native) native.style.setProperty('display', 'none', 'important');
+const footSec = kids.find((c) => c !== mc && (c.classList.contains('listing-footer') || /MLSListings Inc\.|data relating to real estate/i.test(c.textContent || '')));
+if (mc && mc.dataset.ihfMcKey === String(price0)) {
+if (footSec && mc.nextElementSibling !== footSec) section.insertBefore(mc, footSec);
+this._ihfAlignSection(root, mc);
+return;
+}
+const leaves = Array.from(root.querySelectorAll('*')).filter((el) => el.children.length === 0 && (el.textContent || '').trim() && !el.closest('[data-ihf-mc], .similar-listings, [role="dialog"]'));
+const val = (re) => { const i = leaves.findIndex((el) => re.test((el.textContent || '').trim())); return i >= 0 && leaves[i + 1] ? (leaves[i + 1].textContent || '').trim() : ''; };
+const pType = val(/^property type$/i);
+const pSub = val(/^property sub\s*-?\s*type$/i);
+const statsEl = root.querySelector('.ihf-stats-clone');
+if (!pType && !pSub && !statsEl) return;
+const typeStr = [pType, pSub, statsEl ? statsEl.textContent : ''].join(' ');
+if (/\b(LND|COM|MOB|MFG|land|vacant|commercial|industrial|office|retail|mobile|manufactured)\b/i.test(typeStr)) {
+if (mc) mc.remove();
+return;
+}
+const isCondo = /\b(CND|condo|condominium|townho\w*|co-?op)\b/i.test(typeStr);
+const num = (s) => parseFloat(String(s || '').replace(/[^\d.]/g, '')) || 0;
+let hoa = num(val(/^(hoa|association)\s*(fee|dues)s?$/i));
+const freq = val(/^(hoa|association)\s*(fee\s*)?frequency$/i);
+if (/annual|year/i.test(freq)) hoa = hoa / 12; else if (/semi/i.test(freq)) hoa = hoa / 6; else if (/quarter/i.test(freq)) hoa = hoa / 3;
+const st = { price: price0, downPct: 20, rate: 6.8, years: 30, taxPct: 1.2, ins: isCondo ? 1000 : 2000, hoa: Math.round(hoa) };
+if (mc) mc.remove();
+mc = document.createElement('div');
+mc.dataset.ihfMc = '1';
+mc.dataset.ihfOwn = '1';
+mc.dataset.ihfMcKey = String(price0);
+const aboutH = root.querySelector('.listing-description h1, .listing-description h2, .listing-description h3');
+const hSize = aboutH ? getComputedStyle(aboutH).fontSize : '26px';
+const inp = 'font:inherit;font-size:16px;color:#1a1a1a;border:none;border-bottom:1px solid #cccccc;border-radius:0;padding:6px 0;outline:none;background:transparent;width:100%;box-sizing:border-box;transition:border-color .2s ease;';
+const lab = 'display:flex;flex-direction:column;gap:6px;font-size:13px;color:#666666;min-width:0;';
+const field = (k, label, extra) => '<label style="' + lab + '">' + label + '<input data-k="' + k + '" inputmode="decimal" autocomplete="off" style="' + inp + '">' + (extra || '') + '</label>';
+const row = (k, label, color) => '<div data-row="' + k + '" style="display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:14px;color:#1a1a1a;"><span style="display:flex;align-items:center;gap:10px;"><span style="width:10px;height:10px;border-radius:50%;background:' + color + ';flex:0 0 auto;"></span>' + label + '</span><span data-o="' + k + '" style="font-weight:600 !important;"></span></div>';
+mc.innerHTML = '<h2 data-mc-h style="margin:0 0 24px;font-size:' + hSize + ';line-height:1.25;color:#1a1a1a;font-weight:700 !important;text-align:left;">Mortgage Calculator</h2>'
++ '<div style="display:flex;flex-wrap:wrap;gap:32px;align-items:stretch;">'
++ '<div style="flex:1 1 340px;min-width:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 28px;align-content:start;">'
++ field('price', 'Home Price')
++ '<div></div>'
++ field('downPct', 'Down Payment (%)')
++ field('downAmt', 'Down Payment ($)')
++ field('rate', 'Interest Rate (%)')
++ '<div></div>'
++ '<div style="grid-column:1 / -1;display:flex;flex-direction:column;gap:10px;font-size:13px;color:#666666;">Loan Term<div data-terms style="display:flex;flex-wrap:wrap;gap:8px;"></div></div>'
++ field('taxPct', 'Property Tax (% per year)', '<span data-o="taxHint" style="font-size:12px;color:#888888;"></span>')
++ field('ins', 'Home Insurance ($ per year)')
++ field('hoa', 'HOA Dues ($ per month)')
++ '</div>'
++ '<div style="flex:1 1 300px;min-width:0;border:1px solid #e0e0e0;border-radius:12px;padding:28px;box-sizing:border-box;display:flex;flex-direction:column;gap:18px;">'
++ '<div style="font-size:13px;color:#666666;">Estimated Monthly Payment</div>'
++ '<div data-o="total" style="font-size:40px;line-height:1.1;color:#1a1a1a;font-weight:700 !important;letter-spacing:-0.01em;"></div>'
++ '<div data-bar style="display:flex;height:10px;border-radius:999px;overflow:hidden;background:#f0f0f0;"></div>'
++ '<div style="display:flex;flex-direction:column;gap:12px;">'
++ row('pi', 'Principal &amp; Interest', '#1a1a1a') + row('tax', 'Property Tax', '#6b6b6b') + row('insM', 'Home Insurance', '#a8a8a8') + row('hoaM', 'HOA Dues', '#d6d6d6')
++ '</div>'
++ '<div style="height:1px;background:#e0e0e0;"></div>'
++ '<div style="display:flex;justify-content:space-between;font-size:14px;color:#1a1a1a;"><span>Loan Amount</span><span data-o="loan" style="font-weight:600 !important;"></span></div>'
++ '</div></div>'
++ '<p style="margin:20px 0 0;font-size:13px;line-height:1.55;color:#666666;font-style:italic;">This program only provides an estimate. Ask your agent for the tax rates in your area. Insurance estimate is based on an average cost, your final premium cost will be determined by the type of coverage you select. For more information on financing, contact your preferred lender or bank.</p>';
+mc.style.cssText = 'display:block;margin-top:48px;box-sizing:border-box;';
+const q = (s) => mc.querySelector(s);
+const money = (n) => '$' + Math.round(n).toLocaleString('en-US');
+const I = {};
+['price', 'downPct', 'downAmt', 'rate', 'taxPct', 'ins', 'hoa'].forEach((k) => { I[k] = q('[data-k="' + k + '"]'); });
+const show = (k, v) => { if (mc.getRootNode().activeElement === I[k]) return; I[k].value = v; };
+const fill = () => {
+show('price', money(st.price));
+show('downPct', String(+st.downPct.toFixed(2)));
+show('downAmt', money(st.price * st.downPct / 100));
+show('rate', String(st.rate));
+show('taxPct', String(st.taxPct));
+show('ins', money(st.ins));
+show('hoa', money(st.hoa));
+};
+const calc = () => {
+const loan = Math.max(0, st.price * (1 - st.downPct / 100));
+const r = st.rate / 100 / 12, n = st.years * 12;
+const pi = r > 0 ? loan * r / (1 - Math.pow(1 + r, -n)) : loan / n;
+const tax = st.price * st.taxPct / 100 / 12;
+const insM = st.ins / 12;
+const hoaM = st.hoa;
+const total = pi + tax + insM + hoaM;
+q('[data-o="total"]').textContent = money(total);
+q('[data-o="pi"]').textContent = money(pi);
+q('[data-o="tax"]').textContent = money(tax);
+q('[data-o="insM"]').textContent = money(insM);
+q('[data-o="hoaM"]').textContent = money(hoaM);
+q('[data-o="loan"]').textContent = money(loan);
+q('[data-o="taxHint"]').textContent = money(tax) + ' per month';
+q('[data-row="hoaM"]').style.display = hoaM > 0 ? 'flex' : 'none';
+const bar = q('[data-bar]');
+bar.innerHTML = '';
+[[pi, '#1a1a1a'], [tax, '#6b6b6b'], [insM, '#a8a8a8'], [hoaM, '#d6d6d6']].forEach(([v, c]) => {
+if (v <= 0 || total <= 0) return;
+const s = document.createElement('span');
+s.style.cssText = 'display:block;height:100%;background:' + c + ';width:' + (v / total * 100) + '%;transition:width .3s ease;';
+bar.appendChild(s);
+});
+};
+const terms = q('[data-terms]');
+const paintTerms = () => Array.from(terms.children).forEach((b) => {
+const on = +b.dataset.y === st.years;
+b.style.background = on ? '#1a1a1a' : '#ffffff';
+b.style.color = on ? '#ffffff' : '#1a1a1a';
+b.style.borderColor = on ? '#1a1a1a' : '#cccccc';
+});
+[30, 20, 15, 10].forEach((y) => {
+const b = document.createElement('button');
+b.type = 'button';
+b.dataset.y = String(y);
+b.textContent = y + '-Year Fixed';
+b.style.cssText = 'font:inherit;font-size:13px;padding:8px 14px;border-radius:6px;border:1px solid #cccccc;cursor:pointer;transition:background .2s ease,color .2s ease,border-color .2s ease;';
+b.addEventListener('mouseenter', () => { if (+b.dataset.y !== st.years) b.style.borderColor = '#1a1a1a'; });
+b.addEventListener('mouseleave', paintTerms);
+b.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); st.years = y; paintTerms(); calc(); });
+terms.appendChild(b);
+});
+Object.keys(I).forEach((k) => {
+const el = I[k];
+el.addEventListener('keydown', (e) => e.stopPropagation());
+el.addEventListener('focus', () => { el.style.borderBottomColor = '#1a1a1a'; });
+el.addEventListener('input', () => {
+const v = num(el.value);
+if (k === 'price') st.price = v;
+else if (k === 'downPct') st.downPct = Math.min(100, v);
+else if (k === 'downAmt') st.downPct = st.price > 0 ? Math.min(100, v / st.price * 100) : 0;
+else st[k] = v;
+fill();
+calc();
+});
+el.addEventListener('blur', () => { el.style.borderBottomColor = '#cccccc'; fill(); });
+});
+paintTerms();
+fill();
+calc();
+const refH = Array.from(root.querySelectorAll('h2, h3')).find((h) => !h.closest('[data-ihf-own]') && /^(property features|about this property)$/i.test((h.textContent || '').trim()));
+if (refH) {
+const rs = getComputedStyle(refH);
+const mh = mc.querySelector('[data-mc-h]');
+['font-size', 'line-height', 'letter-spacing', 'font-family'].forEach((k) => mh.style.setProperty(k, rs.getPropertyValue(k), 'important'));
+}
+const locH = Array.from(root.querySelectorAll('h2, h3, h4')).find((h) => /^location information$/i.test((h.textContent || '').trim()));
+if (locH) {
+const scope = locH.parentElement && locH.parentElement.parentElement ? locH.parentElement.parentElement : locH.parentElement;
+const cand = [locH, locH.parentElement].concat(Array.from(scope.querySelectorAll('*'))).find((x) => x && parseFloat(getComputedStyle(x).borderBottomWidth) > 0);
+let divBorder = '';
+if (cand) { const s = getComputedStyle(cand); divBorder = s.borderBottomWidth + ' ' + s.borderBottomStyle + ' ' + s.borderBottomColor; }
+else { const hr = scope.querySelector('hr'); if (hr) { const s = getComputedStyle(hr); divBorder = (parseFloat(s.borderTopWidth) ? s.borderTopWidth + ' solid ' + s.borderTopColor : '1px solid ' + s.backgroundColor); } }
+
+}
+const features = kids.find((c) => c.classList.contains('features'));
+const desc = kids.find((c) => c.classList.contains('listing-description'));
+const ref = footSec || native || null;
+if (ref) section.insertBefore(mc, ref); else section.appendChild(mc);
+this._ihfAlignSection(root, mc);
+};
+_ihfCrispCarousel = (root) => {
+const ul = root.querySelector('.listing-photo-carousel ul');
+if (!ul || ul.__ihfCrisp) return;
+ul.__ihfCrisp = true;
+let timer = null;
+const snap = () => {
+const m = getComputedStyle(ul).transform;
+const mm = m && m.match(/matrix\(([^)]+)\)/);
+if (!mm) return;
+const tx = parseFloat(mm[1].split(',')[4]);
+if (!isFinite(tx) || Math.abs(tx - Math.round(tx)) < 0.01) return;
+const dur = ul.style.transitionDuration;
+ul.style.transitionDuration = '0ms';
+ul.style.transform = 'translate3d(' + Math.round(tx) + 'px, 0px, 0px)';
+void ul.offsetWidth;
+ul.style.transitionDuration = dur;
+};
+const schedule = () => {
+if (!/%/.test(ul.style.transform || '')) return;
+clearTimeout(timer);
+const d = parseFloat(getComputedStyle(ul).transitionDuration) || 0;
+timer = setTimeout(snap, d * 1000 + 30);
+};
+new MutationObserver(schedule).observe(ul, { attributes: true, attributeFilter: ['style'] });
+ul.addEventListener('transitionend', (e) => { if (e.target === ul) snap(); });
+window.addEventListener('resize', schedule);
+schedule();
+setTimeout(snap, 400);
 };
 _ihfAddCarouselHeart = (root) => {
 const carousel = root.querySelector('.listing-photo-carousel');
@@ -395,15 +938,20 @@ style.textContent = scopeSel + " { --rh-font: 'Inter', system-ui, sans-serif !im
 }
 try { this._ihfMoveResultsCount(root); } catch (e) { console.error('_ihfMoveResultsCount', e); }
 try { this._ihfTraceHearts(root); } catch (e) { console.error('_ihfTraceHearts', e); }
-try { this._ihfReplaceMap(root); } catch (e) { console.error('_ihfReplaceMap', e); }
 try { this._ihfBoldFeatureLabels(root); } catch (e) { console.error('_ihfBoldFeatureLabels', e); }
-try { this._ihfAddCarouselHeart(root); } catch (e) { console.error('_ihfAddCarouselHeart', e); }
+try { root.querySelectorAll('[data-ihf-heart]').forEach((h) => h.remove()); root.querySelectorAll('.listing-photo-carousel [data-ihf-badge-cloned]').forEach((b) => b.style.setProperty('display', 'none', 'important')); } catch (e) {}
 try { this._ihfAddDaysOnMarket(root); } catch (e) { console.error('_ihfAddDaysOnMarket', e); }
 try { this._ihfBuildOpenHouses(root); } catch (e) { console.error('_ihfBuildOpenHouses', e); }
-try { this._ihfFixCarouselWrap(root); } catch (e) { console.error('_ihfFixCarouselWrap', e); }
+
 try { this._ihfFixDetailLayout(root); } catch (e) { console.error('_ihfFixDetailLayout', e); }
 try { this._ihfBuildScrollNav(root); } catch (e) { console.error('_ihfBuildScrollNav', e); }
 try { this._ihfFixGalleryModal(root); } catch (e) { console.error('_ihfFixGalleryModal', e); }
+try { this._ihfCleanPhotoViewer(root); } catch (e) { console.error('_ihfCleanPhotoViewer', e); }
+try { this._ihfAlignPoweredBy(root); } catch (e) { console.error('_ihfAlignPoweredBy', e); }
+try { this._ihfCrispCarousel(root); } catch (e) { console.error('_ihfCrispCarousel', e); }
+try { this._ihfStyleSchools(root); } catch (e) { console.error('_ihfStyleSchools', e); }
+try { this._ihfBuildMortgageCalc(root); } catch (e) { console.error('_ihfBuildMortgageCalc', e); }
+try { this._ihfAlignVirtualTour(root); } catch (e) { console.error('_ihfAlignVirtualTour', e); }
 try { this._ihfFixFormValues(root); } catch (e) { console.error('_ihfFixFormValues', e); }
 root.querySelectorAll('*').forEach((el) => {
 if (el.shadowRoot) {
@@ -653,6 +1201,7 @@ carousel.style.setProperty('z-index', '1', 'important');
 carousel.style.setProperty('padding', '0', 'important');
 carousel.style.setProperty('box-sizing', 'border-box', 'important');
 Array.from(carousel.children).forEach((child) => {
+if (child.dataset.ihfLoop || child.dataset.ihfHeart || child.dataset.ihfBadgeCloned || child.dataset.ihfOwn) return;
 child.style.setProperty('position', 'static', 'important');
 child.style.setProperty('top', 'auto', 'important');
 child.style.setProperty('padding', '0', 'important');
@@ -745,7 +1294,7 @@ let icon = '';
 if (fmt.type === 'bed') icon = bedIcon;
 else if (fmt.type === 'bath') icon = bathIcon;
 else if (fmt.type === 'sqft') icon = sqftIcon;
-else if (fmt.type === 'home') icon = houseIcon;
+else if (fmt.type === 'home') { icon = houseIcon; cellDiv.dataset.ihfHome = '1'; }
 const isVirtualTour = /^virtual tour$/i.test(text);
 if (isVirtualTour) {
 cellDiv.dataset.ihfVt = '1';
@@ -787,9 +1336,43 @@ const lotText = lotAcres >= 1
 const lotCell = document.createElement('div');
 lotCell.style.cssText = 'font-size:14px;color:var(--rh-text-primary);display:flex;align-items:center;gap:7px;white-space:nowrap;';
 lotCell.innerHTML = lotIcon2 + '<span>' + lotText + '</span>';
+lotCell.dataset.ihfLot = '1';
 cloneRowEl._sqftCellEl.parentElement.insertBefore(lotCell, cloneRowEl._sqftCellEl.nextSibling);
 const primaryNum = parseFloat(((cloneRowEl._sqftCellEl.textContent || '').match(/[\d,]+/) || ['0'])[0].replace(/,/g, ''));
 if (primaryNum && lotSqft && Math.abs(primaryNum - lotSqft) / lotSqft < 0.02) cloneRowEl._sqftCellEl.style.setProperty('display', 'none', 'important');
+}
+}
+if (cloneRowEl && !cloneRowEl.dataset.ihfExtrasAdded) {
+const xl = Array.from(root.querySelectorAll('*')).filter((el) => el.children.length === 0 && (el.textContent || '').trim() && !el.closest('.similar-listings, [role="dialog"], [data-ihf-own], .ihf-stats-clone'));
+const xv = (re) => { const i = xl.findIndex((el) => re.test((el.textContent || '').trim())); return i >= 0 && xl[i + 1] ? (xl[i + 1].textContent || '').trim() : ''; };
+const yearRaw = xv(/^year built$/i);
+const hoaRaw = xv(/^(hoa|association)\s*(fee|dues)s?$/i);
+const typeReady = xv(/^property type$/i) || xv(/^property sub\s*-?\s*type$/i);
+if (typeReady || yearRaw || hoaRaw) {
+cloneRowEl.dataset.ihfExtrasAdded = '1';
+const mkCell = (svg, text, key) => {
+const d = document.createElement('div');
+d.dataset[key] = '1';
+d.style.cssText = 'font-size:14px;color:var(--rh-text-primary);display:flex;align-items:center;gap:7px;white-space:nowrap;';
+d.innerHTML = svg + '<span>' + text + '</span>';
+return d;
+};
+const ym = yearRaw.match(/\b(1[6-9]\d\d|20\d\d)\b/);
+if (ym) {
+const craneIcon = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 17.5L17.5 3.5l3 3L6.5 20.5z"/><path d="M8 13l1.5 1.5M10.5 10.5l1.5 1.5M13 8l1.5 1.5M15.5 5.5l1.5 1.5"/><g transform="rotate(-45 12 12) translate(1.8 1.2) scale(0.85)"><path d="M16 3.5H8.5C5.6 3.5 3.6 5.4 3 8.6c1.7-1.5 3.6-1.9 5.5-1.1H16z" fill="#ffffff"/><path d="M16 3.9h2.6v3.2H16z" fill="#ffffff"/><path d="M10.4 7.5h3.2v13a1.6 1.6 0 0 1-3.2 0z" fill="#ffffff"/></g></svg>';
+const yCell = mkCell(craneIcon, 'Built ' + ym[1], 'ihfYear');
+const after = cloneRowEl.querySelector('[data-ihf-lot]') || cloneRowEl._sqftCellEl;
+if (after) after.parentElement.insertBefore(yCell, after.nextSibling); else cloneRowEl.appendChild(yCell);
+}
+const hoaAmt = parseFloat(hoaRaw.replace(/[^\d.]/g, '')) || 0;
+if (hoaAmt > 0) {
+const freq = xv(/^(hoa|association)\s*(fee\s*)?frequency$/i);
+const per = /annual|year/i.test(freq) ? '/yr' : /semi/i.test(freq) ? '/6 mo' : /quarter/i.test(freq) ? '/qtr' : '/mo';
+const hoaIcon = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 14h3v7H2z"/><path d="M5 15h3.5c.8 0 1.6.3 2.2.8l.8.7h3a1.5 1.5 0 0 1 0 3H10"/><path d="M14.5 18.5l4.8-2.3a1.6 1.6 0 0 1 1.9 2.5L16 21.5c-.6.3-1.2.5-1.9.5H5"/><circle cx="15" cy="7.5" r="3.5"/><path d="M15 5.8v3.4M14 6.6h1.6a.8.8 0 0 1 0 1.6h-1.2a.8.8 0 0 0 0 1.6H16"/></svg>';
+const hCell = mkCell(hoaIcon, 'HOA $' + Math.round(hoaAmt).toLocaleString('en-US') + per, 'ihfHoa');
+const home = cloneRowEl.querySelector('[data-ihf-home]');
+if (home) home.parentElement.insertBefore(hCell, home.nextSibling); else cloneRowEl.appendChild(hCell);
+}
 }
 }
 if (header && header.dataset.ihfRowBuilt && !root.querySelector('.ihf-info-col') && (this._ihfRebuilds || 0) < 5) {
@@ -801,7 +1384,7 @@ if (header && statsRow && !header.dataset.ihfRowBuilt) {
 header.dataset.ihfRowBuilt = '1';
 const col = document.createElement('div');
 col.className = 'ihf-info-col';
-col.style.cssText = 'display:flex;flex-direction:column;gap:20px;margin-top:0;margin-bottom:-12px;background:#ffffff;position:relative;z-index:2;padding-top:16px;padding-bottom:0;';
+col.style.cssText = 'display:flex;flex-direction:column;gap:5.5px;margin-top:0;margin-bottom:-12px;background:#ffffff;position:relative;z-index:2;padding-top:16px;padding-bottom:0;';
 const topRow = document.createElement('div');
 topRow.style.cssText = 'display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:nowrap;gap:32px;';
 const headerClone = header.cloneNode(true);
@@ -916,13 +1499,13 @@ const fixTitle = () => {
 if (this._ihfTitleFixed) return;
 const t = document.title;
 const suffixes = 'Street|St|Avenue|Ave|Road|Rd|Drive|Dr|Lane|Ln|Court|Ct|Way|Boulevard|Blvd|Place|Pl|Terrace|Ter|Circle|Cir|Parkway|Pkwy|Trail|Trl|Loop|Highway|Hwy|Square|Sq|Crossing|Xing|Point|Pt';
-const suffixRe = new RegExp('\\b(' + suffixes + ')\\b\\s+([A-Za-z .\'-]+?),\\s*([A-Za-z]{2})\\b', 'i');
+const suffixRe = new RegExp('^(.*)\\b(' + suffixes + ')\\b\\s+([A-Za-z .\'-]+?),\\s*([A-Za-z]{2})\\b', 'i');
 let matched = false;
-let fixed = t.replace(suffixRe, (m, suf, city, st) => {
+let fixed = t.replace(suffixRe, (m, pre, suf, city, st) => {
 matched = true;
 const properSuf = suf.charAt(0).toUpperCase() + suf.slice(1).toLowerCase();
 const properCity = city.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase());
-return properSuf + ' | ' + properCity + ', ' + st.toUpperCase();
+return pre + properSuf + ' | ' + properCity + ', ' + st.toUpperCase();
 });
 if (!matched) {
 fixed = t.replace(/\b([A-Z]{2,}(?:[ .'-][A-Z]{2,})*),\s*([A-Z]{2})\b/g, (m, city, st) => { matched = true; return '| ' + city.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase()) + ', ' + st; });
@@ -1026,8 +1609,33 @@ const iframe = document.createElement('iframe');
 iframe.src = 'https://keseckerproperties.com/listing/Listing%20Map.html?address=' + encodeURIComponent(address);
 iframe.setAttribute('title', 'Map');
 iframe.setAttribute('loading', 'lazy');
-iframe.style.cssText = 'width:100%;height:450px;border:none;display:block;margin:16px 0 32px;position:static;';
-mapSection.appendChild(iframe);
+iframe.style.cssText = 'width:100%;height:450px;border:none;display:block;';
+const frameWrap = document.createElement('div');
+frameWrap.dataset.ihfOwn = '1';
+frameWrap.style.cssText = 'display:block;width:100%;height:450px;min-height:450px;margin:16px 0 32px;position:relative;overflow:hidden;background:#ffffff;';
+frameWrap.appendChild(iframe);
+mapSection.appendChild(frameWrap);
+let up = mapSection;
+for (let i = 0; i < 3 && up && !up.classList.contains('listing-section'); i++) {
+up.style.setProperty('height', 'auto', 'important');
+up.style.setProperty('max-height', 'none', 'important');
+up.style.setProperty('min-height', '0', 'important');
+up.style.setProperty('overflow', 'visible', 'important');
+up.style.setProperty('display', 'block', 'important');
+up.style.setProperty('flex', '0 0 auto', 'important');
+up = up.parentElement;
+}
+if (!window.__ihfMapMsgBound) {
+window.__ihfMapMsgBound = true;
+window.addEventListener('message', (ev) => {
+if (!ev.data || ev.data.type !== 'ihf-map-failed') return;
+document.querySelectorAll('*').forEach((h) => {
+const sr = h.shadowRoot;
+if (!sr) return;
+sr.querySelectorAll('[data-ihf-map-replaced]').forEach((sec) => sec.style.setProperty('display', 'none', 'important'));
+});
+});
+}
 };
 _ihfTraceHearts = (root) => {
 root.querySelectorAll('.ihf-listing-result-badge-fav').forEach((btn) => {
@@ -1111,5 +1719,303 @@ this._ihfFixAllShadowRoots();
   function start() { try { f._ihfStartCaseFix(); } catch (e) { console.error('[ihf-content] start failed', e); } }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
   console.log('[ihf-content] listing fixes loaded');
+})();
+(function () {
+  if (window.__ihfAreaPanelFix) return;
+  window.__ihfAreaPanelFix = true;
+  var CSS = ''
++ '[data-ihf-ap="card"]{width:376px !important;max-width:calc(100vw - 32px) !important;min-width:0 !important;box-sizing:border-box !important;padding:22px 28px 20px !important;border-radius:12px !important;box-shadow:0 12px 40px rgba(0,0,0,0.12) !important;}'
+    + '[data-ihf-ap="wrap"]{width:100% !important;max-width:100% !important;flex-basis:100% !important;flex-grow:0 !important;margin-left:0 !important;margin-right:0 !important;padding-left:0 !important;padding-right:0 !important;box-sizing:border-box !important;}'
+    + '[data-ihf-ap="field"]{width:100% !important;max-width:320px !important;min-width:0 !important;margin:0 0 18px !important;}'
++ '[data-ihf-ap="group"],[data-ihf-ap="ghide"]{display:none !important;}'
++ '[data-ihf-ap="field"]::before,[data-ihf-ap="field"]::after,[data-ihf-ap="field"] *::before,[data-ihf-ap="field"] *::after{display:none !important;content:none !important;border:none !important;}'
++ '[data-ihf-ap="field"] *{border-bottom:none !important;box-shadow:none !important;outline:none !important;}'
++ '[data-ihf-ap="field"] [role="presentation"],[data-ihf-ap="field"] fieldset{display:none !important;}'
++ '[data-ihf-ap="field"] *{background-color:transparent !important;}'
++ '[data-ihf-ap="field"]{border:none !important;box-shadow:none !important;background-image:linear-gradient(#1a1a1a,#1a1a1a),linear-gradient(#cccccc,#cccccc) !important;background-repeat:no-repeat !important;background-position:left bottom,left bottom !important;background-size:0 1px,100% 1px !important;transition:background-size .3s ease !important;}'
++ '[data-ihf-ap="field"]:hover,[data-ihf-ap="field"]:focus-within{background-size:100% 1px,100% 1px !important;}'
+    + '[data-ihf-ap="field"] *{background-image:none !important;box-shadow:none !important;}'
+    + '[data-ihf-ap="gbtn"]{flex:1 1 0 !important;min-width:0 !important;height:38px !important;margin:0 !important;border:1px solid #1a1a1a !important;border-radius:6px !important;font-size:13px !important;text-transform:none !important;box-shadow:none !important;background-image:none !important;background-color:#ffffff !important;color:#1a1a1a !important;transition:background-color .2s ease,color .2s ease !important;}'
+    + '[data-ihf-ap="gbtn"][class*="contained"]{background-color:#1a1a1a !important;color:#ffffff !important;}'
+    + '[data-ihf-ap="gbtn"]:not([class*="contained"]):hover{background-color:#1a1a1a !important;color:#ffffff !important;}'
+    + '[data-ihf-ap="gbtn"] *{color:inherit !important;}'
++ '[data-ihf-ap="actions"]{margin:-4px 0 0 !important;padding:0 !important;border-top:none !important;display:flex !important;gap:10px !important;justify-content:flex-start !important;}'
+    + '[data-ihf-ap="abtn"]{margin:0 !important;height:40px !important;padding:0 20px !important;border:1px solid #1a1a1a !important;border-radius:6px !important;font-size:14px !important;text-transform:none !important;box-shadow:none !important;transition:background-color .2s ease,color .2s ease !important;}'
++ '[data-ihf-ap="abtn"][data-ihf-primary="1"]{background-color:#000000 !important;color:#ffffff !important;border:none !important;font-weight:600 !important;}'
+    + '[data-ihf-ap="abtn"][data-ihf-primary="1"]:hover{background-color:transparent !important;color:#000000 !important;border:none !important;}'
+    + '[data-ihf-ap="abtn"]:not([data-ihf-primary="1"]){background-color:#ffffff !important;color:#1a1a1a !important;}'
+    + '[data-ihf-ap="abtn"]:not([data-ihf-primary="1"]):hover{background-color:#1a1a1a !important;color:#ffffff !important;}'
+    + '[data-ihf-ap="abtn"] *{color:inherit !important;}'
++ '[data-ihf-ap-hidden="1"]{display:none !important;}'
++ '[data-ihf-closed="1"] [class*="popupIndicatorOpen" i]{transform:none !important;}'
+    + 'button:disabled,button[disabled]{background-color:#f0f0f0 !important;color:#9e9e9e !important;border-color:#e0e0e0 !important;box-shadow:none !important;cursor:default !important;}'
+    + 'button:disabled *,button[disabled] *{color:#9e9e9e !important;}';
+  var st = { card: null, fresh: false };
+  function tag(el, v) { if (el && el.getAttribute('data-ihf-ap') !== v) el.setAttribute('data-ihf-ap', v); }
+  function findCard(sr) {
+    var groups = sr.querySelectorAll('[role="group"]');
+    for (var i = 0; i < groups.length; i++) {
+      var g = groups[i];
+      if (!/expand area/i.test(g.textContent || '')) continue;
+      var c = g.parentElement;
+      while (c && c.parentElement && !(c.querySelectorAll('input').length >= 2 && /reset/i.test(c.textContent || ''))) c = c.parentElement;
+      if (!c) return null;
+      var tip = c.closest('[role="tooltip"]');
+      if (tip && tip.firstElementChild && tip.firstElementChild.contains(g)) c = tip.firstElementChild;
+      return { card: c, group: g };
+    }
+    return null;
+  }
+function lbId(inp) { return inp.getAttribute('aria-controls') || (inp.id ? inp.id + '-popup' : ''); }
+function listboxes(sr, card) {
+var out = [];
+card.querySelectorAll('input').forEach(function (inp) {
+var id = lbId(inp);
+      var lb = id && (sr.getElementById ? sr.getElementById(id) : sr.querySelector('[id="' + id + '"]'));
+      if (!lb) return;
+      var p = lb;
+      while (p.parentElement && p.parentElement !== sr.firstElementChild && p.parentElement.parentNode !== sr) p = p.parentElement;
+p.__ihfLbId = id;
+out.push(p);
+});
+return out;
+  }
+  function apply(sr) {
+var s = sr.querySelector('style[data-ihf-area-css2]');
+if (!s) { s = document.createElement('style'); s.setAttribute('data-ihf-area-css2', '1'); sr.appendChild(s); }
+if (s.textContent !== CSS) s.textContent = CSS;
+if (s !== sr.lastElementChild) sr.appendChild(s);
+    var f = findCard(sr);
+    if (!f) { st.card = null; st.fresh = false; return; }
+    var card = f.card, group = f.group;
+    tag(card, 'card');
+    var marks = [group];
+    card.querySelectorAll('input').forEach(function (inp) {
+      var field = inp.closest('[role="combobox"]') || inp.parentElement;
+      tag(field, 'field');
+      marks.push(field);
+    });
+    marks.forEach(function (m) {
+      var p = m.parentElement;
+      while (p && p !== card) { if (!p.getAttribute('data-ihf-ap')) tag(p, 'wrap'); p = p.parentElement; }
+    });
+tag(group, 'group');
+    if (group.parentElement && group.parentElement !== card && group.parentElement.children.length === 1) group.parentElement.setAttribute('data-ihf-ap', 'ghide');
+    Array.prototype.forEach.call(group.querySelectorAll('button'), function (b) { tag(b, 'gbtn'); });
+    var btns = Array.prototype.filter.call(card.querySelectorAll('button'), function (b) { return /^(view\b.*results?|reset)$/i.test((b.textContent || '').trim()); });
+    if (btns.length) {
+      var actions = btns[0].parentElement;
+      tag(actions, 'actions');
+      btns.forEach(function (b) {
+        tag(b, 'abtn');
+var prim = /^view/i.test((b.textContent || '').trim()) ? '1' : '0';
+if (b.getAttribute('data-ihf-primary') !== prim) b.setAttribute('data-ihf-primary', prim);
+if (prim === '1') {
+b.style.setProperty('border', 'none', 'important');
+b.style.setProperty('outline', 'none', 'important');
+b.style.setProperty('box-shadow', 'none', 'important');
+if (!b.__ihfHov) {
+b.__ihfHov = true;
+var on = function () { b.style.setProperty('background-color', 'transparent', 'important'); b.style.setProperty('color', '#000000', 'important'); };
+var off = function () { b.style.setProperty('background-color', '#000000', 'important'); b.style.setProperty('color', '#ffffff', 'important'); };
+b.addEventListener('mouseenter', on);
+b.addEventListener('mouseleave', off);
+off();
+}
+}
+      });
+    }
+    if (card !== st.card) {
+      st.card = card;
+      st.fresh = true;
+st.active = null;
+var wake = function (e) {
+if (!e.isTrusted || e.type !== 'pointerdown') return;
+var t = e.composedPath ? e.composedPath()[0] : e.target;
+var f = t && t.closest && t.closest('[data-ihf-ap="field"]');
+if (!f) return;
+var inp = f.querySelector('input');
+var id = inp ? lbId(inp) : null;
+var ind = t.closest('button, [class*="popupIndicator" i]');
+st.fresh = false;
+if (!ind || !f.contains(ind)) { st.active = null; syncLists(); setTimeout(syncLists, 0); setTimeout(syncLists, 120); return; }
+var muiOpen = f.getAttribute('aria-expanded') === 'true';
+if (st.active === id) {
+st.active = null;
+if (!muiOpen) st.eat = true;
+syncLists();
+return;
+}
+st.active = id;
+if (muiOpen) st.eat = true;
+syncLists(); setTimeout(syncLists, 0); setTimeout(syncLists, 120);
+};
+var eat = function (e) { if (st.eat) { e.stopPropagation(); e.preventDefault(); if (e.type === 'click') st.eat = false; } };
+var onEnter = function (e) {
+if (!e.isTrusted || e.key !== 'Enter') return;
+var t = e.composedPath ? e.composedPath()[0] : e.target;
+if (!t || t.tagName !== 'INPUT' || !card.contains(t)) return;
+var q = (t.value || '').trim().toLowerCase();
+if (!q) return;
+var id = lbId(t);
+var lb = id && (sr.getElementById ? sr.getElementById(id) : sr.querySelector('[id="' + id + '"]'));
+var opts = lb ? Array.prototype.slice.call(lb.querySelectorAll('[role="option"], li')) : [];
+if (!opts.length) return;
+var txt = function (o) { return (o.textContent || '').replace(/\(\d[\d,]*\)\s*$/, '').trim().toLowerCase(); };
+var best = opts.find(function (o) { return txt(o) === q; }) || opts.find(function (o) { return txt(o).indexOf(q) === 0; }) || opts.find(function (o) { return txt(o).indexOf(q) >= 0; }) || opts[0];
+e.preventDefault(); e.stopPropagation();
+best.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, composed: true }));
+best.click();
+st.active = null;
+setTimeout(function () { if (st.syncLists) st.syncLists(); }, 0);
+};
+card.addEventListener('keydown', onEnter, true);
+card.addEventListener('mousedown', eat, true);
+card.addEventListener('click', eat, true);
+var syncLists = function () {
+if (!st.card) return;
+listboxes(sr, st.card).forEach(function (p) {
+var show = st.active && p.__ihfLbId === st.active;
+if (show) p.removeAttribute('data-ihf-ap-hidden');
+else if (!p.getAttribute('data-ihf-ap-hidden')) p.setAttribute('data-ihf-ap-hidden', '1');
+});
+card.querySelectorAll('[data-ihf-ap="field"]').forEach(function (fl) {
+var i2 = fl.querySelector('input');
+var open = !!(st.active && i2 && lbId(i2) === st.active);
+var v = open ? '0' : '1';
+if (fl.getAttribute('data-ihf-closed') !== v) fl.setAttribute('data-ihf-closed', v);
+});
+};
+st.syncLists = syncLists;
+card.addEventListener('pointerdown', wake, true);
+var dropFocus = function () {
+var a = sr.activeElement;
+if (st.fresh && a && a.tagName === 'INPUT' && card.contains(a)) a.blur();
+};
+dropFocus();
+setTimeout(dropFocus, 0);
+setTimeout(dropFocus, 80);
+setTimeout(dropFocus, 250);
+    }
+if (st.syncLists) st.syncLists();
+  }
+  function hook() {
+    var host = document.querySelector('div.ihf-overlay-container');
+    if (!host || !host.shadowRoot) return false;
+    if (host.__ihfAreaHooked) return true;
+    host.__ihfAreaHooked = true;
+    var sr = host.shadowRoot;
+    var busy = false;
+    new MutationObserver(function () { if (busy) return; busy = true; try { apply(sr); } finally { Promise.resolve().then(function () { busy = false; }); } }).observe(sr, { childList: true, subtree: true });
+    apply(sr);
+var mainBar = function () {
+var main = document.querySelector('div.ihf-container');
+var msr = main && main.shadowRoot;
+var inp = msr && Array.prototype.find.call(msr.querySelectorAll('input'), function (i) { return /start|find|area|search/i.test(i.getAttribute('placeholder') || ''); });
+if (!inp) return null;
+var el = inp, best = inp;
+while (el.parentElement && el.parentElement.getBoundingClientRect().height <= 64) { el = el.parentElement; best = el; }
+return best;
+};
+var popperOf = function (card) { return card.closest('[role="tooltip"]') || card; };
+var closePanel = function () {
+if (!st.card) return;
+var pop = popperOf(st.card);
+var a = sr.activeElement;
+if (a && a.blur) a.blur();
+st.active = null;
+if (st.syncLists) st.syncLists();
+pop.setAttribute('data-ihf-ap-hidden', '1');
+st.hiddenPop = pop;
+};
+document.addEventListener('pointerdown', function (e) {
+if (!e.isTrusted) return;
+var path = e.composedPath ? e.composedPath() : [];
+var bar = mainBar();
+var hit = function (el) { if (!el || !el.getBoundingClientRect) return false; var r = el.getBoundingClientRect(); return r.width > 0 && e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom; };
+var onBar = hit(bar);
+if (st.hiddenPop) {
+if (!st.hiddenPop.isConnected) { st.hiddenPop = null; }
+else if (onBar) {
+st.hiddenPop.removeAttribute('data-ihf-ap-hidden');
+st.hiddenPop = null;
+st.fresh = true;
+st.eatBar = true;
+return;
+}
+}
+var L = function () {};
+if (!st.card) { L('skip: no panel tracked'); return; }
+if (st.hiddenPop) { L('skip: panel already hidden by us'); return; }
+if (onBar) { L('skip: click on search bar'); return; }
+var pop = st.card;
+if (hit(pop)) { var pr = pop.getBoundingClientRect(); L('skip: click counted inside panel box ' + Math.round(pr.left) + ',' + Math.round(pr.top) + ' ' + Math.round(pr.width) + 'x' + Math.round(pr.height) + ' tag=' + pop.tagName + ' class=' + (pop.className || '') + ' role=' + (pop.getAttribute('role') || '')); return; }
+var inList = false;
+if (st.active) {
+var alb = sr.getElementById ? sr.getElementById(st.active) : sr.querySelector('[id="' + st.active + '"]');
+if (alb && !alb.closest('[data-ihf-ap-hidden]') && alb.querySelector('[role="option"], li')) inList = hit(alb);
+}
+if (inList) { L('skip: click inside an open list'); return; }
+L('closing panel');
+closePanel();
+setTimeout(function () {
+var c2 = findCard(sr);
+var p2 = c2 && popperOf(c2);
+L('after close: panel present=' + !!c2 + ' same element=' + (c2 === st.card) + ' hidden attr=' + (p2 ? p2.getAttribute('data-ihf-ap-hidden') : 'n/a') + ' visible=' + (p2 ? p2.getBoundingClientRect().width > 0 : false));
+}, 300);
+}, true);
+['mousedown', 'click'].forEach(function (type) {
+document.addEventListener(type, function (e) {
+if (!st.eatBar) return;
+e.stopPropagation(); e.preventDefault();
+if (type === 'click') st.eatBar = false;
+}, true);
+});
+    console.log('[ihf-content] area panel fix v14 active');
+    return true;
+  }
+  if (!hook()) {
+    var n = 0;
+    var t = setInterval(function () { if (hook() || ++n > 300) clearInterval(t); }, 200);
+  }
+})();
+(function () {
+  if (window.__ihfGalleryRaise) return;
+  window.__ihfGalleryRaise = true;
+  if (location.pathname.replace(/\/+$/, '') !== '/listing') return;
+  var TOP = '2147483100';
+  var isOpen = function (sr) {
+    if (!sr) return false;
+    if (sr.querySelector('[data-ihf-viewer-styled], [data-ihf-gallery-header]')) return true;
+    var d = sr.querySelector('[role="dialog"], [class*="MuiDialog-root"], [class*="MuiModal-root"]');
+    return !!(d && d.getBoundingClientRect().width > 0);
+  };
+  var setTop = function (el, on) {
+    if (!el) return;
+    if (on) {
+      if (el.dataset.ihfRaised !== '1') {
+        el.dataset.ihfRaised = '1';
+        el.dataset.ihfPrevZ = el.style.getPropertyValue('z-index') || '';
+        el.dataset.ihfPrevPos = el.style.getPropertyValue('position') || '';
+      }
+      el.style.setProperty('z-index', TOP, 'important');
+      if (getComputedStyle(el).position === 'static') el.style.setProperty('position', 'relative', 'important');
+    } else if (el.dataset.ihfRaised === '1') {
+      el.dataset.ihfRaised = '0';
+      if (el.dataset.ihfPrevZ) el.style.setProperty('z-index', el.dataset.ihfPrevZ, 'important'); else el.style.removeProperty('z-index');
+      if (el.dataset.ihfPrevPos) el.style.setProperty('position', el.dataset.ihfPrevPos, 'important'); else el.style.removeProperty('position');
+    }
+  };
+  var tick = function () {
+    var ov = document.querySelector('div.ihf-overlay-container');
+    var main = document.querySelector('div.ihf-container');
+    var detail = document.getElementById('ihf-listing-detail');
+    var ovOpen = !!(ov && isOpen(ov.shadowRoot));
+    var mainOpen = !!(main && isOpen(main.shadowRoot));
+    setTop(ov, ovOpen);
+    setTop(detail, mainOpen);
+  };
+  setInterval(tick, 200);
+  tick();
 })();
 </script>
