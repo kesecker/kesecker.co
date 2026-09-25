@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="preconnect" href="https://fonts.googleapis.com" data-early-fonts>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=block">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=block">
 <script src="./support.js"></script>
 </head>
 <body>
@@ -24,10 +24,10 @@
     };
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=block" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=block" rel="stylesheet">
   <style>
     :root {
-      --rh-font: 'Montserrat', system-ui, sans-serif;
+      --rh-font: 'Inter', system-ui, sans-serif;
       --rh-accent: #1a1a1a;
       --rh-accent-hover: #000000;
       --rh-accent-light: #ededed;
@@ -49,6 +49,8 @@
     .vc-eyebrow { font-family: var(--rh-font); font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--rh-accent); }
   </style>
   <style>
+    button[aria-label="Menu"], #nav-burger-fixed { transition: opacity 0.3s ease; }
+    body:has(div[style*="z-index: 2147483005"]) button[aria-label="Menu"], body:has(div[style*="z-index: 2147483005"]) #nav-burger-fixed { opacity: 0 !important; pointer-events: none !important; }
     @keyframes navm-fade-in { from { opacity: 0; } to { opacity: 1; } }
     @keyframes navm-fade-out { from { opacity: 1; } to { opacity: 0; } }
     @keyframes navm-scale-in { from { opacity: 0; transform: scale(0.96) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
@@ -62,13 +64,13 @@
       <img src="assets/key-landing-logo.png" alt="Jackson Kesecker Realtor" style="height: 34px; width: auto;">
     </a>
     <div style="display: flex; align-items: center; gap: clamp(14px, 2.4vw, 26px); flex: 1; padding-left: clamp(8px, 2vw, 28px);">
-      <a href="https://keseckerproperties.com/listings" style="font-family: 'Montserrat', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: #ffffff; text-decoration: none; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 1px; padding-bottom: 2px; transition: background-size 0.3s ease;" style-hover="background-size: 100% 1px;">Search</a>
+      <a href="https://keseckerproperties.com/listings" style="font-family: 'Inter', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: #ffffff; text-decoration: none; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 1px; padding-bottom: 2px; transition: background-size 0.3s ease;" style-hover="background-size: 100% 1px;">Search</a>
       <span style="font-size: 15px; line-height: 1; display: flex; align-items: center; color: #ffffff;">•</span>
-      <a href="../communities" style="font-family: 'Montserrat', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75); text-decoration: none; transition: color 0.3s ease, background-size 0.3s ease; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 1px; padding-bottom: 2px;" style-hover="color: #ffffff; background-size: 100% 1px;">Communities</a>
+      <a href="../communities" style="font-family: 'Inter', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75); text-decoration: none; transition: color 0.3s ease, background-size 0.3s ease; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 1px; padding-bottom: 2px;" style-hover="color: #ffffff; background-size: 100% 1px;">Communities</a>
       <span style="font-size: 15px; line-height: 1; display: flex; align-items: center; color: #ffffff;">•</span>
-      <a href="../about" style="font-family: 'Montserrat', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75); text-decoration: none; transition: color 0.3s ease, background-size 0.3s ease; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 1px; padding-bottom: 2px;" style-hover="color: #ffffff; background-size: 100% 1px;">About</a>
+      <a href="../about" style="font-family: 'Inter', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75); text-decoration: none; transition: color 0.3s ease, background-size 0.3s ease; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 1px; padding-bottom: 2px;" style-hover="color: #ffffff; background-size: 100% 1px;">About</a>
       <span style="font-size: 15px; line-height: 1; display: flex; align-items: center; color: #ffffff;">•</span>
-      <a href="#" onClick="{{ openContactModal }}" style="font-family: 'Montserrat', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75); text-decoration: none; transition: color 0.3s ease, background-size 0.3s ease; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 1px; padding-bottom: 2px;" style-hover="color: #ffffff; background-size: 100% 1px;">Contact</a>
+      <a href="#" onClick="{{ openContactModal }}" style="font-family: 'Inter', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75); text-decoration: none; transition: color 0.3s ease, background-size 0.3s ease; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 1px; padding-bottom: 2px;" style-hover="color: #ffffff; background-size: 100% 1px;">Contact</a>
     </div>
     <button onClick="{{ toggleNavMenu }}" aria-label="Menu" style="flex-shrink: 0; width: 44px; height: 44px; margin-right: -6px; background: transparent; border: none; border-radius: 50%; cursor: pointer; padding: 0 0 0 8px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 6px; box-sizing: border-box; position: relative; isolation: isolate; z-index: 2147483001;">
       <span style="display: block; width: 26px; height: 2px; border-radius: 1px; background: #ffffff; transform: perspective(200px) {{ navBurgerTransform }}; transform-origin: left center; transition: transform 0.4s ease;"></span>
@@ -78,10 +80,10 @@
     <sc-if value="{{ navMenuOpen }}" hint-placeholder-val="{{ false }}">
       <div onClick="{{ closeNavMenu }}" style="position: fixed; inset: 0; z-index: 2147483000; background: rgba(0,0,0,0.88); animation: {{ navOverlayAnim }};">
         <div onClick="{{ stopNavProp }}" style="position: absolute; top: 128px; right: clamp(20px, 5vw, 64px); min-width: 280px; display: flex; flex-direction: column; align-items: flex-end; gap: clamp(26px, 4.2vh, 46px); animation: {{ navCardAnim }};">
-          <a href="https://keseckerproperties.com/listings" target="_self" onClick="{{ closeNavMenu }}" style="font-family: 'Montserrat', system-ui, sans-serif !important; font-size: clamp(16px, 2vw, 24px); font-weight: 500; letter-spacing: -0.02em; line-height: 1; color: #ffffff; text-decoration: none; padding-bottom: 4px; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 2px; transition: background-size 0.3s ease;" style-hover="background-size: 100% 2px;">Search</a>
-          <a href="https://keseckerproperties.com/communities" target="_self" onClick="{{ closeNavMenu }}" style="font-family: 'Montserrat', system-ui, sans-serif !important; font-size: clamp(16px, 2vw, 24px); font-weight: 500; letter-spacing: -0.02em; line-height: 1; color: #ffffff; text-decoration: none; padding-bottom: 4px; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 2px; transition: background-size 0.3s ease;" style-hover="background-size: 100% 2px;">Communities</a>
-          <a href="https://keseckerproperties.com/about" target="_self" onClick="{{ closeNavMenu }}" style="font-family: 'Montserrat', system-ui, sans-serif !important; font-size: clamp(16px, 2vw, 24px); font-weight: 500; letter-spacing: -0.02em; line-height: 1; color: #ffffff; text-decoration: none; padding-bottom: 4px; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 2px; transition: background-size 0.3s ease;" style-hover="background-size: 100% 2px;">About</a>
-          <a href="#" target="_self" onClick="{{ navMenuContact }}" style="font-family: 'Montserrat', system-ui, sans-serif !important; font-size: clamp(16px, 2vw, 24px); font-weight: 500; letter-spacing: -0.02em; line-height: 1; color: #ffffff; text-decoration: none; padding-bottom: 4px; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 2px; transition: background-size 0.3s ease;" style-hover="background-size: 100% 2px;">Contact</a>
+          <a href="https://keseckerproperties.com/listings" target="_self" onClick="{{ closeNavMenu }}" style="font-family: 'Inter', system-ui, sans-serif !important; font-size: clamp(16px, 2vw, 24px); font-weight: 500; letter-spacing: -0.02em; line-height: 1; color: #ffffff; text-decoration: none; padding-bottom: 4px; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 2px; transition: background-size 0.3s ease;" style-hover="background-size: 100% 2px;">Search</a>
+          <a href="https://keseckerproperties.com/communities" target="_self" onClick="{{ closeNavMenu }}" style="font-family: 'Inter', system-ui, sans-serif !important; font-size: clamp(16px, 2vw, 24px); font-weight: 500; letter-spacing: -0.02em; line-height: 1; color: #ffffff; text-decoration: none; padding-bottom: 4px; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 2px; transition: background-size 0.3s ease;" style-hover="background-size: 100% 2px;">Communities</a>
+          <a href="https://keseckerproperties.com/about" target="_self" onClick="{{ closeNavMenu }}" style="font-family: 'Inter', system-ui, sans-serif !important; font-size: clamp(16px, 2vw, 24px); font-weight: 500; letter-spacing: -0.02em; line-height: 1; color: #ffffff; text-decoration: none; padding-bottom: 4px; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 2px; transition: background-size 0.3s ease;" style-hover="background-size: 100% 2px;">About</a>
+          <a href="#" target="_self" onClick="{{ navMenuContact }}" style="font-family: 'Inter', system-ui, sans-serif !important; font-size: clamp(16px, 2vw, 24px); font-weight: 500; letter-spacing: -0.02em; line-height: 1; color: #ffffff; text-decoration: none; padding-bottom: 4px; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 2px; transition: background-size 0.3s ease;" style-hover="background-size: 100% 2px;">Contact</a>
         </div>
       </div>
     </sc-if>
