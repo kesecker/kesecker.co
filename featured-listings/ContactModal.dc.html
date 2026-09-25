@@ -103,7 +103,13 @@ class Component extends DCLogic {
     window.openKeseckerContactModal = () => { this._burgerFade(true); this.setState({ isContactModalVisible: true, isContactModalClosing: false }); };
   }
   _burgerFade = (hide) => {
-    document.querySelectorAll('#nav-burger-fixed, button[aria-label="Menu"]').forEach((b) => {
+    let st = document.getElementById('ks-burger-hide');
+    if (!st) { st = document.createElement('style'); st.id = 'ks-burger-hide'; document.head.appendChild(st); }
+    clearTimeout(window.__ksBurgerT);
+    const sel = '#nav-burger-fixed, button[aria-label="Menu"]';
+    if (hide) st.textContent = sel + '{transition:opacity 0.3s ease !important;opacity:0 !important;pointer-events:none !important;}';
+    else { st.textContent = sel + '{transition:opacity 0.3s ease !important;}'; window.__ksBurgerT = setTimeout(() => { st.textContent = ''; }, 350); }
+    document.querySelectorAll(sel).forEach((b) => {
       clearTimeout(b.__ihfFadeT);
       b.style.setProperty('transition', 'opacity 0.3s ease', 'important');
       if (hide) {
