@@ -294,118 +294,96 @@ row.appendChild(share);
 const nativeSave = pick(/^(save|saved)$/i);
 if (nativeSave && /^saved$/i.test((nativeSave.textContent || '').trim())) this._ihfSetSavedUI(root, true);
 };
+_ihfOhEvenGap = (root, sec) => {
+const h2 = sec.querySelector('h2');
+const list = sec.lastElementChild;
+const prev = sec.previousElementSibling;
+let next = sec.nextElementSibling;
+while (next && getComputedStyle(next).display === 'none') next = next.nextElementSibling;
+if (!h2 || !list || !prev || !next) return;
+const nextH = next.querySelector('h1, h2, h3') || next;
+const prevLeaves = Array.from(prev.querySelectorAll('*')).filter((el) => el.children.length === 0 && (el.textContent || '').trim() && el.getBoundingClientRect().height > 0);
+const prevRect = (prevLeaves.length ? prevLeaves.reduce((m, el) => (el.getBoundingClientRect().bottom > m.getBoundingClientRect().bottom ? el : m)) : prev).getBoundingClientRect();
+const above = h2.getBoundingClientRect().top - prevRect.bottom;
+const below = nextH.getBoundingClientRect().top - list.getBoundingClientRect().bottom;
+if (!prevRect.height || Math.abs(above - below) < 2) return;
+if (!sec.__ihfGapTries) sec.__ihfGapTries = 0;
+if (++sec.__ihfGapTries > 20) return;
+const cur = parseFloat(getComputedStyle(sec).paddingBottom) || 0;
+sec.style.setProperty('padding-bottom', Math.max(0, cur + (above - below)) + 'px', 'important');
+};
 _ihfBuildOpenHouses = (root) => {
+const section = root.querySelector('.listing-section');
+if (!section) return;
 const dayRe = /^(Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day,?\s+[A-Za-z]{3,9}\.?\s+\d{1,2}$/i;
 const timeRe = /\d{1,2}:\d{2}\s*(AM|PM)/i;
-const dates = Array.from(root.querySelectorAll('*')).filter((el) => el.children.length === 0 && dayRe.test((el.textContent || '').trim()) && !el.closest('.similar-listings, [class*="listing-result" i], [role="dialog"], [data-ihf-own]'));
-if (!dates.length) return;
-let c = dates[0].parentElement;
-while (c && !dates.every((d) => c.contains(d))) c = c.parentElement;
-if (!c) return;
-if (dates.length === 1) {
-let blk = dates[0];
-const hasTime = (x) => Array.from(x.querySelectorAll('*')).some((el) => el.children.length === 0 && /\d{1,2}:\d{2}\s*(AM|PM)/i.test(el.textContent || ''));
-while (blk.parentElement && !(hasTime(blk) && blk.querySelector('svg, img'))) blk = blk.parentElement;
-while (blk.parentElement && blk.parentElement.children.length === 1 && !blk.parentElement.classList.contains('listing-section')) blk = blk.parentElement;
-c = blk.parentElement && !blk.parentElement.classList.contains('listing-section') && !blk.parentElement.querySelector('.listing-photo-carousel, .listing-description, .features') ? blk.parentElement : blk;
-}
-if (!c || c.classList.contains('listing-section') || c.querySelector('.listing-photo-carousel, .listing-description, .features')) return;
-while (c.parentElement && c.parentElement.children.length === 1 && !c.parentElement.classList.contains('listing-section')) c = c.parentElement;
-c.dataset.ihfOh = '1';
-if (c.parentElement) c.parentElement.dataset.ihfOh = '1';
-let up = c;
-for (let k = 0; k < 10 && up && !up.classList.contains('listing-section'); k++) { up.dataset.ihfOh = '1'; up = up.parentElement; }
-const items = dates.map((d) => { let it = d; while (it.parentElement && it.parentElement !== c && c.contains(it.parentElement) && !dates.some((o) => o !== d && it.parentElement.contains(o))) it = it.parentElement; return it; });
-c.style.setProperty('display', 'block', 'important');
-c.style.setProperty('width', '100%', 'important');
-c.style.setProperty('margin-left', '0', 'important');
-c.style.setProperty('margin-right', '0', 'important');
-c.style.setProperty('padding', '0', 'important');
-const sig = dates.map((d) => (d.textContent || '').trim()).join('|');
-let own = c.querySelector(':scope > [data-ihf-oh-list]');
-if (!own || own.dataset.sig !== sig) {
-if (own) own.remove();
-own = document.createElement('div');
-own.dataset.ihfOwn = '1';
-own.dataset.ihfOhList = '1';
-own.dataset.sig = sig;
-own.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start;gap:16px;width:100%;margin:0;padding:0;';
-const fs = getComputedStyle(dates[0]).fontSize || '16px';
-items.forEach((it, idx) => {
-const d = dates[idx];
+const dates = Array.from(section.querySelectorAll('*')).filter((el) => el.children.length === 0 && dayRe.test((el.textContent || '').trim()) && !el.closest('.similar-listings, [class*="listing-result" i], [role="dialog"], [data-ihf-own]'));
+const mine = section.querySelector(':scope > [data-ihf-oh-sec]');
+if (!dates.length) { if (mine) mine.remove(); return; }
+let topSec = dates[0];
+while (topSec.parentElement && topSec.parentElement !== section) topSec = topSec.parentElement;
+if (topSec.parentElement !== section || topSec.querySelector('.listing-photo-carousel, .listing-description, .features')) return;
+const rows = dates.map((d) => {
+let it = d;
+while (it.parentElement && it.parentElement !== topSec && !dates.some((o) => o !== d && it.parentElement.contains(o))) it = it.parentElement;
 const tEl = Array.from(it.querySelectorAll('*')).find((el) => el.children.length === 0 && timeRe.test(el.textContent || ''));
-const row = document.createElement('div');
-row.style.cssText = 'display:flex;align-items:center;gap:14px;font-size:' + fs + ';line-height:1.4;color:#1a1a1a;';
-row.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="flex:0 0 auto;"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>';
-const ds = document.createElement('span');
-ds.textContent = (d.textContent || '').trim();
-row.appendChild(ds);
-if (tEl) {
-const sep = document.createElement('span');
-sep.textContent = '\u00a0\u00a0\u2013\u00a0\u00a0';
-sep.style.whiteSpace = 'pre';
-const ts = document.createElement('span');
-ts.textContent = (tEl.textContent || '').trim();
-ts.style.setProperty('font-weight', '700', 'important');
-row.appendChild(sep);
-row.appendChild(ts);
-}
-own.appendChild(row);
+return { date: (d.textContent || '').trim(), time: tEl ? (tEl.textContent || '').trim() : '' };
 });
-c.insertBefore(own, c.firstChild);
-}
-items.forEach((it) => { if (it !== own) it.style.setProperty('display', 'none', 'important'); });
-Array.from(root.querySelectorAll('*')).forEach((el) => {
-if (el.closest('.similar-listings, [class*="listing-result" i], .listing-photo-carousel, [data-ihf-own]')) return;
-const r = el.getBoundingClientRect();
-if (!r.width || r.width > 14 || r.height > 14 || el.children.length) return;
-const bg = getComputedStyle(el).backgroundColor.match(/\d+/g);
-if (bg && +bg[1] > 150 && +bg[0] < 120 && +bg[2] < 140) el.style.setProperty('display', 'none', 'important');
-});
-let head = c.parentElement && c.parentElement.querySelector(':scope > [data-ihf-oh-head]');
-if (!head) {
-head = document.createElement('div');
-head.dataset.ihfOwn = '1';
-head.dataset.ihfOhHead = '1';
-const refH = Array.from(root.querySelectorAll('h2, h3')).find((h) => /^(about this property|property features)$/i.test((h.textContent || '').trim()));
+const sig = rows.map((r) => r.date + ' ' + r.time).join('|');
+topSec.style.setProperty('display', 'none', 'important');
+if (mine && mine.dataset.sig === sig) { if (mine.nextElementSibling !== topSec) section.insertBefore(mine, topSec); this._ihfAlignSection(root, mine); this._ihfOhEvenGap(root, mine); return; }
+if (mine) mine.remove();
+const sec = document.createElement('div');
+sec.dataset.ihfOwn = '1';
+sec.dataset.ihfOhSec = '1';
+sec.dataset.sig = sig;
+sec.style.cssText = 'display:block;margin-top:48px;box-sizing:border-box;';
+const refH = Array.from(section.querySelectorAll('h2, h3')).find((h) => !h.closest('[data-ihf-own]') && /^(about this property|property features)$/i.test((h.textContent || '').trim()));
 const rcs = refH ? getComputedStyle(refH) : null;
 const h2 = document.createElement('h2');
 h2.textContent = 'Open Houses';
-h2.style.cssText = 'margin:0 0 14px;text-align:left;color:#1a1a1a;line-height:1.25;font-weight:700;font-size:' + (rcs ? rcs.fontSize : '26px') + ';';
-const line = document.createElement('div');
+h2.style.cssText = 'margin:0 0 14px;text-align:left;color:#1a1a1a;line-height:1.25;font-size:' + (rcs ? rcs.fontSize : '26px') + ';';
+h2.style.setProperty('font-weight', '700', 'important');
 let divBorder = '1px solid rgba(0,0,0,0.25)';
-const locH = Array.from(root.querySelectorAll('h2, h3, h4')).find((h) => /^location information$/i.test((h.textContent || '').trim()));
+const locH = Array.from(section.querySelectorAll('h2, h3, h4')).find((h) => /^location information$/i.test((h.textContent || '').trim()));
 if (locH) {
 const scope = locH.parentElement && locH.parentElement.parentElement ? locH.parentElement.parentElement : locH.parentElement;
 const cand = [locH, locH.parentElement].concat(Array.from(scope.querySelectorAll('*'))).find((x) => x && parseFloat(getComputedStyle(x).borderBottomWidth) > 0);
 if (cand) { const s = getComputedStyle(cand); divBorder = s.borderBottomWidth + ' ' + s.borderBottomStyle + ' ' + s.borderBottomColor; }
-else { const hr = scope.querySelector('hr'); if (hr) { const s = getComputedStyle(hr); divBorder = (parseFloat(s.borderTopWidth) ? s.borderTopWidth + ' solid ' + s.borderTopColor : '1px solid ' + s.backgroundColor); } }
 }
-line.style.cssText = 'height:0;border-top:' + divBorder + ';width:100%;';
-head.appendChild(h2);
-head.appendChild(line);
-head.style.cssText = 'width:100%;margin:48px 0 20px;';
-c.parentElement.insertBefore(head, c);
+const line = document.createElement('div');
+line.style.cssText = 'height:0;border-top:' + divBorder + ';width:100%;margin:0 0 20px;';
+const list = document.createElement('div');
+list.style.cssText = 'display:flex;flex-direction:column;align-items:flex-start;gap:16px;';
+const fs = getComputedStyle(dates[0]).fontSize || '16px';
+rows.forEach((r) => {
+const row = document.createElement('div');
+row.style.cssText = 'display:flex;align-items:center;gap:14px;font-size:' + fs + ';line-height:1.4;color:#1a1a1a;';
+row.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="flex:0 0 auto;"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>';
+const ds = document.createElement('span');
+ds.textContent = r.date;
+ds.style.setProperty('font-weight', '400', 'important');
+row.appendChild(ds);
+if (r.time) {
+const sp = document.createElement('span');
+sp.textContent = '\u00a0\u00a0\u2013\u00a0\u00a0';
+sp.style.whiteSpace = 'pre';
+const ts = document.createElement('span');
+ts.textContent = r.time;
+ts.style.setProperty('font-weight', '700', 'important');
+row.appendChild(sp);
+row.appendChild(ts);
 }
-const aboutH = Array.from(root.querySelectorAll('h1, h2, h3')).find((h) => /^about this property$/i.test((h.textContent || '').trim()));
-if (aboutH) {
-const ar = aboutH.getBoundingClientRect();
-const pr = aboutH.parentElement.getBoundingClientRect();
-[head, c].forEach((el) => {
-const r = el.getBoundingClientRect();
-if (!r.width || !ar.width) return;
-const dx = ar.left - r.left;
-if (Math.abs(dx) > 1 && Math.abs(dx) < 400 && !el.dataset.ihfOhAligned) {
-el.dataset.ihfOhAligned = '1';
-const ml = parseFloat(getComputedStyle(el).marginLeft) || 0;
-el.style.setProperty('margin-left', (ml + dx) + 'px', 'important');
-}
-el.style.setProperty('width', '100%', 'important');
-el.style.setProperty('max-width', '100%', 'important');
-el.style.setProperty('min-width', '0', 'important');
-el.style.setProperty('box-sizing', 'border-box', 'important');
+list.appendChild(row);
 });
-}
+sec.appendChild(h2);
+sec.appendChild(line);
+sec.appendChild(list);
+section.insertBefore(sec, topSec);
+this._ihfAlignSection(root, sec);
+this._ihfOhEvenGap(root, sec);
+setTimeout(() => this._ihfOhEvenGap(root, sec), 400);
+setTimeout(() => this._ihfOhEvenGap(root, sec), 1200);
 };
 _ihfCleanPhotoViewer = (root) => {
 const vw = window.innerWidth, vh = window.innerHeight;
@@ -1993,5 +1971,28 @@ if (type === 'click') st.eatBar = false;
   };
   setInterval(tick, 200);
   tick();
+})();
+(function () {
+  if (window.__ihfGalleryMask) return;
+  window.__ihfGalleryMask = true;
+  var CSS = '[role="dialog"]:has(img):not([data-ihf-gallery-header-added]):not([data-ihf-reveal]){filter:opacity(0) !important;}';
+  function scan(sr) {
+    if (!sr.querySelector('style[data-ihf-gmask]')) { var s = document.createElement('style'); s.setAttribute('data-ihf-gmask', '1'); s.textContent = CSS; sr.appendChild(s); }
+    sr.querySelectorAll('[role="dialog"]').forEach(function (d) {
+      if (d.__ihfMaskT) return;
+      d.__ihfMaskT = setTimeout(function () { d.setAttribute('data-ihf-reveal', '1'); }, 1500);
+    });
+  }
+  function hook() {
+    var host = document.querySelector('div.ihf-overlay-container');
+    if (!host || !host.shadowRoot) return false;
+    if (host.__ihfGmaskHooked) return true;
+    host.__ihfGmaskHooked = true;
+    var sr = host.shadowRoot;
+    new MutationObserver(function () { scan(sr); }).observe(sr, { childList: true, subtree: true });
+    scan(sr);
+    return true;
+  }
+  if (!hook()) { var n = 0; var t = setInterval(function () { if (hook() || ++n > 300) clearInterval(t); }, 200); }
 })();
 </script>
