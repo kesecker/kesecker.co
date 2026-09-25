@@ -50,6 +50,7 @@
     a { color: var(--rh-accent); text-decoration: none; }
     a:hover { color: var(--rh-accent-hover); }
     .vc-eyebrow { font-family: var(--rh-font); font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--rh-accent); }
+    html body *:not(svg):not(path) { font-family: 'Inter', system-ui, sans-serif !important; }
     @keyframes modal-fade-in { from { opacity: 0; } to { opacity: 1; } }
     @keyframes modal-scale-in { from { opacity: 0; transform: scale(0.96) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
     @keyframes modal-fade-out { from { opacity: 1; } to { opacity: 0; } }
@@ -997,7 +998,7 @@ class Component extends DCLogic {
     if (spacingVal) css += `p, li, span, a, h1, h2, h3, h4, h5, h6 { letter-spacing: ${spacingVal} !important; }\n`;
     if (alignVal) css += `p, li, h1, h2, h3, h4, h5, h6 { text-align: ${alignVal} !important; }\n`;
     if (contrastFilter || saturateVal !== 1) css += `html { filter: ${contrastFilter} saturate(${saturateVal}); }\n`;
-    if (s.a11yDyslexia) css += `* { font-family: 'Lexend', var(--rh-font), sans-serif !important; }\n`;
+    if (s.a11yDyslexia) css += `html:root body * { font-family: 'Lexend', var(--rh-font), sans-serif !important; }\n`;
     if (s.a11yHideImages) css += `img, video { visibility: hidden !important; }\n`;
     if (s.a11yHighlightLinks) css += `a { outline: 2px solid #06947c !important; background: rgba(6,148,124,0.12) !important; }\n`;
     if (s.a11yHighlightHeadings) css += `h1, h2, h3, h4, h5, h6 { outline: 2px solid #06947c !important; background: rgba(6,148,124,0.08) !important; }\n`;
