@@ -135,7 +135,7 @@
               <p style="margin: 0; font-size: 14px; color: #c62828;">{{ tourError }}</p>
             </sc-if>
             <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px;">
-              <button type="submit" disabled="{{ tourSending }}" style="height: 48px; padding: 0 32px; border-radius: 6px; border: none; background: #1a1a1a; color: #ffffff; font-size: 14px; font-weight: 600; font-family: 'Montserrat', system-ui, sans-serif; cursor: pointer; transition: background 0.2s ease, color 0.2s ease;" style-hover="background: #ffffff; color: #1a1a1a; box-shadow: inset 0 0 0 1px #e0e0e0;">{{ tourSubmitLabel }}</button>
+              <button type="submit" disabled="{{ tourSending }}" style="height: 48px; padding: 0 32px; border-radius: 6px; border: none; background: #1a1a1a; color: #ffffff; font-size: 14px; font-weight: 600; font-family: 'Montserrat', system-ui, sans-serif; cursor: pointer; transition: background 0.2s ease, color 0.2s ease;" style-hover="background: #ffffff; color: #1a1a1a;">{{ tourSubmitLabel }}</button>
               <p style="margin: 0; flex: 1 1 260px; font-size: 11px; line-height: 1.5; color: #999999;">This site is protected by reCAPTCHA and the Google <a href="https://policies.google.com/privacy" target="_blank" style="color: #666666; text-decoration: underline;">Privacy Policy</a> and <a href="https://policies.google.com/terms" target="_blank" style="color: #666666; text-decoration: underline;">Terms of Service</a> apply.</p>
             </div>
           </form>
@@ -1302,6 +1302,16 @@ findAllMatches('Share').filter((s) => !s.closest('[data-ihf-own], [data-ihf-acti
       if (hide) b.style.setProperty('pointer-events', 'none', 'important'); else b.style.removeProperty('pointer-events');
     });
   };
+  _tourListing = () => {
+    const host = document.querySelector('div.ihf-container');
+    const sr = host && host.shadowRoot;
+    const q = (sel) => { const el = sr && sr.querySelector(sel); return el ? (el.textContent || '').trim() : ''; };
+    const addr = [q('.ihf-info-col .listing-address-1') || q('.listing-address-1'), q('.ihf-info-col .listing-address-2') || q('.listing-address-2')].filter(Boolean).join(', ');
+    const id = new URLSearchParams(location.search).get('id') || '';
+    const title = (document.title || '').replace(/\s*\|\s*/, ', ');
+    const fallback = /home search|jackson kesecker|realtor/i.test(title) ? '' : title;
+    return [addr || fallback, id ? 'MLS# ' + id.replace(/_\d+$/, '') : ''].filter(Boolean).join(' — ');
+  };
   _tourVals = () => {
     const s = this.state || {};
     const pad = (n) => String(n).padStart(2, '0');
@@ -1340,13 +1350,7 @@ findAllMatches('Share').filter((s) => !s.closest('[data-ihf-own], [data-ihf-acti
     const dateObj = s.tourDate ? new Date(s.tourDate + 'T12:00:00') : null;
     const dateLabel = dateObj ? dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }) : 'Pick a date first';
     const canPrev = ym[0] > today.getFullYear() || ym[1] > today.getMonth();
-    const listing = (() => {
-      const sr = document.querySelector('div.ihf-container') && document.querySelector('div.ihf-container').shadowRoot;
-      const q = (sel) => { const el = sr && sr.querySelector(sel); return el ? (el.textContent || '').trim() : ''; };
-      const addr = [q('.ihf-info-col .listing-address-1') || q('.listing-address-1'), q('.ihf-info-col .listing-address-2') || q('.listing-address-2')].filter(Boolean).join(', ');
-      const id = new URLSearchParams(location.search).get('id') || '';
-      return [addr, id ? 'MLS# ' + id.replace(/_\d+$/, '') : ''].filter(Boolean).join(' — ') || (document.title || '');
-    })();
+    const listing = s.tourListing || this._tourListing();
     const close = () => {
       this._tourFade(false);
       this.setState({ tourShown: false });
@@ -1355,7 +1359,7 @@ findAllMatches('Share').filter((s) => !s.closest('[data-ihf-own], [data-ihf-acti
     return {
       tourOpen: !!s.tourOpen,
       tourOpacity: s.tourShown ? 1 : 0,
-      openTourModal: (e) => { if (e && e.preventDefault) e.preventDefault(); this._tourFade(true); this.setState({ tourOpen: true, tourShown: false, tourSent: false, tourError: '' }); setTimeout(() => this.setState({ tourShown: true }), 20); },
+      openTourModal: (e) => { if (e && e.preventDefault) e.preventDefault(); this._tourFade(true); this.setState({ tourOpen: true, tourShown: false, tourSent: false, tourError: '', tourListing: this._tourListing() }); setTimeout(() => this.setState({ tourShown: true }), 20); },
       closeTour: close,
       stopTourProp: (e) => e.stopPropagation(),
       tourListingLabel: listing.replace(/\s+—\s+MLS#.*$/, ''),
