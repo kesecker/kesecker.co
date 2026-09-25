@@ -97,7 +97,7 @@ class Component extends DCLogic {
   state = { isContactModalVisible: false, isContactModalClosing: false, modalInterestIndex: 0, modalInterestOpen: false, hoveredOffice: null };
   interestOptionsList = ['Buying', 'Selling', 'Other'];
   componentDidMount() {
-    window.openKeseckerContactModal = () => this.setState({ isContactModalVisible: true, isContactModalClosing: false });
+    window.openKeseckerContactModal = () => { this._burgerFade(true); this.setState({ isContactModalVisible: true, isContactModalClosing: false }); };
   }
   _burgerFade = (hide) => {
     document.querySelectorAll('#nav-burger-fixed, button[aria-label="Menu"]').forEach((b) => {
@@ -123,6 +123,7 @@ class Component extends DCLogic {
     if (window.openKeseckerContactModal) delete window.openKeseckerContactModal;
   }
   closeContactModal = () => {
+    this._burgerFade(false);
     this.setState({ isContactModalClosing: true });
     setTimeout(() => this.setState({ isContactModalVisible: false, isContactModalClosing: false }), 300);
   };

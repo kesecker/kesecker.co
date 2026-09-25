@@ -410,7 +410,7 @@
 
   <!-- CONTACT MODAL -->
   <sc-if value="{{ isContactModalVisible }}" hint-placeholder-val="{{ false }}">
-    <div style="position: fixed; inset: 0; z-index: 350; background: #000000; overflow-y: auto; animation: {{ contactModalOverlayAnimation }};">
+    <div style="position: fixed; inset: 0; z-index: 2147483005; background: #000000; overflow-y: auto; animation: {{ contactModalOverlayAnimation }};">
       <div style="position: absolute; inset: 0; background-image: url('uploads/Pinnacles.png'); background-size: cover; background-position: center;"></div>
       <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.82) 100%);"></div>
       <button onClick="{{ closeContactModal }}" aria-label="Close" style="position: fixed; top: 24px; right: clamp(20px, 4vw, 40px); background: none; border: none; font-size: 32px; line-height: 1; cursor: pointer; color: #ffffff; z-index: 2; transition: opacity 0.2s ease;" style-hover="opacity: 0.6;">&times;</button>
@@ -1637,13 +1637,14 @@ class Component extends DCLogic {
       isContactModalVisible: this.state.isContactModalVisible,
       contactModalOverlayAnimation: this.state.isContactModalClosing ? 'modal-fade-out 0.3s ease forwards' : 'modal-fade-in 0.35s ease',
       contactModalCardAnimation: this.state.isContactModalClosing ? 'modal-scale-out 0.3s ease forwards' : 'modal-scale-in 0.35s ease',
-      openContactModal: (e) => { if (e) e.preventDefault(); this.setState({ isContactModalVisible: true, isContactModalClosing: false }); },
+      openContactModal: (e) => { if (e) e.preventDefault(); this._burgerFade(true); this.setState({ isContactModalVisible: true, isContactModalClosing: false }); },
       openContactModalFromMenu: (e) => {
         if (e) e.preventDefault();
         this.setState({ isMobileMenuClosing: true });
-        setTimeout(() => this.setState({ isMobileMenuVisible: false, isMobileMenuClosing: false, isContactModalVisible: true, isContactModalClosing: false }), 300);
+        setTimeout(() => { this._burgerFade(true); this.setState({ isMobileMenuVisible: false, isMobileMenuClosing: false, isContactModalVisible: true, isContactModalClosing: false }); }, 300);
       },
       closeContactModal: () => {
+        this._burgerFade(false);
         this.setState({ isContactModalClosing: true });
         setTimeout(() => this.setState({ isContactModalVisible: false, isContactModalClosing: false }), 300);
       },
