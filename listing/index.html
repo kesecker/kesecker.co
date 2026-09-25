@@ -114,8 +114,7 @@
         <button type="button" onClick="{{ closeTour }}" aria-label="Close" style="position: absolute; top: 16px; right: 16px; width: 40px; height: 40px; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #1a1a1a; transition: color 0.2s ease, opacity 0.2s ease;" style-hover="color: #999999; opacity: 0.65;">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg>
         </button>
-        <h2 style="margin: 0 0 6px; font-size: 28px; font-weight: 700; letter-spacing: -0.01em;">Schedule a Tour</h2>
-        <p style="margin: 0 0 28px; font-size: 14px; color: #666666;">{{ tourListingLabel }}</p>
+        <h2 style="margin: 0 0 28px; font-size: 28px; font-weight: 700; letter-spacing: -0.01em;">Schedule a Tour</h2>
         <sc-if value="{{ tourSent }}" hint-placeholder-val="{{ false }}">
           <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 14px; padding: 12px 0 8px;">
             <p style="margin: 0; font-size: 18px; font-weight: 600;">Thanks — your tour request was sent.</p>
@@ -127,7 +126,7 @@
           <form onSubmit="{{ submitTour }}" style="display: flex; flex-direction: column; gap: 28px;">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px;">
               <div style="display: flex; flex-direction: column; gap: 14px;">
-                <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #666666;">Choose a date</div>
+                <div style="font-size: 13px; font-weight: 600; color: #666666;">Choose a Date</div>
                 <div style="display: flex; align-items: center; justify-content: space-between;">
                   <button type="button" onClick="{{ tourPrevMonth }}" aria-label="Previous month" style="width: 34px; height: 34px; border-radius: 50%; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #1a1a1a; opacity: {{ tourPrevOpacity }}; transition: background 0.2s ease;" style-hover="background: #f0f0f0;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"></path></svg></button>
                   <div style="font-size: 15px; font-weight: 600;">{{ tourMonthLabel }}</div>
@@ -143,7 +142,7 @@
                 </div>
               </div>
               <div style="display: flex; flex-direction: column; gap: 14px; min-width: 0;">
-                <div style="font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #666666;">Choose a time</div>
+                <div style="font-size: 13px; font-weight: 600; color: #666666;">Choose a Time</div>
                 <div style="font-size: 15px; font-weight: 600; min-height: 34px; display: flex; align-items: center;">{{ tourDateLabel }}</div>
                 <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; max-height: 300px; overflow-y: auto; padding-right: 4px; opacity: {{ tourSlotsOpacity }};">
                   <sc-for list="{{ tourSlots }}" as="s" hint-placeholder-count="12">
@@ -153,10 +152,10 @@
               </div>
             </div>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 22px 28px;">
-              <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #666666;">Full Name *</span><input type="text" name="name" required="{{ true }}" autocomplete="name" style="width: 100%; box-sizing: border-box; padding: 8px 2px; font-size: 15px; font-family: 'Montserrat', system-ui, sans-serif; color: #1a1a1a; background: transparent; border: none; border-bottom: 1px solid #cccccc; border-radius: 0; outline: none; transition: border-color 0.2s ease;" style-focus="border-bottom-color: #1a1a1a;"></label>
-              <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #666666;">Phone *</span><input type="tel" name="phone" required="{{ true }}" autocomplete="tel" style="width: 100%; box-sizing: border-box; padding: 8px 2px; font-size: 15px; font-family: 'Montserrat', system-ui, sans-serif; color: #1a1a1a; background: transparent; border: none; border-bottom: 1px solid #cccccc; border-radius: 0; outline: none; transition: border-color 0.2s ease;" style-focus="border-bottom-color: #1a1a1a;"></label>
-              <label style="display: flex; flex-direction: column; gap: 6px; grid-column: 1 / -1;"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #666666;">Email *</span><input type="email" name="email" required="{{ true }}" autocomplete="email" style="width: 100%; box-sizing: border-box; padding: 8px 2px; font-size: 15px; font-family: 'Montserrat', system-ui, sans-serif; color: #1a1a1a; background: transparent; border: none; border-bottom: 1px solid #cccccc; border-radius: 0; outline: none; transition: border-color 0.2s ease;" style-focus="border-bottom-color: #1a1a1a;"></label>
-              <label style="display: flex; flex-direction: column; gap: 6px; grid-column: 1 / -1;"><span style="font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #666666;">What else would you like us to know? (optional)</span><textarea name="message" rows="3" style="width: 100%; box-sizing: border-box; padding: 12px 14px; font-size: 15px; font-family: 'Montserrat', system-ui, sans-serif; color: #1a1a1a; background: #fafafa; border: 1px solid #dddddd; border-radius: 6px; resize: vertical; outline: none;" style-focus="border-color: #1a1a1a;"></textarea></label>
+              <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 13px; font-weight: 600; color: #666666;">Full Name *</span><input type="text" name="name" required="{{ true }}" autocomplete="name" style="width: 100%; box-sizing: border-box; padding: 8px 2px; font-size: 15px; font-family: 'Montserrat', system-ui, sans-serif; color: #1a1a1a; background: transparent; border: none; border-bottom: 1px solid #cccccc; border-radius: 0; outline: none; transition: border-color 0.2s ease;" style-focus="border-bottom-color: #1a1a1a;"></label>
+              <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-size: 13px; font-weight: 600; color: #666666;">Phone *</span><input type="tel" name="phone" required="{{ true }}" autocomplete="tel" style="width: 100%; box-sizing: border-box; padding: 8px 2px; font-size: 15px; font-family: 'Montserrat', system-ui, sans-serif; color: #1a1a1a; background: transparent; border: none; border-bottom: 1px solid #cccccc; border-radius: 0; outline: none; transition: border-color 0.2s ease;" style-focus="border-bottom-color: #1a1a1a;"></label>
+              <label style="display: flex; flex-direction: column; gap: 6px; grid-column: 1 / -1;"><span style="font-size: 13px; font-weight: 600; color: #666666;">Email *</span><input type="email" name="email" required="{{ true }}" autocomplete="email" style="width: 100%; box-sizing: border-box; padding: 8px 2px; font-size: 15px; font-family: 'Montserrat', system-ui, sans-serif; color: #1a1a1a; background: transparent; border: none; border-bottom: 1px solid #cccccc; border-radius: 0; outline: none; transition: border-color 0.2s ease;" style-focus="border-bottom-color: #1a1a1a;"></label>
+              <label style="display: flex; flex-direction: column; gap: 6px; grid-column: 1 / -1;"><span style="font-size: 13px; font-weight: 600; color: #666666;">What Else Would You Like Us to Know? (Optional)</span><textarea name="message" rows="3" style="width: 100%; box-sizing: border-box; padding: 12px 14px; font-size: 15px; font-family: 'Montserrat', system-ui, sans-serif; color: #1a1a1a; background: #fafafa; border: 1px solid #dddddd; border-radius: 6px; resize: vertical; outline: none;" style-focus="border-color: #1a1a1a;"></textarea></label>
             </div>
             <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0;">
             <sc-if value="{{ tourError }}" hint-placeholder-val="{{ false }}">
@@ -1368,7 +1367,13 @@ findAllMatches('Share').filter((s) => !s.closest('[data-ihf-own], [data-ihf-acti
     const dateObj = s.tourDate ? new Date(s.tourDate + 'T12:00:00') : null;
     const dateLabel = dateObj ? dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }) : 'Pick a date first';
     const canPrev = ym[0] > today.getFullYear() || ym[1] > today.getMonth();
-    const listing = (document.title || '').replace(/\s*\|\s*/, ', ');
+    const listing = (() => {
+      const sr = document.querySelector('div.ihf-container') && document.querySelector('div.ihf-container').shadowRoot;
+      const q = (sel) => { const el = sr && sr.querySelector(sel); return el ? (el.textContent || '').trim() : ''; };
+      const addr = [q('.ihf-info-col .listing-address-1') || q('.listing-address-1'), q('.ihf-info-col .listing-address-2') || q('.listing-address-2')].filter(Boolean).join(', ');
+      const id = new URLSearchParams(location.search).get('id') || '';
+      return [addr, id ? 'MLS# ' + id.replace(/_\d+$/, '') : ''].filter(Boolean).join(' — ') || (document.title || '');
+    })();
     const close = () => {
       this._tourFade(false);
       this.setState({ tourShown: false });
