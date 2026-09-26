@@ -43,6 +43,9 @@
     }
     html, body { margin: 0; overflow-x: hidden; background: var(--rh-bg); letter-spacing: 0.015em; }
     html body *:not(svg):not(path) { font-family: 'Inter', system-ui, sans-serif !important; }
+    [data-ks-x], [data-ks-x] svg path, [data-ks-x] svg line { transition: color 0.3s ease, stroke 0.3s ease !important; }
+    [data-ks-x]:hover { color: #999999 !important; }
+    [data-ks-x]:hover svg path, [data-ks-x]:hover svg line { stroke: #999999 !important; }
     @keyframes modal-fade-in { from { opacity: 0; } to { opacity: 1; } }
     @keyframes modal-fade-out { from { opacity: 1; } to { opacity: 0; } }
     a { color: var(--rh-accent); text-decoration: none; }
@@ -64,13 +67,13 @@
       <img src="assets/key-landing-logo.png" alt="Jackson Kesecker Realtor" style="height: 34px; width: auto;">
     </a>
     <div style="display: flex; align-items: center; gap: clamp(14px, 2.4vw, 26px); flex: 1; padding-left: clamp(8px, 2vw, 28px);">
-      <a href="../listings" style="font-family: 'Inter', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75); text-decoration: none; transition: color 0.3s ease, background-size 0.3s ease; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 1px; padding-bottom: 2px;" style-hover="color: #ffffff; background-size: 100% 1px;">Search</a>
+      <a href="../listings" style="font-family: 'Inter', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75); text-decoration: none; transition: color 0.3s ease, background-size 0.3s ease; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 2px; padding-bottom: 2px;" style-hover="color: #ffffff; background-size: 100% 2px;">Search</a>
       <span style="font-size: 15px; line-height: 1; display: flex; align-items: center; color: #ffffff;">•</span>
-      <a href="../communities" style="font-family: 'Inter', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75); text-decoration: none; transition: color 0.3s ease, background-size 0.3s ease; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 1px; padding-bottom: 2px;" style-hover="color: #ffffff; background-size: 100% 1px;">Communities</a>
+      <a href="../communities" style="font-family: 'Inter', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75); text-decoration: none; transition: color 0.3s ease, background-size 0.3s ease; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 2px; padding-bottom: 2px;" style-hover="color: #ffffff; background-size: 100% 2px;">Communities</a>
       <span style="font-size: 15px; line-height: 1; display: flex; align-items: center; color: #ffffff;">•</span>
-      <a href="../about" style="font-family: 'Inter', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75); text-decoration: none; transition: color 0.3s ease, background-size 0.3s ease; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 1px; padding-bottom: 2px;" style-hover="color: #ffffff; background-size: 100% 1px;">About</a>
+      <a href="../about" style="font-family: 'Inter', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75); text-decoration: none; transition: color 0.3s ease, background-size 0.3s ease; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 2px; padding-bottom: 2px;" style-hover="color: #ffffff; background-size: 100% 2px;">About</a>
       <span style="font-size: 15px; line-height: 1; display: flex; align-items: center; color: #ffffff;">•</span>
-      <a href="#" onClick="{{ openContactModal }}" style="font-family: 'Inter', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75); text-decoration: none; transition: color 0.3s ease, background-size 0.3s ease; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 1px; padding-bottom: 2px;" style-hover="color: #ffffff; background-size: 100% 1px;">Contact</a>
+      <a href="#" onClick="{{ openContactModal }}" style="font-family: 'Inter', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75); text-decoration: none; transition: color 0.3s ease, background-size 0.3s ease; background-image: linear-gradient(#ffffff, #ffffff); background-repeat: no-repeat; background-position: left bottom; background-size: 0 2px; padding-bottom: 2px;" style-hover="color: #ffffff; background-size: 100% 2px;">Contact</a>
     </div>
     <button onClick="{{ toggleNavMenu }}" aria-label="Menu" style="flex-shrink: 0; width: 44px; height: 44px; margin-right: -6px; background: transparent; border: none; border-radius: 50%; cursor: pointer; padding: 0 0 0 8px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 6px; box-sizing: border-box; position: relative; isolation: isolate; z-index: 2147483001;">
       <span style="display: block; width: 26px; height: 2px; border-radius: 1px; background: #ffffff; transform: perspective(200px) {{ navBurgerTransform }}; transform-origin: left center; transition: transform 0.4s ease;"></span>
@@ -135,7 +138,7 @@
   </sc-if>
   <div style="position: fixed; right: 24px; bottom: 24px; z-index: 2147483010; width: 56px; height: 56px;">
     <div style="{{ phonePopoverStyle }} position: absolute; right: 0; bottom: 70px; width: 260px; background: #141414; border: 1px solid rgba(255,255,255,0.12); border-radius: 4px; padding: 20px; box-shadow: 0 12px 32px rgba(0,0,0,0.4);">
-      <div style="display: flex; justify-content: flex-end;"><span onClick="{{ onPhoneClose }}" style="color: rgba(255,255,255,0.6); font-size: 14px; line-height: 1; cursor: pointer;">✕</span></div>
+      <div style="display: flex; justify-content: flex-end;"><span data-ks-x="1" onClick="{{ onPhoneClose }}" style="color: rgba(255,255,255,0.6); font-size: 14px; line-height: 1; cursor: pointer;">✕</span></div>
       <p style="font-size: 20px; font-weight: 600; color: #ffffff; text-align: center; margin: -8px 0 4px;">Questions?</p>
       <p style="font-size: 14px; color: rgba(255,255,255,0.85); text-align: center; margin: 0 0 12px;">Call or text today, we are here to help!</p>
       <p style="margin: 0 0 16px; text-align: center;"><a href="tel:+18318210398" style="font-size: 22px; font-weight: 700; color: #ffffff; text-decoration: none;">(831) 821-0398</a></p>
