@@ -12,6 +12,7 @@
 <x-dc>
 <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="#1a1a1a"/><text x="100" y="112" font-size="64" text-anchor="middle" fill="#ffffff" font-family="sans-serif" font-weight="700">JK</text></svg></template>
 <helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&display=swap">
   <title>Jackson Kesecker, Realtor®</title>
   <link rel="icon" type="image/png" href="assets/favicon-dark.png" media="(prefers-color-scheme: dark)">
   <link rel="icon" type="image/png" href="assets/favicon-light.png" media="(prefers-color-scheme: light)">
@@ -51,6 +52,7 @@
     a:hover { color: var(--rh-accent-hover); }
     .vc-eyebrow { font-family: var(--rh-font); font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--rh-accent); }
     html body *:not(svg):not(path) { font-family: 'Inter', system-ui, sans-serif !important; }
+    html body #hero-logo span { font-family: 'Montserrat', system-ui, sans-serif !important; }
     [data-ks-x], [data-ks-x] svg path, [data-ks-x] svg line { transition: color 0.3s ease, stroke 0.3s ease !important; }
     [data-ks-x]:hover { color: #999999 !important; }
     [data-ks-x]:hover svg path, [data-ks-x]:hover svg line { stroke: #999999 !important; }
@@ -94,7 +96,7 @@
     @media (max-width: 640px) {
       #listings, #idx, #neighborhoods, #footer-legal, #about { padding-left: 24px !important; padding-right: 24px !important; }
       #listings-viewport, #testimonials-viewport, #notable-viewport { padding-left: 24px !important; padding-right: 24px !important; }
-      #hero-logo-img { height: 60px !important; }
+      #hero-logo { font-size: 60px !important; }
       #hero-search-bar { padding: 14px 20px !important; }
       #footer-bottom-bar { height: 60px !important; }
       #footer-legal-secondary-row { gap: 28px !important; margin-top: 18px !important; }
@@ -161,7 +163,14 @@
       <!-- HERO CONTENT -->
       <div style="position: absolute; inset: 0; box-sizing: border-box; display: grid; grid-template-rows: auto 1fr;">
         <div style="width: 100%; box-sizing: border-box; z-index: 70; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 18px clamp(16px, 3vw, 32px) 18px clamp(24px, 6vw, 72px); background: transparent; flex-wrap: wrap;">
-          <img id="hero-logo-img" src="uploads/JKR-6d1f334b.png" alt="Logo" style="height: 124px; width: auto; flex-shrink: 0; margin-left: -12px;">
+          <div id="hero-logo" role="img" aria-label="Jackson Kesecker, Realtor®" style="font-size: 124px; height: 1em; display: flex; align-items: center; flex-shrink: 0; margin-left: -12px; color: #ffffff;">
+            <img src="assets/jk-key.png" alt="" style="height: 0.423em; width: auto; display: block; margin-left: 0.08em; flex-shrink: 0;">
+            <div style="width: 1px; height: 0.8em; background: #ffffff; margin: 0 0.16em 0 0.14em; flex-shrink: 0; transform-origin: center; transform: scaleY({{ logoLineScale }}); transition: transform 0.7s cubic-bezier(0.65, 0, 0.35, 1);"></div>
+            <div style="overflow: hidden; display: flex; flex-direction: column; justify-content: center; gap: 0.07em; padding: 0.02em 0.04em 0.02em 0;">
+              <span style="display: block; font-family: 'Montserrat', system-ui, sans-serif; font-size: 0.19em; font-weight: 600; letter-spacing: 0.1em; line-height: 1.15; white-space: nowrap; color: #ffffff; transform: translateX({{ logoTextX }}); opacity: {{ logoTextOpacity }}; transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.55s, opacity 0.5s ease 0.55s;">Jackson Kesecker</span>
+              <span style="display: block; font-family: 'Montserrat', system-ui, sans-serif; font-size: 0.17em; font-weight: 300; letter-spacing: 0.1em; line-height: 1.15; white-space: nowrap; color: #ffffff; transform: translateX({{ logoTextX }}); opacity: {{ logoTextOpacity }}; transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.7s, opacity 0.5s ease 0.7s;">Realtor®</span>
+            </div>
+          </div>
         </div>
         <div style="align-self: center; width: 100%; box-sizing: border-box; transform: translateY(calc(-8vh - 40px));">
         <div id="hero-text-block" style="box-sizing: border-box; padding-left: clamp(20px, 6vw, 73px); padding-right: 24px; display: flex; flex-direction: column; gap: clamp(6px, 1vw, 10px); text-align: left; max-width: 774px;"><span id="hero-eyebrow-span" style="font-family: var(--rh-font); font-size: clamp(12px, 1.1vw, 17px); font-weight: 400; letter-spacing: 0.06em; color: #ffffff;">Keller Williams Coastal &amp; Salinas Valley Estates | DRE#02196405</span><div id="hero-heading-wrap" style="display: flex; align-items: center; overflow: hidden; min-height: clamp(68px, 12vw, 124px);">
@@ -806,7 +815,7 @@ class Component extends DCLogic {
   };
   replayIntro = () => {
     try { localStorage.removeItem('jkr_intro_seen'); } catch (e) {}
-    this.setState({ isIntroVisible: true, isIntroFading: false });
+    this.setState({ isIntroVisible: true, isIntroFading: false, logoIn: false });
   };
   dismissIntro = () => {
     if (this.state.isIntroFading || !this.state.isIntroVisible) return;
@@ -817,6 +826,7 @@ class Component extends DCLogic {
     this.setState({ isIntroFading: true });
     setTimeout(() => {
       this.setState({ isIntroVisible: false, isIntroFading: false });
+      setTimeout(() => this.setState({ logoIn: true }), 250);
     }, 350);
   };
   handleIntroTimeUpdate = (e) => {
@@ -1377,6 +1387,7 @@ class Component extends DCLogic {
       : 'opacity:0;transform:translateX(-32px);transition:opacity 1.4s cubic-bezier(.16,1,.3,1),transform 1.4s cubic-bezier(.16,1,.3,1);';
   }
   componentDidMount() {
+    if (!this.state.isIntroVisible) setTimeout(() => this.setState({ logoIn: true }), 400);
     if (!this.state.isIntroVisible && this.heroVideoRef.current) { setTimeout(() => { try { this.heroVideoRef.current.play(); } catch (e) {} }, 1500); }
     if (this.state.isIntroVisible) {
       this.introFailsafeTimer = setTimeout(() => { if (this.state.isIntroVisible && !this.state.isIntroFading) this.dismissIntro(); }, 6000);
@@ -1584,6 +1595,7 @@ class Component extends DCLogic {
     const reviewCards = [...baseCards, ...baseCards];
     const activeReview = list[this.state.activeReviewIndex] || list[0];
     return {
+      logoLineScale: this.state.logoIn ? 1 : 0, logoTextX: this.state.logoIn ? '0%' : '-105%', logoTextOpacity: this.state.logoIn ? 1 : 0,
       isIntroVisible: this.state.isIntroVisible, introOpacity, introTranslateY, introVideoRef: this.introVideoRef, dismissIntro: this.dismissIntro, handleIntroTimeUpdate: this.handleIntroTimeUpdate, replayIntro: this.replayIntro,
       introSkipHoverEnter: this.introSkipHoverEnter, introSkipHoverLeave: this.introSkipHoverLeave, introSkipUnderlineWidth: this.state.introSkipHover ? '100%' : '0%',
       getInTouchHoverEnter: this.getInTouchHoverEnter, getInTouchHoverLeave: this.getInTouchHoverLeave, getInTouchUnderlineWidth: this.state.getInTouchHover ? '100%' : '0%',
