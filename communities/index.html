@@ -12,6 +12,7 @@
 <body>
 <x-dc>
 <helmet>
+  <script src="smooth-scroll.js?v=3"></script>
   <link rel="icon" type="image/png" href="assets/favicon-dark.png" media="(prefers-color-scheme: dark)">
   <link rel="icon" type="image/png" href="assets/favicon-light.png" media="(prefers-color-scheme: light)">
   <link rel="icon" type="image/png" href="assets/favicon-light.png">
@@ -68,7 +69,7 @@
       <span style="font-size: 15px; line-height: 1; display: flex; align-items: center; color: #ffffff;">•</span>
       <a href="../listings" style="font-family: 'Inter', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75); text-decoration: none; transition: color 0.3s ease, background-size 0.3s ease; background-image: linear-gradient(to top, #ffffff 2px, transparent 2px); background-repeat: no-repeat; background-position: left bottom; background-size: 0 100%; padding-bottom: 2px;" style-hover="color: #ffffff; background-size: 100% 100%;">Search</a>
       <span style="font-size: 15px; line-height: 1; display: flex; align-items: center; color: #ffffff;">•</span>
-      <a href="../communities" style="font-family: 'Inter', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75); text-decoration: none; transition: color 0.3s ease, background-size 0.3s ease; background-image: linear-gradient(to top, #ffffff 2px, transparent 2px); background-repeat: no-repeat; background-position: left bottom; background-size: 0 100%; padding-bottom: 2px;" style-hover="color: #ffffff; background-size: 100% 100%;">Communities</a>
+      <a aria-current="page" href="../communities" style="font-family: 'Inter', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: #ffffff; text-decoration: none; transition: color 0.3s ease, background-size 0.3s ease; background-image: linear-gradient(to top, #ffffff 2px, transparent 2px); background-repeat: no-repeat; background-position: left bottom; background-size: 100% 100%; padding-bottom: 2px;" style-hover="color: #ffffff; background-size: 100% 100%;">Communities</a>
       <span style="font-size: 15px; line-height: 1; display: flex; align-items: center; color: #ffffff;">•</span>
       <a href="../about" style="font-family: 'Inter', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75); text-decoration: none; transition: color 0.3s ease, background-size 0.3s ease; background-image: linear-gradient(to top, #ffffff 2px, transparent 2px); background-repeat: no-repeat; background-position: left bottom; background-size: 0 100%; padding-bottom: 2px;" style-hover="color: #ffffff; background-size: 100% 100%;">About</a>
       <span style="font-size: 15px; line-height: 1; display: flex; align-items: center; color: #ffffff;">•</span>
@@ -93,7 +94,7 @@
     <dc-import name="ContactModalV2" hint-size="0,0"></dc-import>
   </div>
 
-  <div style="height: calc(100vh - 92px); overflow-y: auto;">
+  <div style="min-height: calc(100vh - 92px);">
     <div style="max-width: 1160px; margin: 0 auto; padding: 72px 36px 96px;">
       <div style="text-align: center; margin-bottom: 56px;">
         <span class="vc-eyebrow">Where We Serve</span>
@@ -131,7 +132,8 @@
     </div>
   </div>
 
-  <div style="position: relative; width: 100%; height: 620px; overflow: hidden; background-image: url('uploads/Pinnacles.png'); background-size: cover; background-position: center; background-attachment: fixed;">
+  <div style="position: relative; width: 100%; height: 620px; overflow: hidden; clip-path: inset(0);">
+    <div aria-hidden="true" style="position: fixed; inset: 0; background-image: url('uploads/Pinnacles.png'); background-size: cover; background-position: center; will-change: transform; pointer-events: none;"></div>
     <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.55) 55%, #000000 100%);"></div>
     <div style="position: absolute; left: 50%; top: 150px; transform: translateX(-50%); width: 100%; max-width: 640px; padding: 0 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 18px; text-align: center;">
       <h2 style="font-size: clamp(22px, 3.8vw, 30px); font-weight: 600; color: #ffffff; margin: 0; letter-spacing: -0.01em; text-transform: uppercase; text-shadow: 0 2px 12px rgba(0,0,0,0.55);">Work with Jackson</h2>
