@@ -11,6 +11,7 @@
 <body>
 <x-dc>
 <helmet>
+  <script src="smooth-scroll.js?v=4" data-wrapper="[data-ks-scroll]"></script>
   <title>Listing | Jackson Kesecker, Realtor®</title>
   <link rel="icon" type="image/png" href="assets/favicon-dark.png" media="(prefers-color-scheme: dark)">
   <link rel="icon" type="image/png" href="assets/favicon-light.png" media="(prefers-color-scheme: light)">
@@ -110,7 +111,7 @@
     <dc-import name="ContactModalV2" hint-size="0,0"></dc-import>
   </div>
 
-  <div style="height: calc(100vh - 92px); overflow-y: auto; scroll-behavior: smooth; position: relative;">
+  <div data-ks-scroll="1" style="height: calc(100vh - 92px); overflow-y: auto; scroll-behavior: smooth; position: relative;">
     <div id="ihf-listing-detail" ref="{{ ihfListingDetailRef }}" style="width: 100%; min-height: 100%; padding: 0 36px 24px; box-sizing: border-box; opacity: 0; transition: opacity 0.25s ease; position: relative; z-index: 0; isolation: isolate;"></div>
   </div>
 
