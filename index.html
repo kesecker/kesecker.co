@@ -831,7 +831,6 @@ class Component extends DCLogic {
   dismissIntro = () => {
     if (this.state.isIntroFading || !this.state.isIntroVisible) return;
     if (this.introFailsafeTimer) clearTimeout(this.introFailsafeTimer);
-    try { localStorage.setItem('jkr_intro_seen', '1'); } catch (e) {}
     if (this.introVideoEl) { try { this.introVideoEl.pause(); } catch (e) {} }
     setTimeout(() => { if (this.heroVideoRef.current) { try { this.heroVideoRef.current.play(); } catch (e) {} } }, 1500);
     this.setState({ isIntroFading: true });
@@ -863,7 +862,7 @@ class Component extends DCLogic {
     }
     return phrase;
   }
-  hasSeenIntro = () => { try { return !!localStorage.getItem('jkr_intro_seen'); } catch (e) { return false; } };
+  hasSeenIntro = () => false;
   state = { isIntroVisible: !this.hasSeenIntro(), isIntroFading: false, activeReviewIndex: 0, isReviewModalVisible: false, isReviewModalClosing: false, heroPhraseIndex: 0, heroFadeVisible: true, lang: 'en', isBioModalOpen: false, isBioModalVisible: false, isContactModalVisible: false, isContactModalClosing: false, modalInterestIndex: 0, modalInterestOpen: false, hoveredOffice: null, isBioModalClosing: false, isMobileMenuVisible: false, isMobileMenuClosing: false, isScrolled: false, revealed: {}, listingsOverflow: false, heroSearchValue: '',
     a11yOpen: false, a11yStatementOpen: false, a11yPosition: 'bottom-left', a11yScrollVisible: false, a11yLang: null, langFading: false,
     isIosDevice: false,
