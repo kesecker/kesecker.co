@@ -862,7 +862,12 @@ class Component extends DCLogic {
     }
     return phrase;
   }
-  hasSeenIntro = () => false;
+  hasSeenIntro = () => {
+    let internal = false;
+    try { const r = document.referrer ? new URL(document.referrer) : null; internal = !!(r && /(^|\.)keseckerproperties\.com$/i.test(r.hostname)); } catch (e) {}
+    try { if (sessionStorage.getItem('jkr_on_site')) internal = true; sessionStorage.setItem('jkr_on_site', '1'); } catch (e) {}
+    return internal;
+  };
   state = { isIntroVisible: !this.hasSeenIntro(), isIntroFading: false, activeReviewIndex: 0, isReviewModalVisible: false, isReviewModalClosing: false, heroPhraseIndex: 0, heroFadeVisible: true, lang: 'en', isBioModalOpen: false, isBioModalVisible: false, isContactModalVisible: false, isContactModalClosing: false, modalInterestIndex: 0, modalInterestOpen: false, hoveredOffice: null, isBioModalClosing: false, isMobileMenuVisible: false, isMobileMenuClosing: false, isScrolled: false, revealed: {}, listingsOverflow: false, heroSearchValue: '',
     a11yOpen: false, a11yStatementOpen: false, a11yPosition: 'bottom-left', a11yScrollVisible: false, a11yLang: null, langFading: false,
     isIosDevice: false,
