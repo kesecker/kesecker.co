@@ -54,6 +54,7 @@
     [data-ks-ring] { transition: stroke-dashoffset 0.6s ease; }
     [data-ks-social]:hover [data-ks-ring], [data-ks-social]:focus-visible [data-ks-ring] { stroke-dashoffset: 0; }
     @media (max-width: 760px) { [data-ks-foot-grid] { grid-template-columns: minmax(0, 1fr) !important; justify-items: center !important; row-gap: 20px !important; margin-top: 0 !important; } [data-ks-foot-grid] > * { justify-self: center !important; justify-content: center !important; padding-right: 0 !important; } [data-ks-foot-links] { flex-wrap: wrap !important; white-space: normal !important; row-gap: 12px !important; } }
+    @media (max-width: 760px) { [data-ks-navlinks] { display: none !important; } [data-ks-navlinks] ~ button[aria-label="Menu"] { margin-left: auto !important; } [data-ks-copy] { white-space: normal !important; width: calc(100% - 40px) !important; line-height: 1.5 !important; } #communities-map-col { width: 100% !important; } #communities-map-col > div { width: 100% !important; } }
     @keyframes navm-fade-in { from { opacity: 0; } to { opacity: 1; } }
     @keyframes navm-fade-out { from { opacity: 1; } to { opacity: 0; } }
     @keyframes navm-scale-in { from { opacity: 0; transform: scale(0.96) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
@@ -66,7 +67,7 @@
     <a href="https://keseckerproperties.com/" target="_self" style="display: flex; align-items: center; flex-shrink: 0;">
       <img src="assets/key-landing-logo.png" alt="Jackson Kesecker Realtor" style="height: 34px; width: auto;">
     </a>
-    <div style="display: flex; align-items: center; gap: clamp(14px, 2.4vw, 26px); flex: 1; padding-left: clamp(8px, 2vw, 28px);">
+    <div data-ks-navlinks="1" style="display: flex; align-items: center; gap: clamp(14px, 2.4vw, 26px); flex: 1; padding-left: clamp(8px, 2vw, 28px);">
       <a target="_self" href="https://keseckerproperties.com/" style="font-family: 'Inter', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75); text-decoration: none; transition: color 0.3s ease, background-size 0.3s ease; background-image: linear-gradient(to top, #ffffff 2px, transparent 2px); background-repeat: no-repeat; background-position: left bottom; background-size: 0 100%; padding-bottom: 2px;" style-hover="color: #ffffff; background-size: 100% 100%;">Home</a>
       <span style="font-size: 15px; line-height: 1; display: flex; align-items: center; color: #ffffff;">•</span>
       <a href="../listings" style="font-family: 'Inter', system-ui, sans-serif !important; font-size: 14px; font-weight: 500; color: rgba(255,255,255,0.75); text-decoration: none; transition: color 0.3s ease, background-size 0.3s ease; background-image: linear-gradient(to top, #ffffff 2px, transparent 2px); background-repeat: no-repeat; background-position: left bottom; background-size: 0 100%; padding-bottom: 2px;" style-hover="color: #ffffff; background-size: 100% 100%;">Search</a>
@@ -203,7 +204,7 @@
     <p style="width: 0; min-width: 100%; justify-self: center; font-size: 11px; line-height: 1.7; color: rgba(255,255,255,0.55); text-align: center; max-width: 720px; margin: 32px 0 0;">All information is from sources deemed reliable but is subject to errors, omissions, changes in price, prior sale or withdrawal without notice. No representation is made as to the accuracy of any description. All measurements and square footages are approximate and all descriptive information should be confirmed by customer. Information is reliable but not guaranteed and should not be considered legal or financial advice. Each Keller Williams® office is independently owned and operated.</p>
   </div>
   <div style="height: 60px; background: #000000; position: relative; box-sizing: border-box;">
-    <div style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 12px; color: rgba(255,255,255,0.55); text-align: center; white-space: nowrap;">© 2026 Jackson Kesecker, Realtor®. DRE#02196405 | Broker DRE#01527814.</div>
+    <div data-ks-copy="1" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 12px; color: rgba(255,255,255,0.55); text-align: center; white-space: nowrap;">© 2026 Jackson Kesecker, Realtor®. DRE#02196405 | Broker DRE#01527814.</div>
   </div>
 
   <sc-if value="{{ isPhoneOpen }}" hint-placeholder-val="{{ false }}">
