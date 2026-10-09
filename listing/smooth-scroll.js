@@ -12,7 +12,7 @@
     for (var n = node; n && n.nodeType === 1 && n !== wrap && n !== document.body && n !== document.documentElement; n = n.parentElement || (n.getRootNode && n.getRootNode().host) || null) {
       var cs = getComputedStyle(n);
       if (cs.position === 'fixed') return true;
-      if (/(auto|scroll)/.test(cs.overflowY) && n.scrollHeight > n.clientHeight + 1) return true;
+      if (/(auto|scroll)/.test(cs.overflowY) && n.scrollHeight > n.clientHeight + 1 && n.clientHeight < (wrap ? wrap.clientHeight : window.innerHeight) * 0.85) return true;
     }
     return false;
   }

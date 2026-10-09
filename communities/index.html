@@ -12,7 +12,7 @@
 <body>
 <x-dc>
 <helmet>
-  <script src="smooth-scroll.js?v=4"></script>
+  <script src="smooth-scroll.js?v=5"></script>
   <link rel="icon" type="image/png" href="assets/favicon-dark.png" media="(prefers-color-scheme: dark)">
   <link rel="icon" type="image/png" href="assets/favicon-light.png" media="(prefers-color-scheme: light)">
   <link rel="icon" type="image/png" href="assets/favicon-light.png">
@@ -47,6 +47,8 @@
     button[aria-label="Menu"], #nav-burger-fixed { transition: opacity 0.3s ease; }
     body:has(div[style*="z-index: 2147483005"]) button[aria-label="Menu"], body:has(div[style*="z-index: 2147483005"]) #nav-burger-fixed { opacity: 0 !important; pointer-events: none !important; }
     html body *:not(svg):not(path) { font-family: 'Inter', system-ui, sans-serif !important; }
+    html:has(div[style*="z-index: 2147483005"]), html:has(div[style*="z-index: 2147483005"]) body, html:has(div[style*="z-index: 2147483005"]) [data-ks-scroll], div[style*="z-index: 2147483005"] { scrollbar-width: none !important; -ms-overflow-style: none !important; }
+    html:has(div[style*="z-index: 2147483005"])::-webkit-scrollbar, html:has(div[style*="z-index: 2147483005"]) body::-webkit-scrollbar, html:has(div[style*="z-index: 2147483005"]) [data-ks-scroll]::-webkit-scrollbar, div[style*="z-index: 2147483005"]::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
     [data-ks-x], [data-ks-x] svg path, [data-ks-x] svg line { transition: color 0.3s ease, stroke 0.3s ease !important; }
     [data-ks-x]:hover { color: #999999 !important; }
     [data-ks-x]:hover svg path, [data-ks-x]:hover svg line { stroke: #999999 !important; }

@@ -14,7 +14,7 @@
 <helmet>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&display=swap">
   <title>Jackson Kesecker, REALTOR® | Monterey County Real Estate</title>
-  <script src="smooth-scroll.js?v=4"></script>
+  <script src="smooth-scroll.js?v=5"></script>
   <link rel="icon" type="image/png" href="assets/favicon-dark.png" media="(prefers-color-scheme: dark)">
   <link rel="icon" type="image/png" href="assets/favicon-light.png" media="(prefers-color-scheme: light)">
   <link rel="icon" type="image/png" href="assets/favicon-light.png">
@@ -53,6 +53,8 @@
     a:hover { color: var(--rh-accent-hover); }
     .vc-eyebrow { font-family: var(--rh-font); font-size: 13px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--rh-accent); }
     html body *:not(svg):not(path) { font-family: 'Inter', system-ui, sans-serif !important; }
+    html:has(div[style*="z-index: 2147483005"]), html:has(div[style*="z-index: 2147483005"]) body, html:has(div[style*="z-index: 2147483005"]) [data-ks-scroll], div[style*="z-index: 2147483005"] { scrollbar-width: none !important; -ms-overflow-style: none !important; }
+    html:has(div[style*="z-index: 2147483005"])::-webkit-scrollbar, html:has(div[style*="z-index: 2147483005"]) body::-webkit-scrollbar, html:has(div[style*="z-index: 2147483005"]) [data-ks-scroll]::-webkit-scrollbar, div[style*="z-index: 2147483005"]::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
     html body #hero-logo span { font-family: 'Montserrat', system-ui, sans-serif !important; }
     [data-ks-x], [data-ks-x] svg path, [data-ks-x] svg line { transition: color 0.3s ease, stroke 0.3s ease !important; }
     [data-ks-x]:hover { color: #999999 !important; }
@@ -864,7 +866,7 @@ class Component extends DCLogic {
   }
   hasSeenIntro = () => {
     let internal = false;
-    try { const r = document.referrer ? new URL(document.referrer) : null; internal = !!(r && /(^|\.)jacksonkesecker\.com$/i.test(r.hostname)); } catch (e) {}
+    try { const r = document.referrer ? new URL(document.referrer) : null; internal = !!(r && /(^|\.)(jacksonkesecker|keseckerproperties)\.com$/i.test(r.hostname)); } catch (e) {}
     try { if (sessionStorage.getItem('jkr_on_site')) internal = true; sessionStorage.setItem('jkr_on_site', '1'); } catch (e) {}
     return internal;
   };

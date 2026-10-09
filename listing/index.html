@@ -11,7 +11,7 @@
 <body>
 <x-dc>
 <helmet>
-  <script src="smooth-scroll.js?v=4" data-wrapper="[data-ks-scroll]"></script>
+  <script src="smooth-scroll.js?v=5" data-wrapper="[data-ks-scroll]"></script>
   <title>Listing | Jackson Kesecker, Realtor®</title>
   <link rel="icon" type="image/png" href="assets/favicon-dark.png" media="(prefers-color-scheme: dark)">
   <link rel="icon" type="image/png" href="assets/favicon-light.png" media="(prefers-color-scheme: light)">
@@ -57,6 +57,8 @@
     }
     html, body { margin: 0; overflow-x: hidden; background: var(--rh-bg); letter-spacing: 0.015em; }
     html body *:not(svg):not(path) { font-family: 'Inter', system-ui, sans-serif !important; }
+    html:has(div[style*="z-index: 2147483005"]), html:has(div[style*="z-index: 2147483005"]) body, html:has(div[style*="z-index: 2147483005"]) [data-ks-scroll], div[style*="z-index: 2147483005"] { scrollbar-width: none !important; -ms-overflow-style: none !important; }
+    html:has(div[style*="z-index: 2147483005"])::-webkit-scrollbar, html:has(div[style*="z-index: 2147483005"]) body::-webkit-scrollbar, html:has(div[style*="z-index: 2147483005"]) [data-ks-scroll]::-webkit-scrollbar, div[style*="z-index: 2147483005"]::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }
     [data-ks-x], [data-ks-x] svg path, [data-ks-x] svg line { transition: color 0.3s ease, stroke 0.3s ease !important; }
     [data-ks-x]:hover { color: #999999 !important; }
     [data-ks-x]:hover svg path, [data-ks-x]:hover svg line { stroke: #999999 !important; }
@@ -112,7 +114,7 @@
     <dc-import name="ContactModalV2" hint-size="0,0"></dc-import>
   </div>
 
-  <div data-ks-scroll="1" style="height: calc(100vh - 92px); overflow-y: auto; scroll-behavior: smooth; position: relative;">
+  <div data-ks-scroll="1" style="height: calc(100vh - 92px); overflow-y: auto; position: relative;">
     <div id="ihf-listing-detail" ref="{{ ihfListingDetailRef }}" style="width: 100%; min-height: 100%; padding: 0 36px 24px; box-sizing: border-box; opacity: 0; transition: opacity 0.25s ease; position: relative; z-index: 0; isolation: isolate;"></div>
   </div>
 
