@@ -26,7 +26,7 @@
       if (!wrap || !wrap.firstElementChild) { setTimeout(start, 100); return; }
     }
     var opts = wrap ? { wrapper: wrap, content: wrap.firstElementChild, eventsTarget: wrap } : {};
-    var l = new window.Lenis(Object.assign(opts, { lerp: 0.09, smoothWheel: true, wheelMultiplier: 1, anchors: true, __experimental__naiveDimensions: true, prevent: blocked }));
+    var l = new window.Lenis(Object.assign(opts, { lerp: 0.1, smoothWheel: true, wheelMultiplier: 1, anchors: true, __experimental__naiveDimensions: true, prevent: blocked }));
     window.__ksLenis = l;
     if (window.ResizeObserver) { var ro = new ResizeObserver(fit); ro.observe(document.documentElement); if (document.body) ro.observe(document.body); if (wrap) { ro.observe(wrap); ro.observe(wrap.firstElementChild); } }
     window.addEventListener('load', fit);
